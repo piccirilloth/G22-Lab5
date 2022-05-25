@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="8dp">
+
+    <ScrollView
+        android:id="@+id/timeslot_edit_sv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/timeslot_edit_cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/timeslot_edit_title_edittext"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corner"
+                android:hint="Offer title"
+                android:inputType="text"
+                android:maxLength="30"
+                android:padding="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textColor="?attr/colorOnPrimarySurface"
+                android:textColorHint="?attr/colorOnPrimarySurface"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/timeslot_edit_datetime_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Start date"
+                app:layout_constraintStart_toStartOf="@+id/timeslot_edit_datetime_textview"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_edit_title_edittext" />
+
+            <ImageView
+                android:id="@+id/timeslot_edit_datetime_icon_imgview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/timeslot_edit_datetime_textview"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_edit_datetime_textview"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/timeslot_edit_datetime_textview"
+                app:srcCompat="@drawable/ic_baseline_calendar_month_24" />
+
+            <TextView
+                android:id="@+id/timeslot_edit_datetime_textview"
+                style="@style/Widget.AppCompat.EditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:hint="Date and time"
+                android:inputType="datetime"
+                android:minHeight="48dp"
+                android:textAlignment="textEnd"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_edit_datetime_icon_imgview"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_edit_datetime_label"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/timeslot_edit_duration_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Duration"
+                app:layout_constraintStart_toStartOf="@+id/timeslot_edit_duration_hour"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_edit_datetime_textview" />
+
+            <ImageView
+                android:id="@+id/timeslot_edit_duration_icon_imgview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/timeslot_edit_duration_minute"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_edit_duration_hour"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/timeslot_edit_duration_minute"
+                app:srcCompat="@drawable/ic_baseline_access_time_24" />
+
+            <EditText
+                android:id="@+id/timeslot_edit_duration_hour"
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="00"
+                android:inputType="number"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintBottom_toBottomOf="@+id/timeslot_edit_duration_minute"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_edit_duration_label_hour"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_edit_duration_icon_imgview"
+                app:layout_constraintTop_toTopOf="@+id/timeslot_edit_duration_minute"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/timeslot_edit_duration_label_hour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="hh"
+                app:layout_constraintBottom_toBottomOf="@+id/timeslot_edit_duration_hour"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_edit_duration_separator"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_edit_duration_hour"
+                app:layout_constraintTop_toTopOf="@+id/timeslot_edit_duration_hour" />
+
+            <TextView
+                android:id="@+id/timeslot_edit_duration_separator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text=":"
+                app:layout_constraintBottom_toBottomOf="@+id/timeslot_edit_duration_label_hour"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_edit_duration_minute"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_edit_duration_label_hour"
+                app:layout_constraintTop_toTopOf="@+id/timeslot_edit_duration_label_hour" />
+
+            <EditText
+                android:id="@+id/timeslot_edit_duration_minute"
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="00"
+                android:inputType="number"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_edit_duration_label_minute"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_edit_duration_separator"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_edit_duration_label" />
+
+            <TextView
+                android:id="@+id/timeslot_edit_duration_label_minute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="mm"
+                app:layout_constraintBottom_toBottomOf="@+id/timeslot_edit_duration_minute"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_edit_duration_minute"
+                app:layout_constraintTop_toTopOf="@+id/timeslot_edit_duration_minute" />
+
+            <TextView
+                android:id="@+id/timeslot_edit_location_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Location"
+                app:layout_constraintStart_toStartOf="@+id/timeslot_edit_location_edittext"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_edit_duration_hour" />
+
+            <ImageView
+                android:id="@+id/timeslot_edit_location_icon_imgview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/timeslot_edit_location_edittext"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_edit_location_edittext"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/timeslot_edit_location_edittext"
+                app:srcCompat="@drawable/ic_baseline_location_on_24" />
+
+            <EditText
+                android:id="@+id/timeslot_edit_location_edittext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Location"
+                android:inputType="text"
+                android:maxLength="50"
+                android:minHeight="48dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_edit_location_icon_imgview"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_edit_location_label" />
+
+            <View
+                android:id="@+id/timeslot_edit_divider2"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="16dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_edit_location_edittext" />
+
+            <TextView
+                android:id="@+id/timeslot_edit_skills_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Offered Skills"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_edit_skills_icon_imgview"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_edit_divider2" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/timeslot_edit_skills_chipgroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_edit_skills_label">
+
+            </com.google.android.material.chip.ChipGroup>
+
+
+            <ImageView
+                android:id="@+id/timeslot_edit_skills_icon_imgview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/timeslot_edit_skills_label"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_edit_skills_label"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/timeslot_edit_skills_label"
+                app:srcCompat="@drawable/ic_baseline_work_outline_24" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/timeslot_edit_skills_menu"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="New skill"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_edit_add_skill_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/timeslot_edit_skills_chipgroup">
+
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/timeslot_edit_add_skill_button"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/circle"
+                android:text="+"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/timeslot_edit_skills_menu"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_edit_skills_menu"
+                app:layout_constraintTop_toTopOf="@+id/timeslot_edit_skills_menu" />
+
+            <View
+                android:id="@+id/timeslot_edit_divider"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="16dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_edit_skills_menu" />
+
+            <TextView
+                android:id="@+id/timeslot_edit_description_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Description"
+                app:layout_constraintStart_toStartOf="@+id/timeslot_edit_description_edittext"
+                app:layout_constraintTop_toBottomOf="@id/timeslot_edit_divider" />
+
+            <EditText
+                android:id="@+id/timeslot_edit_description_edittext"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="Insert a description of your time offer.."
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_edit_description_label"
+                tools:layout_conversion_absoluteHeight="465dp"
+                tools:layout_conversion_absoluteWidth="379dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

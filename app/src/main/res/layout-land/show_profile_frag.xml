@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ShowProfile.ShowProfileFragment">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/background"
+            android:elevation="16dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/show_profile_profile_image_imgview"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="16dp"
+                app:civ_border_color="?attr/colorOnPrimarySurface"
+                app:civ_border_width="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ScrollView
+            android:id="@+id/show_profile_sv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:fillViewport="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/show_profile_cl"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp">
+
+                <TextView
+                    android:id="@+id/show_profile_fullname_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Unknown name"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/show_profile_divider2"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="16dp"
+                    android:background="?android:attr/listDivider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_fullname_textview" />
+
+                <TextView
+                    android:id="@+id/show_profile_email_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Email"
+                    app:layout_constraintStart_toStartOf="@+id/show_profile_email_textview"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_divider2" />
+
+                <ImageView
+                    android:id="@+id/show_profile_email_icon_imgview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/show_profile_email_textview"
+                    app:layout_constraintEnd_toStartOf="@+id/show_profile_email_textview"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/show_profile_email_textview"
+                    app:srcCompat="@drawable/ic_baseline_email_24" />
+
+                <TextView
+                    android:id="@+id/show_profile_email_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:focusable="true"
+                    android:hint="email not filled"
+                    android:longClickable="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textIsSelectable="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/show_profile_email_icon_imgview"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_email_label" />
+
+                <TextView
+                    android:id="@+id/show_profile_nickname_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Nickname"
+                    app:layout_constraintStart_toStartOf="@+id/show_profile_nickname_textview"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_email_textview" />
+
+                <ImageView
+                    android:id="@+id/show_profile_nickname_icon_imgview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/show_profile_nickname_textview"
+                    app:layout_constraintEnd_toStartOf="@+id/show_profile_nickname_textview"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/show_profile_nickname_textview"
+                    app:srcCompat="@drawable/ic_baseline_accessibility_24" />
+
+                <TextView
+                    android:id="@+id/show_profile_nickname_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:hint="nickname not filled"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/show_profile_nickname_icon_imgview"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_nickname_label" />
+
+                <TextView
+                    android:id="@+id/show_profile_location_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Location"
+                    app:layout_constraintStart_toStartOf="@+id/show_profile_location_textview"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_nickname_textview" />
+
+                <ImageView
+                    android:id="@+id/show_profile_location_icon_imgview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/show_profile_location_textview"
+                    app:layout_constraintEnd_toStartOf="@+id/show_profile_location_textview"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/show_profile_location_textview"
+                    app:srcCompat="@drawable/ic_baseline_location_on_24" />
+
+                <TextView
+                    android:id="@+id/show_profile_location_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:hint="location not filled"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/show_profile_location_icon_imgview"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_location_label" />
+
+                <TextView
+                    android:id="@+id/show_profile_phone_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Telephone"
+                    app:layout_constraintStart_toStartOf="@+id/show_profile_phone_textview"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_location_textview" />
+
+                <ImageView
+                    android:id="@+id/show_profile_phone_icon_imgview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/show_profile_phone_textview"
+                    app:layout_constraintEnd_toStartOf="@+id/show_profile_phone_textview"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/show_profile_phone_textview"
+                    app:srcCompat="@drawable/ic_baseline_phone_24" />
+
+                <TextView
+                    android:id="@+id/show_profile_phone_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:focusable="true"
+                    android:hint="telephone not filled"
+                    android:longClickable="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/show_profile_phone_icon_imgview"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_phone_label" />
+
+                <View
+                    android:id="@+id/show_profile_divider3"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="16dp"
+                    android:background="?android:attr/listDivider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_phone_textview" />
+
+                <TextView
+                    android:id="@+id/show_profile_skills_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Skills"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/show_profile_skills_icon_imgview"
+                    app:layout_constraintTop_toBottomOf="@id/show_profile_divider3"
+                    tools:layout_editor_absoluteY="374dp" />
+
+
+                <ImageView
+                    android:id="@+id/show_profile_skills_icon_imgview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintEnd_toStartOf="@+id/show_profile_skills_label"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/show_profile_skills_label"
+                    app:srcCompat="@drawable/ic_baseline_work_outline_24"
+                    tools:layout_editor_absoluteY="372dp" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/show_profile_skills_chipgroup"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/show_profile_skills_icon_imgview"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_skills_label" />
+
+                <View
+                    android:id="@+id/show_profile_divider"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="16dp"
+                    android:background="?android:attr/listDivider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_skills_chipgroup" />
+
+                <TextView
+                    android:id="@+id/show_profile_description_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Description"
+                    app:layout_constraintStart_toStartOf="@+id/show_profile_description_textview"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_divider" />
+
+                <TextView
+                    android:id="@+id/show_profile_description_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="32dp"
+                    android:focusable="true"
+                    android:hint="description not filled"
+                    android:longClickable="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textIsSelectable="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_description_label" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

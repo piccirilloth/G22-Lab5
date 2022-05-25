@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/save_changes_item"
+        android:icon="@drawable/ic_baseline_save_changes_24"
+        android:title="Edit Advertisement"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/discard_changes_item"
+        android:actionLayout="@layout/critic_menu_item"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:title="Discard changes"
+        app:showAsAction="ifRoom" />
+
+</menu>

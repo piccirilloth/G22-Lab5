@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/timeslot_item_card"
+        android:layout_width="match_parent"
+        android:layout_height="115dp"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/rounded_corner"
+            android:elevation="16dp"
+            android:orientation="horizontal">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/timeslot_item_title_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingLeft="4dp"
+                    android:text="Title"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                    android:textColor="?attr/colorOnPrimarySurface"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/timeslot_item_datetime_icon_imgview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/timeslot_item_datetime_textview"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintHorizontal_chainStyle="spread"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/timeslot_item_title_textview"
+                    app:srcCompat="@drawable/ic_baseline_calendar_month_24"
+                    app:tint="?attr/colorOnPrimarySurface" />
+
+                <TextView
+                    android:id="@+id/timeslot_item_datetime_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:text="31/12/2022 - 11:50"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="?attr/colorOnPrimarySurface"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/timeslot_item_duration_icon_imgview"
+                    app:layout_constraintStart_toEndOf="@+id/timeslot_item_datetime_icon_imgview"
+                    app:layout_constraintTop_toBottomOf="@+id/timeslot_item_title_textview" />
+
+                <ImageView
+                    android:id="@+id/timeslot_item_duration_icon_imgview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_marginEnd="63dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/timeslot_item_duration_textview"
+                    app:layout_constraintTop_toBottomOf="@+id/timeslot_item_title_textview"
+                    app:layout_constraintVertical_bias="0.434"
+                    app:srcCompat="@drawable/ic_baseline_access_time_24"
+                    app:tint="?attr/colorOnPrimarySurface" />
+
+                <TextView
+                    android:id="@+id/timeslot_item_duration_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="8dp"
+                    android:text="100 h : 50 min"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="?attr/colorOnPrimarySurface"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/timeslot_item_title_textview" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageButton
+                android:id="@+id/timeslot_item_edit_button_imgbtn"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="0"
+                android:background="@drawable/circle"
+                android:contentDescription="Edit the timeslot"
+                android:elevation="8dp"
+                app:srcCompat="@drawable/ic_edit"
+                app:tint="?attr/colorOnPrimary" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

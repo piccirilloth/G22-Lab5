@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    app:startDestination="@id/nav_skills_list">
+
+    <fragment
+        android:id="@+id/nav_timeslot_show"
+        android:name="com.example.g22.TimeSlotView.TimeSlotShowFragment"
+        android:label="@string/frag_title_timeslot_show"
+        tools:layout="@layout/time_slot_show_frag">
+        <argument
+            android:name="timeSlotId"
+            app:argType="string" />
+        <argument
+            android:name="readOnly"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_nav_timeslot_show_to_nav_show_other_profile"
+            app:destination="@id/nav_show_other_profile" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_timeslot_show_my_offers"
+        android:name="com.example.g22.TimeSlotView.TimeSlotShowFragment"
+        android:label="@string/frag_title_timeslot_show"
+        tools:layout="@layout/time_slot_show_frag">
+        <argument
+            android:name="timeSlotId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_timeSlotShowMyOffersFragment_to_timeSlotEditFragment"
+            app:destination="@id/nav_timeslot_edit"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="readOnly"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_nav_timeslot_show_my_offers_to_nav_show_other_profile"
+            app:destination="@id/nav_show_other_profile" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/nav_timeslot_list_my_offers"
+        android:name="com.example.g22.TimeSlotList.TimeSlotListFragment"
+        android:label="@string/frag_title_my_offers"
+        tools:layout="@layout/time_slot_list_frag">
+        <action
+            android:id="@+id/action_timeSlotListFragment_to_timeSlotEditFragment2"
+            app:destination="@id/nav_timeslot_edit"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="skill"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_nav_timeslot_list_my_offers_to_nav_timeslot_show_my_offers"
+            app:destination="@id/nav_timeslot_show_my_offers" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_timeslot_list_by_skills"
+        android:name="com.example.g22.TimeSlotList.TimeSlotListFragment"
+        android:label="@string/frag_title_list_by_skills"
+        tools:layout="@layout/time_slot_list_frag">
+        <argument
+            android:name="skill"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_nav_timeslot_list_by_skills_to_nav_timeslot_show"
+            app:destination="@id/nav_timeslot_show" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_timeslot_edit"
+        android:name="com.example.g22.TimeSlotView.TimeSlotEditFragment"
+        android:label="@string/frag_title_timeslot_edit"
+        tools:layout="@layout/time_slot_edit_frag">
+        <argument
+            android:name="isAdd"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <action
+            android:id="@+id/action_timeSlotEditFragment_to_timeSlotListFragment"
+            app:destination="@id/nav_timeslot_list_my_offers"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="timeSlotId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_show_profile"
+        android:name="com.example.g22.ShowProfile.ShowProfileFragment"
+        android:label="@string/frag_title_profile_show"
+        tools:layout="@layout/show_profile_frag" >
+        <action
+            android:id="@+id/action_showProfileFragment_to_editProfileFragment"
+            app:destination="@id/nav_edit_profile"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="profileId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_edit_profile"
+        android:name="com.example.g22.ShowProfile.EditProfileFragment"
+        android:label="@string/frag_title_profile_edit"
+        tools:layout="@layout/edit_profile_frag"/>
+    <action
+        android:id="@+id/nav_to_home"
+        app:destination="@id/nav_skills_list"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim"
+        app:popUpTo="@id/nav_skills_list"
+        app:popUpToInclusive="true" />
+    <fragment
+        android:id="@+id/nav_skills_list"
+        android:name="com.example.g22.SkillsList.SkillsListFragment"
+        android:label="@string/frag_title_skills_list"
+        tools:layout="@layout/skills_list_frag"
+        >
+        <action
+            android:id="@+id/action_nav_skills_list_to_nav_timeslot_list_by_skills"
+            app:destination="@id/nav_timeslot_list_by_skills" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_show_other_profile"
+        android:name="com.example.g22.ShowProfile.ShowProfileFragment"
+        android:label="@string/frag_title_profile_show"
+        tools:layout="@layout/show_profile_frag" >
+        <argument
+            android:name="profileId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+</navigation>

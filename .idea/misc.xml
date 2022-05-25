@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="../../../../../layout/custom_preview.xml" value="0.21944444444444444" />
+        <entry key="../../../../layout/custom_preview.xml" value="0.3374094202898551" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22-Lab03/app/src/main/res/layout/time_slot_edit_frag.xml" value="0.30052083333333335" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22-Lab03/app/src/main/res/layout/time_slot_item.xml" value="0.1" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22-Lab03/app/src/main/res/layout/time_slot_show_frag.xml" value="0.28703703703703703" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.224" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/drawable/ic_baseline_access_time_24.xml" value="0.224" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.224" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/drawable/ic_baseline_calendar_month_24.xml" value="0.224" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/drawable/ic_launcher_background.xml" value="0.224" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/layout/activity_main.xml" value="0.17708333333333334" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/layout/edit_profile_frag.xml" value="0.18854166666666666" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/layout/nav_header.xml" value="0.30052083333333335" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/layout/show_profile_frag.xml" value="0.30052083333333335" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/layout/time_slot.xml" value="0.30052083333333335" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/layout/time_slot_details_frag.xml" value="0.20199275362318841" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/layout/time_slot_edit_frag.xml" value="0.30052083333333335" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/layout/time_slot_list_frag.xml" value="0.30052083333333335" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/layout/time_slot_show_frag.xml" value="0.30052083333333335" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/menu/context_menu.xml" value="0.1" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/menu/drawer_menu.xml" value="0.30052083333333335" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/menu/edit_menu.xml" value="0.30052083333333335" />
+        <entry key="..\:/Users/leona/AndroidStudioProjects/G22/app/src/main/res/menu/save_changes_menu.xml" value="0.30052083333333335" />
+        <entry key="..\:/Users/lorep/OneDrive/Desktop/MAD2022/G22-Lab03/app/src/main/res/layout/time_slot.xml" value="0.264" />
+        <entry key="..\:/Users/lorep/OneDrive/Desktop/MAD2022/G22-Lab03/app/src/main/res/layout/time_slot_list_frag.xml" value="0.1" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/drawable/background.xml" value="0.2985" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/drawable/ic_baseline_access_time_24.xml" value="0.14" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.1" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/drawable/ic_baseline_calendar_month_24.xml" value="0.2985" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.2985" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/drawable/rounded_corner.xml" value="0.1555" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/layout-land/edit_profile_frag.xml" value="0.31040564373897706" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/layout-land/show_profile_frag.xml" value="0.15961199294532627" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/layout-land/time_slot_edit_frag.xml" value="0.31040564373897706" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/layout/edit_profile_frag.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/layout/show_profile_frag.xml" value="0.22" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/layout/time_slot.xml" value="0.26458333333333334" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/layout/time_slot_edit_frag.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/layout/time_slot_item.xml" value="0.14722222222222223" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/layout/time_slot_list_frag.xml" value="0.25" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/layout/time_slot_show_frag.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/menu/drawer_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/menu/edit_menu.xml" value="0.14722222222222223" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/menu/picture_context_menu.xml" value="0.14722222222222223" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab03/app/src/main/res/menu/save_changes_menu.xml" value="0.14722222222222223" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab4/app/src/main/res/menu/edit_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab4/app/src/main/res/menu/google_login_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/picci/OneDrive/Desktop/G22-Lab4/app/src/main/res/menu/google_logout_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/rugge/Documents/development/university/mobile_app_dev/G22-Lab03/app/src/main/res/drawable-anydpi/ic_user_icon.xml" value="0.1" />
+        <entry key="..\:/Users/rugge/Documents/development/university/mobile_app_dev/G22-Lab03/app/src/main/res/drawable/background.xml" value="0.1" />
+        <entry key="..\:/Users/rugge/Documents/development/university/mobile_app_dev/G22-Lab03/app/src/main/res/drawable/ic_baseline_30fps_24.xml" value="0.11" />
+        <entry key="..\:/Users/rugge/Documents/development/university/mobile_app_dev/G22-Lab03/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/rugge/Documents/development/university/mobile_app_dev/G22-Lab03/app/src/main/res/layout/custom_menu_item.xml" value="0.1" />
+        <entry key="..\:/Users/rugge/Documents/development/university/mobile_app_dev/G22-Lab03/app/src/main/res/layout/edit_profile_frag.xml" value="0.23777173913043478" />
+        <entry key="..\:/Users/rugge/Documents/development/university/mobile_app_dev/G22-Lab03/app/src/main/res/layout/nav_header.xml" value="0.264" />
+        <entry key="..\:/Users/rugge/Documents/development/university/mobile_app_dev/G22-Lab03/app/src/main/res/layout/show_profile_frag.xml" value="0.23777173913043478" />
+        <entry key="..\:/Users/rugge/Documents/development/university/mobile_app_dev/G22-Lab03/app/src/main/res/layout/time_slot_edit_frag.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/rugge/Documents/development/university/mobile_app_dev/G22-Lab03/app/src/main/res/layout/time_slot_show_frag.xml" value="0.23777173913043478" />
+        <entry key="..\:/Users/rugge/Documents/development/university/mobile_app_dev/G22-Lab03/app/src/main/res/menu/context_menu.xml" value="0.1" />
+        <entry key="..\:/Users/rugge/Documents/development/university/mobile_app_dev/G22-Lab03/app/src/main/res/menu/drawer_menu.xml" value="0.11302083333333333" />
+        <entry key="..\:/Users/rugge/Documents/development/university/mobile_app_dev/G22-Lab03/app/src/main/res/menu/edit_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/rugge/Documents/development/university/mobile_app_dev/G22-Lab03/app/src/main/res/menu/save_changes_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/drawable-anydpi/ic_user_icon.xml" value="0.1" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/drawable-land/background.xml" value="0.118" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/drawable/background.xml" value="0.3675" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/drawable/circle.xml" value="0.1" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/drawable/ic_baseline_access_time_24.xml" value="0.1" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/drawable/ic_baseline_airline_seat_recline_extra_24.xml" value="0.1" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/drawable/ic_baseline_calendar_month_24.xml" value="0.1" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/drawable/ic_baseline_list_alt_24.xml" value="0.1" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.1" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/drawable/ic_baseline_save_changes_24.xml" value="0.1" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/drawable/ic_edit.xml" value="0.1" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/drawable/rounded_corner.xml" value="0.118" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/layout-land/edit_profile_frag.xml" value="0.20134228187919462" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/layout-land/show_profile_frag.xml" value="0.31040564373897706" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/layout/activity_main.xml" value="0.3061594202898551" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/layout/critic_menu_item.xml" value="0.29528985507246375" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/layout/edit_profile_frag.xml" value="0.25448717948717947" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/layout/nav_header.xml" value="0.36666666666666664" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/layout/show_profile_frag.xml" value="0.33152173913043476" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/layout/time_slot_details_frag.xml" value="0.36666666666666664" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/layout/time_slot_edit_frag.xml" value="0.24444444444444444" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/layout/time_slot_item.xml" value="0.24444444444444444" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/layout/time_slot_list_frag.xml" value="0.36666666666666664" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/layout/time_slot_show_frag.xml" value="0.3157894736842105" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/menu/drawer_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/development/university/mad/G22-Lab03/app/src/main/res/menu/edit_menu.xml" value="0.36666666666666664" />
+        <entry key="app/src/main/res/drawable/background.xml" value="0.1455" />
+        <entry key="app/src/main/res/drawable/circle.xml" value="0.4065" />
+        <entry key="app/src/main/res/drawable/google_icon.xml" value="0.293" />
+        <entry key="app/src/main/res/drawable/ic_baseline_access_time_24.xml" value="0.182" />
+        <entry key="app/src/main/res/drawable/ic_baseline_accessibility_24.xml" value="0.4065" />
+        <entry key="app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.182" />
+        <entry key="app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.182" />
+        <entry key="app/src/main/res/drawable/ic_baseline_calendar_month_24.xml" value="0.3425" />
+        <entry key="app/src/main/res/drawable/ic_baseline_filter_alt_24.xml" value="0.167" />
+        <entry key="app/src/main/res/drawable/ic_baseline_list_alt_24.xml" value="0.182" />
+        <entry key="app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.4065" />
+        <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.4065" />
+        <entry key="app/src/main/res/drawable/ic_baseline_work_outline_24.xml" value="0.4065" />
+        <entry key="app/src/main/res/drawable/ic_edit.xml" value="0.3655" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1455" />
+        <entry key="app/src/main/res/drawable/rounded_corner.xml" value="0.293" />
+        <entry key="app/src/main/res/drawable/rounded_corner_filters.xml" value="0.293" />
+        <entry key="app/src/main/res/drawable/rounded_corner_secondary.xml" value="0.3925" />
+        <entry key="app/src/main/res/layout-land/edit_profile_frag.xml" value="0.75" />
+        <entry key="app/src/main/res/layout-land/show_profile_frag.xml" value="0.67" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/date_picker_frag.xml" value="0.1773049645390071" />
+        <entry key="app/src/main/res/layout/edit_profile_frag.xml" value="0.3283514492753623" />
+        <entry key="app/src/main/res/layout/filter_dialog.xml" value="0.534375" />
+        <entry key="app/src/main/res/layout/show_profile_frag.xml" value="0.34375" />
+        <entry key="app/src/main/res/layout/skill_item.xml" value="0.42864583333333334" />
+        <entry key="app/src/main/res/layout/skills_list_frag.xml" value="0.4296875" />
+        <entry key="app/src/main/res/layout/skills_list_item.xml" value="0.5333333333333333" />
+        <entry key="app/src/main/res/layout/time_slot_details_frag.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/time_slot_edit_frag.xml" value="0.37864583333333335" />
+        <entry key="app/src/main/res/layout/time_slot_item.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/time_slot_list_frag.xml" value="0.67" />
+        <entry key="app/src/main/res/layout/time_slot_show_frag.xml" value="0.35625" />
+        <entry key="app/src/main/res/menu/drawer_menu.xml" value="0.3224489795918367" />
+        <entry key="app/src/main/res/menu/edit_menu.xml" value="0.33" />
+        <entry key="app/src/main/res/menu/filter_menu.xml" value="0.30052083333333335" />
+        <entry key="app/src/main/res/menu/google_login_menu.xml" value="0.534375" />
+        <entry key="app/src/main/res/menu/google_logout_menu.xml" value="0.3015625" />
+        <entry key="app/src/main/res/menu/picture_context_menu.xml" value="0.2989583333333333" />
+        <entry key="app/src/main/res/menu/save_changes_menu.xml" value="0.34010416666666665" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.3645833333333333" />
+      </ProjectState>
+    </option>
+  </component>
+</project>

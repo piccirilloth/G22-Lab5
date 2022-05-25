@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">G22</string>
+
+    <!-- Navigation -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Profile name</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+
+    <!-- Drawer menu -->
+    <string name="menu_skills">Home</string>
+    <string name="menu_my_offers">My Offers</string>
+    <string name="menu_profile">Profile</string>
+    <string name="top_bar_item_filter_title">Filter</string>    
+
+    <!-- Fragment names -->
+    <string name="frag_title_skills_list">Categories</string>
+    <string name="frag_title_list_by_skills">Offers</string>
+    <string name="frag_title_my_offers">@string/menu_my_offers</string>
+    <string name="frag_title_timeslot_show">Timeslot Details</string>
+    <string name="frag_title_timeslot_edit">Timeslot Editing</string>
+    <string name="frag_title_profile_show">@string/menu_profile</string>
+    <string name="frag_title_profile_edit">Profile Editing</string>
+
+
+    <string name="web_client_id">557615414508-qfuijuhplu1rn0hs2qv7ed1hh4rgnn2r.apps.googleusercontent.com</string>
+    <string name="nav_header_login_label">You are logout, please login!</string>
+    <string name="nav_header_login_button">Sign in</string>
+    <string name="top_bar_item_login_title">Sign in</string>
+    <string name="top_bar_item_logout_title">Logout</string>
+
+</resources>

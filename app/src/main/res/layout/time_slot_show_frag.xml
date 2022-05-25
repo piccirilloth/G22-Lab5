@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/timeslot_show_sv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/timeslot_show_cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp">
+
+            <TextView
+                android:id="@+id/timeslot_show_title_textview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corner"
+                android:padding="16dp"
+                android:text="This is my personal offer"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textColor="?attr/colorOnPrimarySurface"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/timeslot_show_datetime_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Start date"
+                app:layout_constraintStart_toStartOf="@+id/timeslot_show_datetime_textview"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_show_title_textview" />
+
+            <ImageView
+                android:id="@+id/timeslot_show_datetime_icon_imgview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/timeslot_show_datetime_textview"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_show_datetime_textview"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/timeslot_show_datetime_textview"
+                app:srcCompat="@drawable/ic_baseline_calendar_month_24" />
+
+            <TextView
+                android:id="@+id/timeslot_show_datetime_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Date and time"
+                android:textAlignment="textEnd"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_show_datetime_icon_imgview"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_show_datetime_label"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/timeslot_show_duration_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Duration"
+                app:layout_constraintStart_toStartOf="@+id/timeslot_show_duration_textview"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_show_datetime_textview" />
+
+            <ImageView
+                android:id="@+id/timeslot_show_duration_icon_imgview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/timeslot_show_duration_textview"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_show_duration_textview"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/timeslot_show_duration_textview"
+                app:srcCompat="@drawable/ic_baseline_access_time_24" />
+
+            <TextView
+                android:id="@+id/timeslot_show_duration_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="120 minutes"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_show_duration_icon_imgview"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_show_duration_label" />
+
+            <TextView
+                android:id="@+id/timeslot_show_location_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Location"
+                app:layout_constraintStart_toStartOf="@+id/timeslot_show_location_textview"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_show_duration_textview" />
+
+            <ImageView
+                android:id="@+id/timeslot_show_location_icon_imgview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/timeslot_show_location_textview"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_show_location_textview"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/timeslot_show_location_textview"
+                app:srcCompat="@drawable/ic_baseline_location_on_24" />
+
+            <TextView
+                android:id="@+id/timeslot_show_location_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Location"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_show_location_icon_imgview"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_show_location_label" />
+
+            <TextView
+                android:id="@+id/timeslot_show_owner_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Owner"
+                app:layout_constraintStart_toStartOf="@+id/timeslot_show_location_textview"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_show_location_textview" />
+
+            <Button
+                android:id="@+id/timeslot_show_owner_button"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:capitalize="none"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="0dp"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:text="Owner"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                app:icon="@drawable/ic_baseline_account_circle_24"
+                app:iconPadding="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_show_owner_label" />
+
+            <View
+                android:id="@+id/timeslot_show_divider2"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="32dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_show_owner_button" />
+
+            <TextView
+                android:id="@+id/timeslot_show_skills_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Offered Skills"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_show_skills_icon_imgview"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_show_divider2" />
+
+            <ImageView
+                android:id="@+id/timeslot_show_skills_icon_imgview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/timeslot_show_skills_label"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_show_skills_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/timeslot_show_skills_label"
+                app:srcCompat="@drawable/ic_baseline_work_outline_24" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/timeslot_show_skills_chipgroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_show_skills_icon_imgview"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_show_skills_label">
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <View
+                android:id="@+id/timeslot_show_divider"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="32dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_show_skills_chipgroup" />
+
+            <TextView
+                android:id="@+id/timeslot_show_description_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Description"
+                app:layout_constraintStart_toStartOf="@+id/timeslot_show_description_textview"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_show_divider" />
+
+            <TextView
+                android:id="@+id/timeslot_show_description_textview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="32dp"
+                android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_show_description_label"
+                tools:layout_conversion_absoluteHeight="465dp"
+                tools:layout_conversion_absoluteWidth="379dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

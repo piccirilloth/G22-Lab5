@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "557615414508",
+    "project_id": "time-banking-9318d",
+    "storage_bucket": "time-banking-9318d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:557615414508:android:2b9b8da7b396f97418f9c9",
+        "android_client_info": {
+          "package_name": "com.example.g22"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "557615414508-qk7sfd4fdqrv09mu3j3vdj2t2ol704t3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.g22",
+            "certificate_hash": "b536eab4a232b04b98fe678d5e5458fde6706269"
+          }
+        },
+        {
+          "client_id": "557615414508-o8236m1q4ph3624bri1k2lse56bsdkik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAEw90coYlUlalGIqx26fx_ffkdX5vqII"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "557615414508-o8236m1q4ph3624bri1k2lse56bsdkik.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

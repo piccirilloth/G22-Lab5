@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ShowProfile.EditProfileFragment">
+
+    <ScrollView
+        android:id="@+id/edit_profile_sv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+
+            <RelativeLayout
+                android:id="@+id/edit_profile_rl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:background="@drawable/background"
+                android:elevation="16dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/edit_profile_profile_image_imgview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:alpha=".75"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    app:civ_border_color="?attr/colorOnPrimarySurface"
+                    app:civ_border_width="4dp"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <ImageButton
+                    android:id="@+id/edit_profile_photo_edit_button_imgbtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@null"
+                    android:scaleX="3"
+                    android:scaleY="3"
+                    app:srcCompat="@android:drawable/ic_menu_camera" />
+            </RelativeLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/edit_profile_cl"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                android:layout_weight="2">
+
+                <TextView
+                    android:id="@+id/edit_profile_fullname_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Full name"
+                    app:layout_constraintStart_toStartOf="@+id/edit_profile_fullname_edittext"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/edit_profile_fullname_icon_imgview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_profile_fullname_edittext"
+                    app:layout_constraintEnd_toStartOf="@+id/edit_profile_fullname_edittext"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/edit_profile_fullname_edittext"
+                    app:srcCompat="@drawable/ic_baseline_account_circle_24" />
+
+                <EditText
+                    android:id="@+id/edit_profile_fullname_edittext"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="your full name"
+                    android:text="Full name"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/edit_profile_fullname_icon_imgview"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_profile_fullname_label" />
+
+                <View
+                    android:id="@+id/edit_profile_divider3"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="16dp"
+                    android:background="?android:attr/listDivider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_profile_fullname_edittext" />
+
+                <TextView
+                    android:id="@+id/edit_profile_email_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Email"
+                    app:layout_constraintStart_toStartOf="@+id/edit_profile_email_edittext"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_profile_divider3" />
+
+                <ImageView
+                    android:id="@+id/edit_profile_email_icon_imgview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_profile_email_edittext"
+                    app:layout_constraintEnd_toStartOf="@+id/edit_profile_email_edittext"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/edit_profile_email_edittext"
+                    app:srcCompat="@drawable/ic_baseline_email_24" />
+
+                <EditText
+                    android:id="@+id/edit_profile_email_edittext"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:hint="your email"
+                    android:inputType="textEmailSubject"
+                    android:longClickable="true"
+                    android:text="email"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textIsSelectable="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/edit_profile_email_icon_imgview"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_profile_email_label" />
+
+                <TextView
+                    android:id="@+id/edit_profile_nickname_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Nickname"
+                    app:layout_constraintStart_toStartOf="@+id/edit_profile_nickname_edittext"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_profile_email_edittext" />
+
+                <ImageView
+                    android:id="@+id/edit_profile_nickname_icon_imgview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_profile_nickname_edittext"
+                    app:layout_constraintEnd_toStartOf="@+id/edit_profile_nickname_edittext"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/edit_profile_nickname_edittext"
+                    app:srcCompat="@drawable/ic_baseline_accessibility_24" />
+
+                <EditText
+                    android:id="@+id/edit_profile_nickname_edittext"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:hint="nickname / alias"
+                    android:longClickable="true"
+                    android:text="Nickname"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textIsSelectable="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/edit_profile_nickname_icon_imgview"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_profile_nickname_label" />
+
+                <TextView
+                    android:id="@+id/edit_profile_location_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Location"
+                    app:layout_constraintStart_toStartOf="@+id/edit_profile_location_edittext"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_profile_nickname_edittext" />
+
+                <ImageView
+                    android:id="@+id/edit_profile_location_icon_imgview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_profile_location_edittext"
+                    app:layout_constraintEnd_toStartOf="@+id/edit_profile_location_edittext"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/edit_profile_location_edittext"
+                    app:srcCompat="@drawable/ic_baseline_location_on_24" />
+
+                <EditText
+                    android:id="@+id/edit_profile_location_edittext"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="where are you?"
+                    android:text="location"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/edit_profile_location_icon_imgview"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_profile_location_label" />
+
+                <TextView
+                    android:id="@+id/edit_profile_phone_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Telephone"
+                    app:layout_constraintStart_toStartOf="@+id/edit_profile_phone_edittext"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_profile_location_edittext" />
+
+                <ImageView
+                    android:id="@+id/edit_profile_phone_icon_imgview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_profile_phone_edittext"
+                    app:layout_constraintEnd_toStartOf="@+id/edit_profile_phone_edittext"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/edit_profile_phone_edittext"
+                    app:srcCompat="@drawable/ic_baseline_phone_24" />
+
+                <EditText
+                    android:id="@+id/edit_profile_phone_edittext"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:hint="your phone number"
+                    android:inputType="phone"
+                    android:longClickable="true"
+                    android:text="+391234567890"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/edit_profile_phone_icon_imgview"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_profile_phone_label" />
+
+                <View
+                    android:id="@+id/edit_profile_divider2"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="16dp"
+                    android:background="?android:attr/listDivider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_profile_phone_edittext" />
+
+                <TextView
+                    android:id="@+id/edit_profile_skills_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Skills"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/edit_profile_skills_icon_imgview"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_profile_divider2" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/edit_profile_skills_chipgroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_profile_skills_label" />
+
+                <ImageView
+                    android:id="@+id/edit_profile_skills_icon_imgview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_profile_skills_label"
+                    app:layout_constraintEnd_toStartOf="@+id/edit_profile_skills_label"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/edit_profile_skills_label"
+                    app:srcCompat="@drawable/ic_baseline_work_outline_24" />
+
+                <EditText
+                    android:id="@+id/edit_profile_new_skill_edittext"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="insert a new skill"
+                    android:inputType="textPersonName"
+                    android:minHeight="48dp"
+                    app:layout_constraintEnd_toStartOf="@+id/edit_profile_add_skill_button"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/edit_profile_skills_icon_imgview"
+                    app:layout_constraintTop_toBottomOf="@id/edit_profile_skills_chipgroup"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/edit_profile_add_skill_button"
+                    style="@style/Widget.AppCompat.Button.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/circle"
+                    android:text="+"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_profile_new_skill_edittext"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/edit_profile_new_skill_edittext"
+                    app:layout_constraintTop_toTopOf="@+id/edit_profile_new_skill_edittext" />
+
+                <View
+                    android:id="@+id/edit_profile_divider"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="16dp"
+                    android:background="?android:attr/listDivider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_profile_new_skill_edittext" />
+
+                <TextView
+                    android:id="@+id/edit_profile_description_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Description"
+                    app:layout_constraintStart_toStartOf="@+id/edit_profile_description_edittext"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_profile_divider" />
+
+                <EditText
+                    android:id="@+id/edit_profile_description_edittext"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:hint="Insert a long description..."
+                    android:longClickable="true"
+                    android:text="prova"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textIsSelectable="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_profile_description_label" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
