@@ -34,6 +34,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
     private lateinit var skillsCG: ChipGroup
     private lateinit var descriptionTV: TextView
     private lateinit var toolbar: Toolbar
+    private lateinit var creditTV: TextView
 
     // Others
     private lateinit var navController: NavController
@@ -55,6 +56,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
         skillsCG = requireActivity().findViewById(R.id.show_profile_skills_chipgroup)
         descriptionTV = requireActivity().findViewById(R.id.show_profile_description_textview)
         toolbar = requireActivity().findViewById(R.id.toolbar)
+        creditTV = requireActivity().findViewById(R.id.show_profile_credit_textview)
 
         setScrollableImage()
 
@@ -114,6 +116,10 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
         locationTV.text = profile.location
         phoneTV.text = profile.phone
         descriptionTV.text = profile.description
+
+        val hours: Int = profile.credit / 60
+        val minutes: Int = profile.credit % 60
+        creditTV.text = "${hours}h ${minutes}m"
 
         skillsCG.removeAllViews()
         profile.skills.forEach { s ->

@@ -112,6 +112,7 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
         tsListListenerRegistration?.remove()
         tsListListenerRegistration = db.collection("offers")
             .whereArrayContains("skills", skill)
+            .whereEqualTo("valid", true)
             .addSnapshotListener { value, error ->
                 if (error != null) {
                     Log.d("error", "firebase failure")

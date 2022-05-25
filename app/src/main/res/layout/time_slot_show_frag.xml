@@ -165,15 +165,26 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/timeslot_show_owner_label" />
 
+            <Button
+                android:id="@+id/timeslot_show_contact_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contact me"
+                android:layout_marginTop="8dp"
+                tools:layout_editor_absoluteX="25dp"
+                tools:layout_editor_absoluteY="397dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/timeslot_show_owner_button"/>
+
             <View
                 android:id="@+id/timeslot_show_divider2"
                 android:layout_width="0dp"
                 android:layout_height="2dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:background="?android:attr/listDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/timeslot_show_owner_button" />
+                app:layout_constraintTop_toBottomOf="@+id/timeslot_show_contact_button" />
 
             <TextView
                 android:id="@+id/timeslot_show_skills_label"
@@ -244,6 +255,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/timeslot_show_description_label"
                 tools:layout_conversion_absoluteHeight="465dp"
                 tools:layout_conversion_absoluteWidth="379dp" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

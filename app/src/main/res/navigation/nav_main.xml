@@ -19,6 +19,13 @@
         <action
             android:id="@+id/action_nav_timeslot_show_to_nav_show_other_profile"
             app:destination="@id/nav_show_other_profile" />
+        <action
+            android:id="@+id/action_nav_timeslot_show_to_chatFragment"
+            app:destination="@id/chatFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 
     <fragment
@@ -153,5 +160,17 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.g22.chat.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" >
+        <argument
+            android:name="receiver"
+            app:argType="string" />
+        <argument
+            android:name="offerId"
+            app:argType="string" />
     </fragment>
 </navigation>

@@ -11,7 +11,7 @@
     <string name="menu_skills">Home</string>
     <string name="menu_my_offers">My Offers</string>
     <string name="menu_profile">Profile</string>
-    <string name="top_bar_item_filter_title">Filter</string>    
+    <string name="top_bar_item_filter_title">Filter</string>
 
     <!-- Fragment names -->
     <string name="frag_title_skills_list">Categories</string>
@@ -28,5 +28,7 @@
     <string name="nav_header_login_button">Sign in</string>
     <string name="top_bar_item_login_title">Sign in</string>
     <string name="top_bar_item_logout_title">Logout</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -48,11 +48,63 @@
                     android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:hint="Unknwon name"
-                    android:paddingBottom="16dp"
+                    android:paddingBottom="8dp"
                     android:text="Full name"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                     android:textColor="?attr/colorOnPrimarySurface"
                     android:textColorHint="?attr/colorOnPrimarySurface" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp">
+
+                    <TextView
+                        android:id="@+id/show_profile_credit_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Credit"
+                        android:textColor="?attr/colorOnPrimarySurface"
+                        android:textColorHint="?attr/colorOnPrimarySurface"
+                        app:layout_constraintBottom_toTopOf="@id/show_profile_hourglass_imgview"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <ImageView
+                        android:id="@+id/show_profile_hourglass_imgview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="6dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_baseline_hourglass_empty_24"
+                        android:textColor="?attr/colorOnPrimarySurface"
+                        android:textColorHint="?attr/colorOnPrimarySurface"
+                        app:layout_constraintBottom_toBottomOf="@id/show_profile_credit_textview"
+                        app:layout_constraintEnd_toStartOf="@+id/show_profile_credit_textview"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/show_profile_credit_textview" />
+
+                    <TextView
+                        android:id="@+id/show_profile_credit_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="55"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                        android:textColor="?attr/colorOnPrimarySurface"
+                        android:textColorHint="?attr/colorOnPrimarySurface"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/show_profile_hourglass_imgview"
+                        app:layout_constraintTop_toBottomOf="@id/show_profile_credit_label" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -118,6 +170,7 @@
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/show_profile_nickname_textview"
+                    app:layout_constraintVertical_bias="1.0"
                     app:srcCompat="@drawable/ic_baseline_accessibility_24" />
 
                 <TextView

@@ -34,6 +34,7 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
     private lateinit var descriptionTV: TextView
     private lateinit var skillsCG: ChipGroup
     private lateinit var ownerBtn: Button
+    private lateinit var contactButton: Button
 
     // Others
     private lateinit var navController: NavController
@@ -53,6 +54,7 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
         descriptionTV = requireActivity().findViewById(R.id.timeslot_show_description_textview)
         skillsCG = requireActivity().findViewById(R.id.timeslot_show_skills_chipgroup)
         ownerBtn = requireActivity().findViewById(R.id.timeslot_show_owner_button)
+        contactButton = requireActivity().findViewById(R.id.timeslot_show_contact_button)
 
         ownerBtn.setOnClickListener {
             navController.navigate(R.id.action_nav_timeslot_show_to_nav_show_other_profile,
@@ -75,10 +77,15 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
                 timeslotVM.currTimeSlotLD.value!!.owner == Firebase.auth.currentUser!!.uid) {
                 ownerBtn.text = "Myself"
                 ownerBtn.isEnabled = false
+                contactButton.visibility = View.GONE
             }
             else {
                 ownerBtn.text = it
                 ownerBtn.isEnabled = true
+                contactButton.visibility = View.VISIBLE
+                contactButton.setOnClickListener {
+                    navController.navigate(TimeSlotShowFragmentDirections.actionNavTimeslotShowToChatFragment("receiver_uid", "offer_id")) //TODO:
+                }
             }
         }
 

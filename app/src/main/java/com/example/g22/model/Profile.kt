@@ -10,7 +10,8 @@ data class Profile (
     var location: String,
     var phone: String,
     var skills: List<String>,
-    var description: String
+    var description: String,
+    var credit: Int
         ) {
 
     constructor(): this(
@@ -22,6 +23,7 @@ data class Profile (
         "",
         emptyList(),
         "",
+        0
     )
 
     companion object {
@@ -34,7 +36,8 @@ data class Profile (
                 "",
                 user.phoneNumber ?: "",
                 emptyList(),
-                ""
+                "",
+                0
             )
         }
     }
