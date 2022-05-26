@@ -3,6 +3,7 @@ package com.example.g22.chat
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
@@ -18,6 +19,7 @@ import com.example.g22.TimeSlotList.AdvertisementAdapter
 import com.example.g22.TimeSlotList.MessageAdapter
 import com.example.g22.TimeSlotList.TimeSlotListFragmentArgs
 import com.example.g22.TimeSlotList.TimeSlotListVM
+import com.example.g22.model.Message
 import com.example.g22.toAdvertisementList
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
@@ -48,22 +50,38 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         // Recycler View configuration
         rv.layoutManager = LinearLayoutManager(requireActivity())
-        adapter = MessageAdapter(messageListVM.messageListLD.value ?: emptyList())
+        adapter = MessageAdapter(emptyList())
         rv.adapter = adapter
 
         rv.addOnLayoutChangeListener { view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-            if(adapter.itemCount > 0)
+            if(adapter.itemCount > 0 && oldBottom < bottom)
                 rv.smoothScrollToPosition(adapter.itemCount - 1)
+        }
+
+        messageListVM.messageListLD.observe(viewLifecycleOwner) {
+            /*
+            The first time:
+                - updateList is triggered with emptylist
+                - db call is done and live data populated
+                - updateList triggered with livedata content
+            The second time:
+                - updateList is triggered with livedata content (not empty this time)
+                - db call is done and live data updated
+                - addMessage triggered with livedata last element
+            This is the motivation behind the if
+             */
+            if(it.size > adapter.itemCount) {
+                if(adapter.itemCount == 0)
+                    adapter.updateList(it)
+                else
+                    adapter.addMessage(it.last())
+                if(adapter.itemCount > 0)
+                    rv.smoothScrollToPosition(adapter.itemCount - 1)
+            }
         }
 
         messageListVM.observeMessages(navArguments.receiver, navArguments.offerId)
         // Observe any change of the chat
-        messageListVM.messageListLD.observe(viewLifecycleOwner) {
-            adapter.updateList(it)
-            if(adapter.itemCount > 0)
-                rv.smoothScrollToPosition(adapter.itemCount - 1)
-
-        }
 
         sendBtn.setOnClickListener{
             if(messageEditText.text.toString() != "") {

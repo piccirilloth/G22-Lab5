@@ -76,4 +76,9 @@ class MessageAdapter(private var data: List<Message>): RecyclerView.Adapter<Mess
         notifyDataSetChanged()
     }
 
+    fun addMessage(message: Message) {
+        data = data.plus(message)
+        notifyItemInserted(itemCount)
+    }
+
 }
