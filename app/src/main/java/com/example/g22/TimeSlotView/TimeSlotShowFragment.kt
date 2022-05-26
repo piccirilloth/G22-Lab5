@@ -84,7 +84,10 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
                 ownerBtn.isEnabled = true
                 contactButton.visibility = View.VISIBLE
                 contactButton.setOnClickListener {
-                    navController.navigate(TimeSlotShowFragmentDirections.actionNavTimeslotShowToChatFragment("receiver_uid", "offer_id")) //TODO:
+                    navController.navigate(
+                        R.id.action_nav_timeslot_show_to_chatFragment,
+                        bundleOf("receiver" to "receiver_uid", "offer" to "offer_id" )
+                    ) //TODO:
                 }
             }
         }

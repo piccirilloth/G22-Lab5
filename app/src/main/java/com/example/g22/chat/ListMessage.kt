@@ -10,6 +10,8 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.g22.R
 import com.example.g22.model.Message
+import com.example.g22.model.TimeSlot
+import com.example.g22.toAdvertisementList
 
 class MessageAdapter(private var data: List<Message>): RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
     class MessageViewHolder(v: View): RecyclerView.ViewHolder(v) {
@@ -48,6 +50,12 @@ class MessageAdapter(private var data: List<Message>): RecyclerView.Adapter<Mess
     override fun onViewRecycled(holder: MessageViewHolder) {
         super.onViewRecycled(holder)
         holder.unbind()
+    }
+
+    fun updateList(messageList: List<Message>) {
+        data = messageList
+        // TODO: provide a way to handle list modifications better
+        notifyDataSetChanged()
     }
 
 }

@@ -38,6 +38,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         rv.layoutManager = LinearLayoutManager(requireActivity())
         adapter = MessageAdapter(messageListVM.messageListLD.value ?: emptyList())
         rv.adapter = adapter
+
+
+        // Observe any change of the chat
+        messageListVM.messageListLD.observe(viewLifecycleOwner) {
+            adapter.updateList(it)
+        }
     }
 
 }
