@@ -87,7 +87,9 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
                     navController.navigate(
                         R.id.action_nav_timeslot_show_to_chatFragment,
                         bundleOf("receiver" to timeslotVM.currTimeSlotLD.value?.owner,
-                            "offerId" to timeslotVM.currTimeSlotLD.value?.id )
+                            "offerId" to timeslotVM.currTimeSlotLD.value?.id,
+                        "receiverName" to ownerBtn.text.toString(),
+                            "offerTitle" to timeslotVM.currTimeSlotLD.value?.title)
                     ) //TODO:
                 }
             }

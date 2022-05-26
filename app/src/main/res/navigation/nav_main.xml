@@ -172,5 +172,11 @@
         <argument
             android:name="offerId"
             app:argType="string" />
+        <argument
+            android:name="offerTitle"
+            app:argType="string" />
+        <argument
+            android:name="receiverName"
+            app:argType="string" />
     </fragment>
 </navigation>

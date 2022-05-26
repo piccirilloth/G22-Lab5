@@ -41,7 +41,6 @@
             android:id="@+id/chat_fragment_rv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layoutAnimation="@anim/layout_animation"
             app:layout_constraintBottom_toTopOf="@+id/chat_fragment_message_edit_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/chat_fragment_reject_button" />
