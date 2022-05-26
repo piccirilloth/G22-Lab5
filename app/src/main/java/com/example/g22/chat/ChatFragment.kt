@@ -51,17 +51,31 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         adapter = MessageAdapter(messageListVM.messageListLD.value ?: emptyList())
         rv.adapter = adapter
 
+        rv.addOnLayoutChangeListener { view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            if(adapter.itemCount > 0)
+                rv.smoothScrollToPosition(adapter.itemCount - 1)
+        }
+
         messageListVM.observeMessages(navArguments.receiver, navArguments.offerId)
         // Observe any change of the chat
         messageListVM.messageListLD.observe(viewLifecycleOwner) {
             adapter.updateList(it)
+            if(adapter.itemCount > 0)
+                rv.smoothScrollToPosition(adapter.itemCount - 1)
+
         }
 
         sendBtn.setOnClickListener{
-            if(messageEditText.text.toString() != "")
-                messageListVM.createMessage(navArguments.receiver, navArguments.offerId, messageEditText.text.toString())
-            messageEditText.text.clear()
+            if(messageEditText.text.toString() != "") {
+                messageListVM.createMessage(
+                    navArguments.receiver,
+                    navArguments.offerId,
+                    messageEditText.text.toString()
+                )
+                messageEditText.text.clear()
+            }
         }
+        //messageListVM.messageListLD.value?.size?.let { rv.scrollToPosition(it) }
     }
 
 }
