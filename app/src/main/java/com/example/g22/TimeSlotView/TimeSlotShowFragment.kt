@@ -67,6 +67,10 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
                 navController.popBackStack()
         }
 
+        Firebase.auth.addAuthStateListener {
+            contactButton.isEnabled = it.currentUser != null
+        }
+
         // Observe any change to the current timeslot to update the views
         timeslotVM.currTimeSlotLD.observe(viewLifecycleOwner) {
             bindTimeSlotData(it)
@@ -83,8 +87,6 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
                 ownerBtn.text = it
                 ownerBtn.isEnabled = true
                 contactButton.visibility = View.VISIBLE
-                if(Firebase.auth.currentUser == null)
-                    contactButton.isEnabled = false //TODO: this does not work in timeslot show!
                 contactButton.setOnClickListener {
                     navController.navigate(
                         R.id.action_nav_timeslot_show_to_chatFragment,
