@@ -1,10 +1,13 @@
 package com.example.g22.TimeSlotList
 
+import android.content.IntentSender
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -12,16 +15,26 @@ import com.example.g22.R
 import com.example.g22.model.Message
 import com.example.g22.model.TimeSlot
 import com.example.g22.toAdvertisementList
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MessageAdapter(private var data: List<Message>): RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
     class MessageViewHolder(v: View): RecyclerView.ViewHolder(v) {
         private val messageCard: CardView = v.findViewById(R.id.message_item_card)
         private val messageTV : TextView = v.findViewById(R.id.message_item_textview)
         private val timeTV : TextView = v.findViewById(R.id.message_time_textview)
+        private val cl : ConstraintLayout = v.findViewById(R.id.external_cl_message_item)
 
-        fun bind(message: String, time: String) {
+        fun bind(message: String, time: String, sender: String) {
             messageTV.text = message
             timeTV.text = time
+            val cs = ConstraintSet()
+            cs.clone(cl)
+            if(sender == "${Firebase.auth.currentUser!!.uid}")
+                cs.clear(R.id.message_item_card, ConstraintSet.START)
+            else
+                cs.clear(R.id.message_item_card, ConstraintSet.END)
+            cs.applyTo(cl)
         }
 
         fun unbind() {
@@ -41,8 +54,13 @@ class MessageAdapter(private var data: List<Message>): RecyclerView.Adapter<Mess
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
         val item = data[position]
+        val date = item.time
 
-        holder.bind(item.text, item.time.toString())
+        holder.bind(item.text, "${date.date.toString().padStart(2, '0')}" +
+                "/${(date.month + 1).toString().padStart(2, '0')}" +
+                "/${(date.year - 100).toString().padStart(2, '0')} - " +
+                "${date.hours.toString().padStart(2, '0')}" +
+                ":${date.minutes.toString().padStart(2, '0')}", item.sender)
     }
 
     override fun getItemCount(): Int = data.size
