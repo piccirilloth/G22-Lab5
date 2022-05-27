@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:maxWidth="300dp"
-                android:text="pppppppppppppppppppppppppppppppppppppppppppppppppppp"
+                android:text=""
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="?attr/colorOnPrimarySurface"
                 app:layout_constraintBottom_toTopOf="@id/message_time_textview"

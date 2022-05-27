@@ -179,4 +179,9 @@
             android:name="receiverName"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/interestingOfferListFragment"
+        android:name="com.example.g22.interestingOffers.InterestingOfferListFragment"
+        android:label="fragment_interesting_offer_list"
+        tools:layout="@layout/fragment_interesting_offer_list" />
 </navigation>

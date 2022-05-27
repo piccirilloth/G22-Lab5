@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.g22.model.Conversation
 import com.example.g22.model.Message
 import com.example.g22.model.TimeSlot
 import com.google.firebase.auth.ktx.auth
@@ -50,10 +51,18 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
             }
     }
 
-    fun createMessage(receiver: String, timeSlotId: String, message: String) {
-        db.collection("chats")
-            .document()
-            .set(Message(timeSlotId, receiver, "${Firebase.auth.currentUser!!.uid}",
-                message, Date(System.currentTimeMillis())))
+    fun createMessage(receiver: String, timeSlotId: String, message: String, offerTitle: String, receiverName: String) {
+        db.runTransaction { transaction ->
+            val user = Firebase.auth.currentUser
+            if(user != null) {
+                if (messageListLD.value?.size == 0) {
+                    val ref = db.collection("conversations").document()
+                    transaction.set(ref, Conversation(timeSlotId, user.uid, receiver, offerTitle, user.displayName.toString(), receiverName))
+                }
+                val ref = db.collection("chats").document()
+                transaction.set(ref, Message(timeSlotId, receiver, "${Firebase.auth.currentUser!!.uid}",
+                    message, Date(System.currentTimeMillis())))
+            }
+        }
     }
 }
