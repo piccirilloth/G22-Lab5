@@ -16,7 +16,7 @@ import com.google.android.material.chip.Chip
 class InterestingOfferList {
     class InterestingOfferAdapter(private var data: List<Conversation>): RecyclerView.Adapter<InterestingOfferAdapter.InterestingOfferViewHolder>() {
         class InterestingOfferViewHolder(v: View): RecyclerView.ViewHolder(v) {
-            private val cardView: CardView = v.findViewById(R.id.interesting_ogger_list_item_card)
+            private val cardView: CardView = v.findViewById(R.id.interesting_offer_list_item_card)
             private val titleTV : TextView = v.findViewById(R.id.interesting_offer_list_item_fullname_text_view)
             private val fullnameTV: TextView = v.findViewById(R.id.interesting_offer_list_item_fullname_text_view)
             private val notChip: Chip = v.findViewById(R.id.interesting_offers_list_item_count_notification_chip)
