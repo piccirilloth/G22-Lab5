@@ -20,7 +20,7 @@ import java.util.Date
 class MessagesListVM(application: Application) : AndroidViewModel(application) {
     private val db = FirebaseFirestore.getInstance()
 
-    private var tsListListenerRegistration: ListenerRegistration? = null
+    private var msgListListenerRegistration: ListenerRegistration? = null
 
     private val _messageListLD: MutableLiveData<List<Message>> =
         MutableLiveData<List<Message>>().also {
@@ -31,8 +31,9 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
 
     fun observeMessages(receiver: String, timeSlotId: String) {
         val users = listOf<String>("${Firebase.auth.currentUser!!.uid}", receiver)
-        tsListListenerRegistration?.remove()
-        db.collection("chats")
+        msgListListenerRegistration?.remove()
+        clearList()
+        msgListListenerRegistration = db.collection("chats")
             .whereEqualTo("offer", timeSlotId)
             .whereIn("sender", users)
             .addSnapshotListener { value, error ->
@@ -41,8 +42,10 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                     return@addSnapshotListener
                 }
                 if (value != null && !value.isEmpty) {
-                    value.filter { users.contains(it.get("receiver").toString()) }
-                    _messageListLD.value = value.toObjects(Message::class.java).sortedBy { it.time.toString() }
+                    val result = value.toObjects(Message::class.java).filter {
+                        users.contains(it.receiver)
+                    }
+                    _messageListLD.value = result.sortedBy { it.time.toString() }
                 }
                 else {
                     _messageListLD.value = emptyList()
@@ -64,5 +67,9 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                     message, Date(System.currentTimeMillis())))
             }
         }
+    }
+
+    fun clearList() {
+        _messageListLD.value = emptyList()
     }
 }

@@ -58,6 +58,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 rv.smoothScrollToPosition(adapter.itemCount - 1)
         }
 
+        messageListVM.observeMessages(navArguments.receiver, navArguments.offerId)
+        // Observe any change of the chat
+
         messageListVM.messageListLD.observe(viewLifecycleOwner) {
             /*
             The first time:
@@ -80,8 +83,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             }
         }
 
-        messageListVM.observeMessages(navArguments., navArguments.offerId)
-        // Observe any change of the chat
+
 
         sendBtn.setOnClickListener{
             if(messageEditText.text.toString() != "") {

@@ -3,46 +3,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/interesting_offer_list_item_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
         android:layout_margin="8dp"
+        app:cardCornerRadius="20dp"
         app:cardElevation="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/rounded_corner"
-            >
+            android:background="@drawable/rounded_corner">
 
             <TextView
                 android:id="@+id/interesting_offer_list_item_offerTitle_text_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:paddingLeft="12dp"
                 android:text="title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="?attr/colorOnPrimarySurface"
                 app:layout_constraintEnd_toStartOf="@+id/interesting_offers_list_item_count_notification_chip"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:ellipsize="end"
-                android:maxLines="1"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/interesting_offer_list_item_fullname_text_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:paddingLeft="12dp"
                 android:text="fullname"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -50,9 +49,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/interesting_offers_list_item_count_notification_chip"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/interesting_offer_list_item_offerTitle_text_view"
-                android:ellipsize="end"
-                android:maxLines="1"/>
+                app:layout_constraintTop_toBottomOf="@id/interesting_offer_list_item_offerTitle_text_view" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/interesting_offers_list_item_count_notification_chip"

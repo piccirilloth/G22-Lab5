@@ -65,8 +65,6 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
                     adapter.updateList(it)
                 else
                     adapter.addConversation(it.last())
-                if(adapter.itemCount > 0)
-                    rv.smoothScrollToPosition(adapter.itemCount - 1)
             }
         }
     }
