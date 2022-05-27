@@ -23,7 +23,7 @@ class InterestingOfferList {
 
             fun bind(item: Conversation, onCardViewClickCallback: (Int) -> Unit) {
                 titleTV.text = item.offerTitle
-                fullnameTV.text = item.receiverName
+                fullnameTV.text = item.requestorName
                 // notChip.text = item.notificationCount.toString()
                 cardView.setOnClickListener { onCardViewClickCallback(bindingAdapterPosition) }
             }
@@ -72,9 +72,15 @@ class InterestingOfferList {
          */
         private fun showChat(adapterPos: Int) {
             //TODO: show chat
-            /*navController.navigate(
-                SkillsListFragmentDirections
-                    .actionNavSkillsListToNavTimeslotListBySkills(skill = data[adapterPos]))*/
+            navController.navigate(
+                InterestingOfferListFragmentDirections
+                    .actionNavInterestingOffersToChatFragment(
+                        receiver = data[adapterPos].requestorUid,
+                        offerId = data[adapterPos].offerId,
+                        offerTitle = data[adapterPos].offerTitle,
+                        receiverName = data[adapterPos].requestorName
+                    )
+            )
         }
 
     }

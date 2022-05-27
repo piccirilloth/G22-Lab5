@@ -80,7 +80,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             }
         }
 
-        messageListVM.observeMessages(navArguments.receiver, navArguments.offerId)
+        messageListVM.observeMessages(navArguments., navArguments.offerId)
         // Observe any change of the chat
 
         sendBtn.setOnClickListener{
