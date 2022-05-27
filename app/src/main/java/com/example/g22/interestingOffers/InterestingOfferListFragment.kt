@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.activity.OnBackPressedCallback
@@ -21,8 +22,8 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
 
     private lateinit var rv: RecyclerView
     private lateinit var adapter: InterestingOfferList.InterestingOfferAdapter
-    private lateinit var incomingBtn: ImageButton
-    private lateinit var outcomingBtn : EditText
+    private lateinit var incomingBtn: Button
+    private lateinit var outcomingBtn : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
