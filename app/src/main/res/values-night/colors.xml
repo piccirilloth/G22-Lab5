@@ -12,6 +12,7 @@
     <color name="text1">#FFFFFF</color>
     <color name="text2">#FFFFFF</color>
     <color name="text3">#FFFFFF</color>
+    <color name="timeText">#FFFFFF</color>
 
     <color name="primaryDarkColor">#1976d2</color>
     <color name="primaryColor">#63a4ff</color>
