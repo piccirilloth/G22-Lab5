@@ -46,6 +46,8 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
         adapter = InterestingOfferList.InterestingOfferAdapter(emptyList())
         rv.adapter = adapter
 
+        intOfferVM.observeIncomingRequests()
+
         intOfferVM.interOfferListLD.observe(viewLifecycleOwner) {
             /*
             The first time:

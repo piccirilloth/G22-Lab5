@@ -29,7 +29,7 @@ class InterestingOfferListVM(application: Application) : AndroidViewModel(applic
         val user = Firebase.auth.currentUser
         if(user != null) {
             db.collection("conversations")
-                .whereEqualTo("receiver", user.uid)
+                .whereEqualTo("receiverUid", user.uid)
                 .addSnapshotListener { value, error ->
                     if (error != null) {
                         Log.d("error", "firebase failure")
