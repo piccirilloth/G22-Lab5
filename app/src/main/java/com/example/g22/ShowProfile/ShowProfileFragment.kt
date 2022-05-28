@@ -35,6 +35,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
     private lateinit var descriptionTV: TextView
     private lateinit var toolbar: Toolbar
     private lateinit var creditTV: TextView
+    private lateinit var showReviewsButton: ImageButton
 
     // Others
     private lateinit var navController: NavController
@@ -57,6 +58,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
         descriptionTV = requireActivity().findViewById(R.id.show_profile_description_textview)
         toolbar = requireActivity().findViewById(R.id.toolbar)
         creditTV = requireActivity().findViewById(R.id.show_profile_credit_textview)
+        showReviewsButton = requireActivity().findViewById(R.id.show_profile_show_reviews_button)
 
         setScrollableImage()
 
@@ -86,6 +88,10 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
                 Snackbar.make(requireView(), it, Snackbar.LENGTH_LONG).show()
                 profileVM.snackbarMessageLD.value = ""
             }
+        }
+
+        showReviewsButton.setOnClickListener{
+            navController.navigate(R.id.action_nav_show_profile_to_userReviewsListFragment4)
         }
     }
 
