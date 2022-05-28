@@ -99,11 +99,13 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
                 adapter.updateList(it)
                 intOfferVM.isStatusChanged.value = false
             }
-            else if(it.size > adapter.itemCount) {
-                if(adapter.itemCount == 0)
-                    adapter.updateList(it)
-                else
-                    adapter.addConversation(it.last())
+            else {
+                if (it.size > adapter.itemCount) {
+                    if (adapter.itemCount == 0)
+                        adapter.updateList(it)
+                    else
+                        adapter.addConversation(it.last())
+                }
             }
         }
     }

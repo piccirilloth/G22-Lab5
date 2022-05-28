@@ -52,54 +52,15 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                 }
 
             }
-        val user = Firebase.auth.currentUser
-        if(user != null && messageListLD.value?.size != 0) {
-            db.collection("conversations")
-                .whereEqualTo("offerId", timeSlotId)
-                .whereIn("receiverUid", users)
-                .get().addOnSuccessListener {
-                    if (it != null && !it.isEmpty) {
-                        val result = it.toObjects(Conversation::class.java)
-                        val conversation = result.filter { users.contains(it.requestorUid) }[0]
-                        var convUid = ""
-                        for(doc in it) {
-                            if(doc.get("offerId") == conversation.offerId && doc.get("receiverUid") == conversation.receiverUid
-                                && doc.get("requestorUid") == conversation.receiverUid) {
-                                convUid = doc.id
-                            }
-                        }
-                        db.collection("conversations").document(convUid).update("notRedMessages", 0)
-                    }
-                }
-        }
     }
 
     fun createMessage(receiver: String, timeSlotId: String, message: String, offerTitle: String, receiverName: String) {
         val user = Firebase.auth.currentUser
-        if(user != null && messageListLD.value?.size != 0) {
-            db.collection("conversations")
-                .whereEqualTo("offerId", timeSlotId)
-                .whereIn("receiverUid", listOf(user.uid, receiver))
-                .get().addOnSuccessListener {
-                    if (it != null && !it.isEmpty) {
-                        val result = it.toObjects(Conversation::class.java)
-                        val conversation = result.filter { listOf<String>(user.uid, receiver).contains(it.requestorUid) }[0]
-                        var convUid = ""
-                        for(doc in it) {
-                            if(doc.get("offerId") == conversation.offerId && doc.get("receiverUid") == conversation.receiverUid
-                                && doc.get("requestorUid") == conversation.receiverUid) {
-                                convUid = doc.id
-                            }
-                        }
-                        db.collection("conversations").document(convUid).update("notRedMessages", conversation.notRedMessages+1)
-                    }
-                }
-        }
         db.runTransaction { transaction ->
             if(user != null) {
                 if (messageListLD.value?.size == 0) {
                     val ref = db.collection("conversations").document()
-                    transaction.set(ref, Conversation(timeSlotId, user.uid, receiver, offerTitle, user.displayName.toString(), receiverName, 1))
+                    transaction.set(ref, Conversation(timeSlotId, user.uid, receiver, offerTitle, user.displayName.toString(), receiverName))
                 }
                 val ref = db.collection("chats").document()
                 transaction.set(ref, Message(timeSlotId, receiver, "${Firebase.auth.currentUser!!.uid}",

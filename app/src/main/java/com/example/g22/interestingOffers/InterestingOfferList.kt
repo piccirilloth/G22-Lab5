@@ -27,7 +27,7 @@ class InterestingOfferList {
             fun bind(item: Conversation, onCardViewClickCallback: (Int) -> Unit) {
                 titleTV.text = item.offerTitle
                 fullnameTV.text = item.requestorName
-                notChip.text = item.notRedMessages.toString()
+                // notChip.text
                 cardView.setOnClickListener { onCardViewClickCallback(bindingAdapterPosition) }
             }
 
