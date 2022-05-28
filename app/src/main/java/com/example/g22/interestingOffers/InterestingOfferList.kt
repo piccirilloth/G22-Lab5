@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -12,19 +13,21 @@ import com.example.g22.R
 import com.example.g22.SkillsList.SkillsListFragmentDirections
 import com.example.g22.model.Conversation
 import com.google.android.material.chip.Chip
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class InterestingOfferList {
     class InterestingOfferAdapter(private var data: List<Conversation>): RecyclerView.Adapter<InterestingOfferAdapter.InterestingOfferViewHolder>() {
         class InterestingOfferViewHolder(v: View): RecyclerView.ViewHolder(v) {
             private val cardView: CardView = v.findViewById(R.id.interesting_offer_list_item_card)
-            private val titleTV : TextView = v.findViewById(R.id.interesting_offer_list_item_fullname_text_view)
+            private val titleTV : TextView = v.findViewById(R.id.interesting_offer_list_item_offerTitle_text_view)
             private val fullnameTV: TextView = v.findViewById(R.id.interesting_offer_list_item_fullname_text_view)
             private val notChip: Chip = v.findViewById(R.id.interesting_offers_list_item_count_notification_chip)
 
             fun bind(item: Conversation, onCardViewClickCallback: (Int) -> Unit) {
                 titleTV.text = item.offerTitle
                 fullnameTV.text = item.requestorName
-                // notChip.text = item.notificationCount.toString()
+                notChip.text = item.notRedMessages.toString()
                 cardView.setOnClickListener { onCardViewClickCallback(bindingAdapterPosition) }
             }
 
@@ -72,10 +75,17 @@ class InterestingOfferList {
          */
         private fun showChat(adapterPos: Int) {
             //TODO: show chat
+            val currentUser = Firebase.auth.currentUser
+            var receiver = ""
+            if(currentUser != null)
+                receiver = if(currentUser.uid == data[adapterPos].receiverUid)
+                    data[adapterPos].requestorUid
+                else
+                    data[adapterPos].receiverUid
             navController.navigate(
                 InterestingOfferListFragmentDirections
                     .actionNavInterestingOffersToChatFragment(
-                        receiver = data[adapterPos].requestorUid,
+                        receiver = receiver,
                         offerId = data[adapterPos].offerId,
                         offerTitle = data[adapterPos].offerTitle,
                         receiverName = data[adapterPos].requestorName

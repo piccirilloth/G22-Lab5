@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,13 +41,47 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
         rv = requireActivity().findViewById(R.id.interesting_offer_list_rv)
         incomingBtn = requireActivity().findViewById(R.id.interesting_offer_list_incoming_button)
         outcomingBtn = requireActivity().findViewById(R.id.interesting_offer_list_outcoming_button)
+        val toolbar: Toolbar = requireActivity().findViewById(R.id.toolbar)
 
         // Recycler View configuration
         rv.layoutManager = LinearLayoutManager(requireActivity())
         adapter = InterestingOfferList.InterestingOfferAdapter(emptyList())
         rv.adapter = adapter
 
-        intOfferVM.observeIncomingRequests()
+        intOfferVM.isIncoming.observe(viewLifecycleOwner) {
+            if(it == true) {
+                toolbar.title = "Incoming"
+                incomingBtn.setBackgroundColor(resources.getColor(R.color.primaryDarkColor))
+                outcomingBtn.setBackgroundColor(resources.getColor(R.color.primaryColor))
+            } else {
+                toolbar.title = "Outcoming"
+                outcomingBtn.setBackgroundColor(resources.getColor(R.color.primaryDarkColor))
+                incomingBtn.setBackgroundColor(resources.getColor(R.color.primaryColor))
+            }
+            intOfferVM.observeRequests(it)
+        }
+
+        incomingBtn.setOnClickListener {
+            if(intOfferVM.isIncoming.value == false) {
+                toolbar.title = "Incoming"
+                intOfferVM.isStatusChanged.value = true
+                outcomingBtn.setBackgroundColor(resources.getColor(R.color.primaryColor))
+                incomingBtn.setBackgroundColor(resources.getColor(R.color.primaryDarkColor))
+                intOfferVM.observeRequests(true)
+                intOfferVM.isIncoming.value = true
+            }
+        }
+
+        outcomingBtn.setOnClickListener {
+            if(intOfferVM.isIncoming.value == true) {
+                toolbar.title = "Outcoming"
+                intOfferVM.isStatusChanged.value = true
+                intOfferVM.isIncoming.value = false
+                incomingBtn.setBackgroundColor(resources.getColor(R.color.primaryColor))
+                outcomingBtn.setBackgroundColor(resources.getColor(R.color.primaryDarkColor))
+                intOfferVM.observeRequests(false)
+            }
+        }
 
         intOfferVM.interOfferListLD.observe(viewLifecycleOwner) {
             /*
@@ -60,7 +95,11 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
                 - addMessage triggered with livedata last element
             This is the motivation behind the if
              */
-            if(it.size > adapter.itemCount) {
+            if(intOfferVM.isStatusChanged.value == true) {
+                adapter.updateList(it)
+                intOfferVM.isStatusChanged.value = false
+            }
+            else if(it.size > adapter.itemCount) {
                 if(adapter.itemCount == 0)
                     adapter.updateList(it)
                 else

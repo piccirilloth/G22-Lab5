@@ -18,18 +18,22 @@ class InterestingOfferListVM(application: Application) : AndroidViewModel(applic
 
     private var intListListenerRegistration: ListenerRegistration? = null
 
+    var isStatusChanged: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+    var isIncoming: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+
     private val _interOfferListLD: MutableLiveData<List<Conversation>> = MutableLiveData<List<Conversation>>().also {
         it.value = emptyList()
     }
 
     val interOfferListLD: LiveData<List<Conversation>> = _interOfferListLD
 
-    fun observeIncomingRequests() {
+    fun observeRequests(isIncoming: Boolean) {
+        val uid = if(isIncoming) "receiverUid" else "requestorUid"
         intListListenerRegistration?.remove()
         val user = Firebase.auth.currentUser
         if(user != null) {
             db.collection("conversations")
-                .whereEqualTo("receiverUid", user.uid)
+                .whereEqualTo(uid, user.uid)
                 .addSnapshotListener { value, error ->
                     if (error != null) {
                         Log.d("error", "firebase failure")
