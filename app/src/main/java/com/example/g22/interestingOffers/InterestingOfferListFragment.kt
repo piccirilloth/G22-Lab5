@@ -105,7 +105,8 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
                         adapter.updateList(it)
                     else
                         adapter.addConversation(it.last())
-                }
+                } else
+                    adapter.updateList(it)
             }
         }
     }
