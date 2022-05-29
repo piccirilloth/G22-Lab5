@@ -18,11 +18,13 @@ class ReviewAdapter(private var data: List<Review>): RecyclerView.Adapter<Review
         private val reviewerName : TextView = v.findViewById(R.id.reviewer_name)
         private val reviewDescription : TextView = v.findViewById(R.id.review_comment)
         private val ratingBar : RatingBar = v.findViewById(R.id.ratingBar)
+        private val skill : TextView = v.findViewById(R.id.skill)
 
-        fun bind(reviewer: String, description: String, rating: String) {
+        fun bind(reviewer: String, description: String, rating: String, skill: String) {
             reviewerName.text = reviewer
             reviewDescription.text = description
             ratingBar.rating = rating.toFloat()
+            this.skill.text = skill
         }
 
         fun unbind() {
@@ -42,7 +44,7 @@ class ReviewAdapter(private var data: List<Review>): RecyclerView.Adapter<Review
     override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         val item = data[position]
 
-        holder.bind(item.reviewer, item.description, item.rating)
+        holder.bind(item.reviewer, item.description, item.rating, item.skill)
     }
 
     override fun getItemCount(): Int = data.size
@@ -50,5 +52,10 @@ class ReviewAdapter(private var data: List<Review>): RecyclerView.Adapter<Review
     override fun onViewRecycled(holder: ReviewViewHolder) {
         super.onViewRecycled(holder)
         holder.unbind()
+    }
+
+    fun updateList(reviewList: List<Review>) {
+        data = reviewList
+        notifyDataSetChanged()
     }
 }

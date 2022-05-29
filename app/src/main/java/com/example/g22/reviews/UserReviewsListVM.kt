@@ -1,6 +1,8 @@
 package com.example.g22.reviews
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.g22.model.Review
@@ -10,7 +12,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.ktx.Firebase
 import java.util.*
 
-class UserReviewsListVM {
+class UserReviewsListVM(application: Application) : AndroidViewModel(application) {
     private val db = FirebaseFirestore.getInstance()
 
     private var reviewsListListenerRegistration: ListenerRegistration? = null
@@ -26,14 +28,14 @@ class UserReviewsListVM {
         val reviewee = "${Firebase.auth.currentUser!!.uid}"
         reviewsListListenerRegistration?.remove()
         db.collection("reviews")
-            .whereEqualTo("reviewee", reviewee)
+            //.whereEqualTo("reviewee", reviewee)
             .addSnapshotListener { value, error ->
                 if(error != null) {
                     Log.d("error", "firebase failure")
                     return@addSnapshotListener
                 }
                 if(value != null && !value.isEmpty) {
-                    _reviewsListLD.value = value.toObjects<Review?>(Review.class.java)
+                    _reviewsListLD.value = value.toObjects<Review?>(Review::class.java)
                         .sortedBy { it.date.toString() }
                 } else {
                     _reviewsListLD.value = emptyList()
@@ -41,10 +43,10 @@ class UserReviewsListVM {
             }
     }
 
-    fun createReview(reviewee: String, rating: String, description: String){
+    fun createReview(reviewee: String, rating: String, description: String, skill: String){
         db.collection("reviews")
             .document()
             .set(Review("${Firebase.auth.currentUser!!.uid}", reviewee, rating,
-                description, Date(System.currentTimeMillis())))
+                description, skill, Date(System.currentTimeMillis())))
     }
 }

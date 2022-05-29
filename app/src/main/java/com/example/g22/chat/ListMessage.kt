@@ -81,4 +81,5 @@ class MessageAdapter(private var data: List<Message>): RecyclerView.Adapter<Mess
         notifyItemInserted(itemCount)
     }
 
+
 }
