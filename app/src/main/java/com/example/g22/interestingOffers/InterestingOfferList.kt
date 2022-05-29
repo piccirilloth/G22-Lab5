@@ -26,8 +26,8 @@ class InterestingOfferList {
 
             fun bind(item: Conversation, onCardViewClickCallback: (Int) -> Unit) {
                 titleTV.text = item.offerTitle
-                fullnameTV.text = item.requestorName
-                // notChip.text
+                fullnameTV.text = if(item.requestorUid == Firebase.auth.currentUser!!.uid) item.receiverName else item.requestorName
+                notChip.text = if(item.requestorUid == Firebase.auth.currentUser!!.uid) item.requestorUnseen.toString() else item.receiverUnseen.toString()
                 cardView.setOnClickListener { onCardViewClickCallback(bindingAdapterPosition) }
             }
 

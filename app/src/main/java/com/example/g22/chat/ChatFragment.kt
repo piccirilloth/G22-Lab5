@@ -83,7 +83,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             }
         }
 
-
+        messageListVM.conversationId.observe(viewLifecycleOwner) {
+            if(messageListVM.conversationId.value!! != "")
+                messageListVM.resetNotifications()
+        }
 
         sendBtn.setOnClickListener{
             if(messageEditText.text.toString() != "") {

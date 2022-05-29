@@ -7,6 +7,8 @@ data class Conversation(
     val offerTitle: String,
     val requestorName: String,
     val receiverName: String,
+    val receiverUnseen: Int,
+    val requestorUnseen: Int
 ) {
     constructor(): this(
         "",
@@ -15,5 +17,7 @@ data class Conversation(
         "",
         "",
         "",
+        0,
+        0
     )
 }

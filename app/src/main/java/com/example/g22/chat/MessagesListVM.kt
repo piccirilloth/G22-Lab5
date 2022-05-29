@@ -29,6 +29,8 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
 
     val messageListLD: LiveData<List<Message>> = _messageListLD
 
+    var conversationId: MutableLiveData<String> = MutableLiveData<String>("")
+
     fun observeMessages(receiver: String, timeSlotId: String) {
         val users = listOf<String>("${Firebase.auth.currentUser!!.uid}", receiver)
         msgListListenerRegistration?.remove()
@@ -45,6 +47,7 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                     val result = value.toObjects(Message::class.java).filter {
                         users.contains(it.receiver)
                     }
+                    conversationId.value = result[0].conversationId
                     _messageListLD.value = result.sortedBy { it.time.toString() }
                 }
                 else {
@@ -54,19 +57,45 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
             }
     }
 
+    fun resetNotifications() {
+        db.runTransaction { transaction ->
+            val convRef = db.collection("conversations").document(conversationId.value!!)
+            val requestorUid = transaction.get(convRef).get("requestorUid")
+            transaction.update(convRef, if(requestorUid == Firebase.auth.currentUser!!.uid) "requestorUnseen" else "receiverUnseen", 0)
+        }
+    }
+
     fun createMessage(receiver: String, timeSlotId: String, message: String, offerTitle: String, receiverName: String) {
         val user = Firebase.auth.currentUser
+        val ref = db.collection("conversations").document()
         db.runTransaction { transaction ->
+            var requestorUid = ""
+            var oldReceiverUnseen = 0
+            var oldRequestorUnseen = 0
             if(user != null) {
-                if (messageListLD.value?.size == 0) {
-                    val ref = db.collection("conversations").document()
-                    transaction.set(ref, Conversation(timeSlotId, user.uid, receiver, offerTitle, user.displayName.toString(), receiverName))
+                if(conversationId.value!! != "") {
+                    val updateNotRef = db.collection("conversations").document(conversationId.value!!)
+                    val queryResult = transaction.get(updateNotRef)
+                    requestorUid = queryResult.get("requestorUid").toString()
+                    oldReceiverUnseen = queryResult.get("receiverUnseen").toString().toInt()
+                    oldRequestorUnseen = queryResult.get("requestorUnseen").toString().toInt()
                 }
-                val ref = db.collection("chats").document()
-                transaction.set(ref, Message(timeSlotId, receiver, "${Firebase.auth.currentUser!!.uid}",
-                    message, Date(System.currentTimeMillis())))
+                val chatRef = db.collection("chats").document()
+                transaction.set(chatRef, Message(timeSlotId, receiver, "${Firebase.auth.currentUser!!.uid}",
+                    message, Date(System.currentTimeMillis()), if(conversationId.value!! == "") ref.id else conversationId.value!!))
+                if (messageListLD.value?.size == 0) {
+                    transaction.set(ref, Conversation(timeSlotId, user.uid, receiver, offerTitle, user.displayName.toString(), receiverName, 1, 0))
+                } else {
+                    val updateNotRef = db.collection("conversations").document(conversationId.value!!)
+                    val userToNotify = if(receiver == requestorUid) "requestorUnseen" else "receiverUnseen"
+                    transaction.update(updateNotRef, userToNotify, if(userToNotify == "requestorUnseen") oldRequestorUnseen+1 else oldReceiverUnseen+1)
+                }
             }
+        }.addOnSuccessListener {
+            if(conversationId.value!! == "")
+                conversationId.value = ref.id
         }
+
     }
 
     fun clearList() {
