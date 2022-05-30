@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.g22.model.Conversation
 import com.example.g22.model.Message
+import com.example.g22.model.Status
 import com.example.g22.model.TimeSlot
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
@@ -85,7 +86,7 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                 transaction.set(chatRef, Message(timeSlotId, receiver, "${Firebase.auth.currentUser!!.uid}",
                     message, Timestamp.now().toDate(), if(conversationId.value!! == "") ref.id else conversationId.value!!))
                 if (messageListLD.value?.size == 0) {
-                    transaction.set(ref, Conversation(timeSlotId, user.uid, receiver, offerTitle, user.displayName.toString(), receiverName, 1, 0))
+                    transaction.set(ref, Conversation(timeSlotId, user.uid, receiver, offerTitle, user.displayName.toString(), receiverName, 1, 0, Status.PENDING))
                 } else {
                     val updateNotRef = db.collection("conversations").document(conversationId.value!!)
                     val userToNotify = if(receiver == requestorUid) "requestorUnseen" else "receiverUnseen"
@@ -101,5 +102,13 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
 
     fun clearList() {
         _messageListLD.value = emptyList()
+    }
+
+    fun confirmRequest() {
+        db.collection("conversations").document(conversationId.value!!)
+            .update("status", Status.CONFIRMED)
+            .addOnSuccessListener {
+
+            }
     }
 }

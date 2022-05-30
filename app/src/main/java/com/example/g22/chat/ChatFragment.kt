@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.activity.OnBackPressedCallback
@@ -31,6 +32,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var adapter: MessageAdapter
     private lateinit var sendBtn: ImageButton
     private lateinit var messageEditText : EditText
+    private lateinit var acceptBtn: Button
+    private lateinit var rejectBtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +50,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         rv = requireActivity().findViewById(R.id.chat_fragment_rv)
         sendBtn = requireActivity().findViewById(R.id.chat_fragment_message_send_img_button)
         messageEditText = requireActivity().findViewById(R.id.chat_fragment_message_edit_text)
+        acceptBtn = requireActivity().findViewById(R.id.chat_fragment_accept_button)
+        rejectBtn = requireActivity().findViewById(R.id.chat_fragment_reject_button)
+
+        acceptBtn.setOnClickListener {
+            messageListVM.confirmRequest()
+        }
 
         // Recycler View configuration
         rv.layoutManager = LinearLayoutManager(requireActivity())
