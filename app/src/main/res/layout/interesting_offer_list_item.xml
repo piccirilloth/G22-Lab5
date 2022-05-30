@@ -25,6 +25,7 @@
                 android:id="@+id/interesting_offer_list_item_offerTitle_text_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:paddingLeft="12dp"

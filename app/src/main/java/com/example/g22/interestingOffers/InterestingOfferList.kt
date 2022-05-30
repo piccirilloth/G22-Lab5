@@ -8,6 +8,7 @@ import androidx.cardview.widget.CardView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.g22.R
 import com.example.g22.SkillsList.SkillsListFragmentDirections
@@ -60,9 +61,10 @@ class InterestingOfferList {
         }
 
         fun updateList(interOfferList: List<Conversation>) {
-            data = interOfferList
             // TODO: provide a way to handle list modifications better
-            notifyDataSetChanged()
+            val diffs = DiffUtil.calculateDiff(ConversationListCallback(data, interOfferList))
+            data = interOfferList
+            diffs.dispatchUpdatesTo(this)
         }
 
         fun addConversation(c: Conversation) {
@@ -73,6 +75,34 @@ class InterestingOfferList {
         /**
          * Utilities
          */
+
+        class ConversationListCallback(
+            private val oldList: List<Conversation>,
+            private val newList: List<Conversation>
+        ): DiffUtil.Callback() {
+            override fun getOldListSize(): Int = oldList.size
+
+            override fun getNewListSize(): Int = newList.size
+
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return oldList[oldItemPosition].offerId == newList[newItemPosition].offerId
+                        && oldList[oldItemPosition].requestorUid == newList[newItemPosition].requestorUid
+                        && oldList[oldItemPosition].receiverUid == newList[newItemPosition].receiverUid
+            }
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                val isRequestor = oldList[oldItemPosition].receiverUid == Firebase.auth.currentUser!!.uid
+                val oldName = if(isRequestor) oldList[oldItemPosition].receiverName else oldList[oldItemPosition].requestorName
+                val newName = if(isRequestor) newList[newItemPosition].receiverName else newList[newItemPosition].requestorName
+                val oldNot = if(isRequestor) oldList[oldItemPosition].receiverUnseen else oldList[oldItemPosition].requestorUnseen
+                val newNot = if(isRequestor) newList[newItemPosition].receiverUnseen else newList[newItemPosition].requestorUnseen
+                return oldList[oldItemPosition].offerTitle == newList[newItemPosition].offerTitle
+                        && oldName == newName
+                        && oldNot == newNot
+
+            }
+        }
+
         private fun showChat(adapterPos: Int) {
             //TODO: show chat
             val currentUser = Firebase.auth.currentUser

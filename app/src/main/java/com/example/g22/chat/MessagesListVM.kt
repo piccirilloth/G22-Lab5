@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.g22.model.Conversation
 import com.example.g22.model.Message
 import com.example.g22.model.TimeSlot
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -82,7 +83,7 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                 }
                 val chatRef = db.collection("chats").document()
                 transaction.set(chatRef, Message(timeSlotId, receiver, "${Firebase.auth.currentUser!!.uid}",
-                    message, Date(System.currentTimeMillis()), if(conversationId.value!! == "") ref.id else conversationId.value!!))
+                    message, Timestamp.now().toDate(), if(conversationId.value!! == "") ref.id else conversationId.value!!))
                 if (messageListLD.value?.size == 0) {
                     transaction.set(ref, Conversation(timeSlotId, user.uid, receiver, offerTitle, user.displayName.toString(), receiverName, 1, 0))
                 } else {

@@ -95,7 +95,7 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
                 - addMessage triggered with livedata last element
             This is the motivation behind the if
              */
-            if(intOfferVM.isStatusChanged.value == true) {
+            /*if(intOfferVM.isStatusChanged.value == true) {
                 adapter.updateList(it)
                 intOfferVM.isStatusChanged.value = false
             }
@@ -107,7 +107,8 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
                         adapter.addConversation(it.last())
                 } else
                     adapter.updateList(it)
-            }
+            }*/
+            adapter.updateList(it)
         }
     }
 
