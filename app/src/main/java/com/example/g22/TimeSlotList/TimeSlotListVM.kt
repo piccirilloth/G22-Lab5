@@ -107,8 +107,7 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
     fun observeSkillOffers(skill: String) {
         tsListListenerRegistration?.remove()
         tsListListenerRegistration = db.collection("offers")
-            .whereArrayContains("skills", skill)
-            .whereEqualTo("valid", true)
+            .whereArrayContains("skills", skill) // TODO: check if the offer has been accepted
             .addSnapshotListener { value, error ->
                 if (error != null) {
                     Log.d("error", "firebase failure")

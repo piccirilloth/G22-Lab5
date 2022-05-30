@@ -13,11 +13,11 @@ data class TimeSlot (
     var location: String,
     var owner: String,
     var skills: List<String>,
-    var isAccepted: Boolean
+    var accepted: Boolean
         ) {
 
-    constructor(title: String, description: String, date: Date, duration: Duration, location:String, owner: String, skills: List<String>, valid: Boolean)
-    : this("", title, description, date, duration, location, owner, skills, valid)
+    constructor(title: String, description: String, date: Date, duration: Duration, location:String, owner: String, skills: List<String>, accepted: Boolean)
+    : this("", title, description, date, duration, location, owner, skills, accepted)
 
     constructor() : this("", "", "", Date(), Duration(0), "", "", emptyList(), false)
 
