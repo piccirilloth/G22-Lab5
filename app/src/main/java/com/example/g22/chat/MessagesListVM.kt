@@ -107,7 +107,7 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
 
     fun confirmRequest() {
         db.runTransaction { transaction ->
-            val convRef = db.collection("conversation").document(conversationId.value!!)
+            val convRef = db.collection("conversations").document(conversationId.value!!)
             val convResult = transaction.get(convRef)
             val requestorUid: String = convResult.getString("requestorUid")?: return@runTransaction
             val receiverUid: String = convResult.getString("receiverUid")?: return@runTransaction
