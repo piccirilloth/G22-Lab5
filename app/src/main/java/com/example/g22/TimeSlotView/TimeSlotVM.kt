@@ -6,13 +6,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.g22.model.TimeSlot
-import com.example.g22.model.AppRepository
-import com.example.g22.model.Profile
 import com.example.g22.utils.Duration
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.ktx.Firebase
 import java.util.*
 
 class TimeSlotVM(application: Application): AndroidViewModel(application) {

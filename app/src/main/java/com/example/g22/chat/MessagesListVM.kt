@@ -10,6 +10,7 @@ import com.example.g22.model.Conversation
 import com.example.g22.model.Message
 import com.example.g22.model.Status
 import com.example.g22.model.TimeSlot
+import com.example.g22.utils.Duration
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -105,10 +106,30 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
     }
 
     fun confirmRequest() {
-        db.collection("conversations").document(conversationId.value!!)
-            .update("status", Status.CONFIRMED)
-            .addOnSuccessListener {
+        db.runTransaction { transaction ->
+            val convRef = db.collection("conversation").document(conversationId.value!!)
+            val convResult = transaction.get(convRef)
+            val requestorUid: String = convResult.getString("requestorUid")?: return@runTransaction
+            val receiverUid: String = convResult.getString("receiverUid")?: return@runTransaction
+            val offerId: String = convResult.getString("offerId")?: return@runTransaction
 
+            val requestorRef = db.collection("users").document(requestorUid)
+            val creditReq: Int = transaction.get(requestorRef).get("credit").toString().toInt()
+
+            val receiverRef = db.collection("users").document(receiverUid)
+            val creditRec: Int = transaction.get(receiverRef).get("credit").toString().toInt()
+
+            val offerRef = db.collection("offers").document(offerId)
+            val offerDuration = transaction.get(offerRef).get("duration", Duration::class.java)?.minutes?: return@runTransaction
+            if(creditReq >= offerDuration) {
+                // the user has enough credits
+                transaction.update(requestorRef, "credit", creditReq - offerDuration)
+                transaction.update(convRef, "status", Status.CONFIRMED)
+                transaction.update(offerRef, "isAccepted", true)
+                transaction.update(receiverRef, "credit", creditRec + offerDuration)
             }
+
+        }
+
     }
 }
