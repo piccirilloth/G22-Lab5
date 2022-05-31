@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -21,6 +23,8 @@ import com.example.g22.TimeSlotList.TimeSlotListFragmentArgs
 import com.example.g22.TimeSlotList.TimeSlotListVM
 import com.example.g22.model.Message
 import com.example.g22.toAdvertisementList
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
     private val messageListVM by activityViewModels<MessagesListVM>()
@@ -31,6 +35,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var adapter: MessageAdapter
     private lateinit var sendBtn: ImageButton
     private lateinit var messageEditText : EditText
+    private lateinit var acceptBtn: Button
+    private lateinit var rejectBtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,16 +53,28 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         rv = requireActivity().findViewById(R.id.chat_fragment_rv)
         sendBtn = requireActivity().findViewById(R.id.chat_fragment_message_send_img_button)
         messageEditText = requireActivity().findViewById(R.id.chat_fragment_message_edit_text)
+        acceptBtn = requireActivity().findViewById(R.id.chat_fragment_accept_button)
+        rejectBtn = requireActivity().findViewById(R.id.chat_fragment_reject_button)
+
+        acceptBtn.setOnClickListener {
+            messageListVM.confirmRequest()
+        }
 
         // Recycler View configuration
         rv.layoutManager = LinearLayoutManager(requireActivity())
         adapter = MessageAdapter(emptyList())
         rv.adapter = adapter
 
+        val toolbar: Toolbar = requireActivity().findViewById(R.id.toolbar)
+        toolbar.title = "Offer's chat" //TODO: enhance the name of the toolbar
+
         rv.addOnLayoutChangeListener { view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             if(adapter.itemCount > 0 && oldBottom < bottom)
                 rv.smoothScrollToPosition(adapter.itemCount - 1)
         }
+
+        messageListVM.observeMessages(navArguments.receiver, navArguments.offerId)
+        // Observe any change of the chat
 
         messageListVM.messageListLD.observe(viewLifecycleOwner) {
             /*
@@ -80,15 +98,19 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             }
         }
 
-        messageListVM.observeMessages(navArguments.receiver, navArguments.offerId)
-        // Observe any change of the chat
+        messageListVM.conversationId.observe(viewLifecycleOwner) {
+            if(messageListVM.conversationId.value!! != "")
+                messageListVM.resetNotifications()
+        }
 
         sendBtn.setOnClickListener{
             if(messageEditText.text.toString() != "") {
                 messageListVM.createMessage(
                     navArguments.receiver,
                     navArguments.offerId,
-                    messageEditText.text.toString()
+                    messageEditText.text.toString(),
+                    navArguments.offerTitle,
+                    navArguments.receiverName
                 )
                 messageEditText.text.clear()
             }

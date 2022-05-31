@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navHeaderGoogleLoginButton: SignInButton
     private lateinit var myOffersItem: MenuItem
     private lateinit var profileItem: MenuItem
+    private lateinit var intOffersItem: MenuItem
 
     lateinit var oneTapClient: SignInClient
     lateinit var signInRequest: BeginSignInRequest
@@ -93,6 +94,7 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
         myOffersItem = navView.menu.findItem(R.id.nav_timeslot_list_my_offers)
         profileItem = navView.menu.findItem(R.id.nav_show_profile)
+        intOffersItem = navView.menu.findItem(R.id.nav_interesting_offers)
 
         // Set the navigation drawer header
         val navHeader: View = navView.getHeaderView(0)
@@ -121,7 +123,8 @@ class MainActivity : AppCompatActivity() {
             setOf(
                 R.id.nav_timeslot_list_my_offers,
                 R.id.nav_show_profile,
-                R.id.nav_skills_list
+                R.id.nav_skills_list,
+                R.id.nav_interesting_offers
             ), drawerLayout
         )
 
@@ -135,6 +138,7 @@ class MainActivity : AppCompatActivity() {
             if (it.currentUser == null) {
                 myOffersItem.isEnabled = false
                 profileItem.isEnabled = false
+                intOffersItem.isEnabled = false
 
                 navHeaderProfilePic.visibility = View.GONE
                 navHeaderProfileName.visibility = View.GONE
@@ -144,14 +148,16 @@ class MainActivity : AppCompatActivity() {
                 navHeaderGoogleLoginButton.visibility = View.VISIBLE
                 if (navController.currentDestination?.id == R.id.nav_timeslot_list_my_offers ||
                     navController.currentDestination?.id == R.id.nav_timeslot_edit ||
-                    navController.currentDestination?.id == R.id.nav_timeslot_show_my_offers
+                    navController.currentDestination?.id == R.id.nav_timeslot_show_my_offers ||
+                    navController.currentDestination?.id == R.id.nav_interesting_offers
                 ) {
-                    if (navController.currentDestination?.id != R.id.nav_skills_list)
-                        navController.navigate(R.id.nav_to_home)
+                    // if (navController.currentDestination?.id != R.id.nav_skills_list)
+                    navController.navigate(R.id.nav_to_home)
                 }
             } else {
                 myOffersItem.isEnabled = true
                 profileItem.isEnabled = true
+                intOffersItem.isEnabled = true
 
                 navHeaderProfilePic.visibility = View.VISIBLE
                 navHeaderProfileName.visibility = View.VISIBLE

@@ -7,13 +7,15 @@ data class Message(
     var receiver: String,
     var sender: String,
     var text: String,
-    var time: Date
+    var time: Date,
+    var conversationId: String
 ) {
     constructor(): this(
         "",
         "",
         "",
         "",
-        Date()
+        Date(),
+    ""
     )
 }
