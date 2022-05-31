@@ -5,6 +5,7 @@ import java.util.Date
 data class Review (
     var reviewer : String,
     var reviewee : String,
+    var revieweeId : String,
     var rating : String,
     var description : String,
     var skill : String,
@@ -14,6 +15,7 @@ data class Review (
         "",
         "",
         "" ,
+        "",
         "",
         "",
         Date()

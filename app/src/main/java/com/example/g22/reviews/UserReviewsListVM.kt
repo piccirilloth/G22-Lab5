@@ -22,13 +22,17 @@ class UserReviewsListVM(application: Application) : AndroidViewModel(application
             it.value = emptyList()
         }
 
-    val reviewListLD: LiveData<List<Review>> = _reviewsListLD
+    private val _numReviewsLD : MutableLiveData<Int> = MutableLiveData<Int>(0)
+    private val _avgScoreLD : MutableLiveData<Float> = MutableLiveData<Float>("0.0".toFloat())
 
-    fun observeReviews() {
-        val reviewee = "${Firebase.auth.currentUser!!.uid}"
+    val reviewListLD: LiveData<List<Review>> = _reviewsListLD
+    val numReviewsLD : LiveData<Int> = _numReviewsLD
+    val avgScoreLD : LiveData<Float> = _avgScoreLD
+
+    fun observeReviews(revieweeId: String) {
         reviewsListListenerRegistration?.remove()
         db.collection("reviews")
-            //.whereEqualTo("reviewee", reviewee)
+            .whereEqualTo("revieweeId", revieweeId)
             .addSnapshotListener { value, error ->
                 if(error != null) {
                     Log.d("error", "firebase failure")
@@ -37,8 +41,12 @@ class UserReviewsListVM(application: Application) : AndroidViewModel(application
                 if(value != null && !value.isEmpty) {
                     _reviewsListLD.value = value.toObjects<Review?>(Review::class.java)
                         .sortedBy { it.date.toString() }
+                    _numReviewsLD.value = _reviewsListLD.value!!.size
+                    _avgScoreLD.value = _reviewsListLD.value!!.map { it -> it.rating.toFloat() }.average().toFloat()
                 } else {
                     _reviewsListLD.value = emptyList()
+                    _numReviewsLD.value = 0
+                    _avgScoreLD.value = "0.0".toFloat()
                 }
             }
     }
@@ -46,11 +54,36 @@ class UserReviewsListVM(application: Application) : AndroidViewModel(application
     fun createReview(reviewee: String, rating: String, description: String, skill: String){
         db.collection("reviews")
             .document()
-            .set(Review("${Firebase.auth.currentUser!!.uid}", reviewee, rating,
+            .set(Review("${Firebase.auth.currentUser!!.uid}", reviewee, "abc", rating,
                 description, skill, Date(System.currentTimeMillis())))
     }
 
-    fun numReviewsPerUSer() {
-        //TODO
-    }
+    /*fun numReviews(userId : String) {
+
+        db.collection("reviews")
+            .whereEqualTo("revieweeId", userId)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.d("error", "firebase failure")
+                    return@addSnapshotListener
+                }
+                if (value != null && !value.isEmpty) {
+                    _numReviewsLD.value = value.size()
+                }
+            }
+    }*/
+
+    /*fun avgScore(userId: String) {
+        db.collection("reviews")
+            .whereEqualTo("revieweeId", userId)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.d("error", "firebase failure")
+                    return@addSnapshotListener
+                }
+                if (value != null && !value.isEmpty) {
+
+                }
+            }
+    }*/
 }

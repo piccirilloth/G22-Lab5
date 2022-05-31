@@ -7,6 +7,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -91,7 +92,8 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
         }
 
         showReviewsButton.setOnClickListener{
-            navController.navigate(R.id.action_nav_show_profile_to_userReviewsListFragment)
+            navController.navigate(R.id.action_nav_show_profile_to_userReviewsListFragment,
+                bundleOf("revieweeId" to profileVM.profileLD.value?.id))
         }
     }
 
