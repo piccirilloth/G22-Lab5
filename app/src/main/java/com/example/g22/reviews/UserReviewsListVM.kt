@@ -49,4 +49,8 @@ class UserReviewsListVM(application: Application) : AndroidViewModel(application
             .set(Review("${Firebase.auth.currentUser!!.uid}", reviewee, rating,
                 description, skill, Date(System.currentTimeMillis())))
     }
+
+    fun numReviewsPerUSer() {
+        //TODO
+    }
 }

@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/reviews_number_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -16,15 +16,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <RatingBar
+        android:id="@+id/ratingBar_reviews_list"
+        style="@style/Widget.AppCompat.RatingBar.Indicator"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/reviews_number_tv"
+        app:layout_constraintTop_toBottomOf="@id/reviews_number_tv" />
+
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+        android:id="@+id/avg_score_list_tv"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="4.0/5"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
+        app:layout_constraintStart_toEndOf="@+id/ratingBar_reviews_list"
+        app:layout_constraintTop_toTopOf="@+id/ratingBar_reviews_list"
+        app:layout_constraintBottom_toBottomOf="@id/ratingBar_reviews_list"
+        android:layout_marginStart="6dp"/>
     <View
         android:id="@+id/divider"
         android:layout_width="0dp"
@@ -35,7 +44,7 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/ratingBar_reviews_list" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/user_reviews_rv"

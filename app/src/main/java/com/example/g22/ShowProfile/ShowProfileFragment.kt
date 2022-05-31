@@ -91,7 +91,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
         }
 
         showReviewsButton.setOnClickListener{
-            navController.navigate(R.id.action_nav_show_profile_to_userReviewsListFragment4)
+            navController.navigate(R.id.action_nav_show_profile_to_userReviewsListFragment)
         }
     }
 

@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -15,10 +14,10 @@ import com.example.g22.model.Review
 class ReviewAdapter(private var data: List<Review>): RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
     class ReviewViewHolder(v: View): RecyclerView.ViewHolder(v) {
         //private val cardView: CardView = v.findViewById(R.id.review_item_card)
-        private val reviewerName : TextView = v.findViewById(R.id.reviewer_name)
-        private val reviewDescription : TextView = v.findViewById(R.id.review_comment)
-        private val ratingBar : RatingBar = v.findViewById(R.id.ratingBar)
-        private val skill : TextView = v.findViewById(R.id.skill)
+        private val reviewerName : TextView = v.findViewById(R.id.reviewer_name_review_item)
+        private val reviewDescription : TextView = v.findViewById(R.id.comment_review_item)
+        private val ratingBar : RatingBar = v.findViewById(R.id.ratingBar_review_item)
+        private val skill : TextView = v.findViewById(R.id.skill_review_item)
 
         fun bind(reviewer: String, description: String, rating: String, skill: String) {
             reviewerName.text = reviewer
