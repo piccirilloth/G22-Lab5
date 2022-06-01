@@ -153,10 +153,8 @@ class TimeSlotVM(application: Application): AndroidViewModel(application) {
             }
 
             transaction.set(db.collection("offers").document(tmp.id), tmp)
-
         }
             .addOnSuccessListener {
-                //ToDo snackbar
             }
             .addOnFailureListener {
                 //ToDo snackbar

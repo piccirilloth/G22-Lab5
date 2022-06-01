@@ -41,9 +41,23 @@
             android:id="@+id/chat_fragment_rv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/chat_fragment_message_edit_text"
+            app:layout_constraintBottom_toTopOf="@+id/chat_fragment_reject_message"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/chat_fragment_reject_button" />
+            app:layout_constraintTop_toBottomOf="@id/chat_fragment_reject_button" >
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/chat_fragment_reject_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@id/chat_fragment_message_edit_text"
+            app:layout_constraintTop_toBottomOf="@id/chat_fragment_rv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <EditText
             android:id="@+id/chat_fragment_message_edit_text"

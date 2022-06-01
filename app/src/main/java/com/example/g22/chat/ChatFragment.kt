@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
@@ -22,6 +23,7 @@ import com.example.g22.TimeSlotList.MessageAdapter
 import com.example.g22.TimeSlotList.TimeSlotListFragmentArgs
 import com.example.g22.TimeSlotList.TimeSlotListVM
 import com.example.g22.model.Message
+import com.example.g22.model.Status
 import com.example.g22.toAdvertisementList
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -37,6 +39,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var messageEditText : EditText
     private lateinit var acceptBtn: Button
     private lateinit var rejectBtn: Button
+    private lateinit var rejectMessage: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,15 +58,41 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         messageEditText = requireActivity().findViewById(R.id.chat_fragment_message_edit_text)
         acceptBtn = requireActivity().findViewById(R.id.chat_fragment_accept_button)
         rejectBtn = requireActivity().findViewById(R.id.chat_fragment_reject_button)
+        rejectMessage = requireActivity().findViewById(R.id.chat_fragment_reject_message)
+        rejectMessage.visibility = View.GONE
+        messageListVM.clearList()
+        messageListVM.resetConversationStatus()
+        messageListVM.conversationId.value = ""
+
+        messageListVM.conversationStatusLD.observe(viewLifecycleOwner) {
+            if (it == Status.REJECTED && !messageListVM.messageListLD.value!!.isEmpty()) {
+                rejectMessage.visibility = View.VISIBLE
+                messageEditText.isEnabled = false
+                sendBtn.isEnabled = false
+                if (messageListVM.messageListLD.value!!.first().sender == Firebase.auth.currentUser!!.uid) {
+                    rejectMessage.text = "Your proposal has been rejected."
+                }
+                else {
+                    acceptBtn.visibility = View.GONE
+                    rejectBtn.visibility = View.GONE
+                    rejectMessage.text = "You have rejected user's proposal."
+                }
+            }
+        }
 
         acceptBtn.setOnClickListener {
             messageListVM.confirmRequest()
+        }
+
+        rejectBtn.setOnClickListener {
+            messageListVM.rejectRequest()
         }
 
         // Recycler View configuration
         rv.layoutManager = LinearLayoutManager(requireActivity())
         adapter = MessageAdapter(emptyList())
         rv.adapter = adapter
+
 
         val toolbar: Toolbar = requireActivity().findViewById(R.id.toolbar)
         toolbar.title = "Offer's chat" //TODO: enhance the name of the toolbar
@@ -74,8 +103,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }
 
         messageListVM.observeMessages(navArguments.receiver, navArguments.offerId)
-        // Observe any change of the chat
 
+        // Observe any change of the chat
         messageListVM.messageListLD.observe(viewLifecycleOwner) {
             /*
             The first time:
@@ -96,6 +125,22 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 if(adapter.itemCount > 0)
                     rv.smoothScrollToPosition(adapter.itemCount - 1)
             }
+            if (it.size > 0 && messageListVM.conversationStatusLD.value == null) {
+                messageListVM.observeConversationStatus()
+                if (it.first().sender == Firebase.auth.currentUser!!.uid) {
+                    acceptBtn.visibility = View.GONE
+                    rejectBtn.visibility = View.GONE
+                }
+                else {
+                    acceptBtn.visibility = View.VISIBLE
+                    rejectBtn.visibility = View.VISIBLE
+                }
+            }
+            else {
+                acceptBtn.visibility = View.GONE
+                rejectBtn.visibility = View.GONE
+            }
+
         }
 
         messageListVM.conversationId.observe(viewLifecycleOwner) {

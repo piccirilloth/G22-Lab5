@@ -17,6 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/interesting_offer_list_card_cl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/rounded_corner">
