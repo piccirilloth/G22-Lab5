@@ -124,7 +124,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_timeslot_list_my_offers,
                 R.id.nav_show_profile,
                 R.id.nav_skills_list,
-                R.id.nav_interesting_offers
+                R.id.nav_interesting_offers,
+                R.id.nav_accepted_offers
             ), drawerLayout
         )
 

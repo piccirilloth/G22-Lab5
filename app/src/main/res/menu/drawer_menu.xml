@@ -20,6 +20,10 @@
             android:id="@+id/nav_interesting_offers"
             android:icon="@drawable/ic_baseline_chat_bubble_24"
             android:title="Interesting offers" />
+        <item
+            android:id="@+id/nav_accepted_offers"
+            android:icon="@drawable/ic_baseline_save_changes_24"
+            android:title="Accepted offers" />
 
     </group>
 

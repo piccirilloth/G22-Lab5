@@ -24,6 +24,7 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
     private val db = FirebaseFirestore.getInstance()
 
     private var msgListListenerRegistration: ListenerRegistration? = null
+    private var convStatusListenerRegistration: ListenerRegistration? = null
 
     private val _messageListLD: MutableLiveData<List<Message>> =
         MutableLiveData<List<Message>>().also {
@@ -69,8 +70,9 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
     }
 
     fun observeConversationStatus() {
+        convStatusListenerRegistration?.remove()
         if (conversationId.value != "") {
-            db.collection("conversations")
+            convStatusListenerRegistration = db.collection("conversations")
                 .document(conversationId.value!!)
                 .addSnapshotListener { value, error ->
                     val tmpStatus = value!!.get("status").toString()
@@ -199,6 +201,11 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                 transaction.update(offerRef, "isAccepted", true)
                 transaction.update(receiverRef, "credit", creditRec + offerDuration)
             }
+            else {
+                val rejRef = db.collection("conversations")
+                                .document(conversationId.value!!)
+                transaction.update(rejRef, "status", Status.REJECTED)
+            }
 
         }
 
@@ -211,6 +218,12 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
             .addOnSuccessListener {
                 _conversationStatusLD.value = Status.REJECTED
             }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        convStatusListenerRegistration?.remove()
+        msgListListenerRegistration?.remove()
     }
 
 }

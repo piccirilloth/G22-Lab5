@@ -23,4 +23,5 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#ffffff</color>
     <color name="rejectedOffer">#ff0000</color>
+    <color name="acceptedOffer">#196D1E</color>
 </resources>

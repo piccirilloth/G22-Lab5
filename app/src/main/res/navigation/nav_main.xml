@@ -200,4 +200,13 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
+    <fragment
+        android:id="@+id/nav_accepted_offers"
+        android:name="com.example.g22.interestingOffers.InterestingOfferListFragment"
+        android:label="fragment_accepted_offer_list"
+        tools:layout="@layout/fragment_interesting_offer_list" >
+        <action
+            android:id="@+id/action_nav_accepted_offers_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
 </navigation>

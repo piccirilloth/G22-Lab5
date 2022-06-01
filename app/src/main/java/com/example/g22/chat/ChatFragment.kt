@@ -60,9 +60,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         rejectBtn = requireActivity().findViewById(R.id.chat_fragment_reject_button)
         rejectMessage = requireActivity().findViewById(R.id.chat_fragment_reject_message)
         rejectMessage.visibility = View.GONE
-        messageListVM.clearList()
-        messageListVM.resetConversationStatus()
-        messageListVM.conversationId.value = ""
+        if (savedInstanceState == null) {
+            messageListVM.clearList()
+            messageListVM.resetConversationStatus()
+            messageListVM.conversationId.value = ""
+            messageListVM.observeMessages(navArguments.receiver, navArguments.offerId)
+        }
 
         messageListVM.conversationStatusLD.observe(viewLifecycleOwner) {
             if (it == Status.REJECTED && !messageListVM.messageListLD.value!!.isEmpty()) {
@@ -102,7 +105,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 rv.smoothScrollToPosition(adapter.itemCount - 1)
         }
 
-        messageListVM.observeMessages(navArguments.receiver, navArguments.offerId)
 
         // Observe any change of the chat
         messageListVM.messageListLD.observe(viewLifecycleOwner) {

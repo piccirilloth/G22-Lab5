@@ -38,10 +38,14 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        rv = requireActivity().findViewById(R.id.interesting_offer_list_rv)
-        incomingBtn = requireActivity().findViewById(R.id.interesting_offer_list_incoming_button)
-        outcomingBtn = requireActivity().findViewById(R.id.interesting_offer_list_outcoming_button)
+        rv = view.findViewById(R.id.interesting_offer_list_rv)
+        incomingBtn = view.findViewById(R.id.interesting_offer_list_incoming_button)
+        outcomingBtn = view.findViewById(R.id.interesting_offer_list_outcoming_button)
         val toolbar: Toolbar = requireActivity().findViewById(R.id.toolbar)
+
+        if (savedInstanceState == null) {
+
+        }
 
         // Recycler View configuration
         rv.layoutManager = LinearLayoutManager(requireActivity())
@@ -58,56 +62,24 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
                 outcomingBtn.setBackgroundColor(resources.getColor(R.color.primaryDarkColor))
                 incomingBtn.setBackgroundColor(resources.getColor(R.color.primaryColor))
             }
-            intOfferVM.observeRequests(it)
+            intOfferVM.observeRequests(it, findNavController().currentDestination!!.id == R.id.nav_accepted_offers)
         }
 
         incomingBtn.setOnClickListener {
             if(intOfferVM.isIncoming.value == false) {
-                toolbar.title = "Incoming"
                 intOfferVM.isStatusChanged.value = true
-                outcomingBtn.setBackgroundColor(resources.getColor(R.color.primaryColor))
-                incomingBtn.setBackgroundColor(resources.getColor(R.color.primaryDarkColor))
-                intOfferVM.observeRequests(true)
                 intOfferVM.isIncoming.value = true
             }
         }
 
         outcomingBtn.setOnClickListener {
             if(intOfferVM.isIncoming.value == true) {
-                toolbar.title = "Outcoming"
                 intOfferVM.isStatusChanged.value = true
                 intOfferVM.isIncoming.value = false
-                incomingBtn.setBackgroundColor(resources.getColor(R.color.primaryColor))
-                outcomingBtn.setBackgroundColor(resources.getColor(R.color.primaryDarkColor))
-                intOfferVM.observeRequests(false)
             }
         }
 
         intOfferVM.interOfferListLD.observe(viewLifecycleOwner) {
-            /*
-            The first time:
-                - updateList is triggered with emptylist
-                - db call is done and live data populated
-                - updateList triggered with livedata content
-            The second time:
-                - updateList is triggered with livedata content (not empty this time)
-                - db call is done and live data updated
-                - addMessage triggered with livedata last element
-            This is the motivation behind the if
-             */
-            /*if(intOfferVM.isStatusChanged.value == true) {
-                adapter.updateList(it)
-                intOfferVM.isStatusChanged.value = false
-            }
-            else {
-                if (it.size > adapter.itemCount) {
-                    if (adapter.itemCount == 0)
-                        adapter.updateList(it)
-                    else
-                        adapter.addConversation(it.last())
-                } else
-                    adapter.updateList(it)
-            }*/
             adapter.updateList(it)
         }
     }
