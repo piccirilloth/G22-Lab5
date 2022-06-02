@@ -92,7 +92,7 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
         } else {
             // Set a loading screen while fetching data..
             tsListLoadedLD.value = false
-//            _tsListLD.value = emptyList()
+            _tsListLD.value = emptyList()
 
             tsListListenerRegistration = db.collection("offers")
                 .whereEqualTo("owner", Firebase.auth.currentUser?.uid.toString())
@@ -117,7 +117,7 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
 
         // Set a loading screen while fetching data..
         tsListLoadedLD.value = false
-//        _tsListLD.value = emptyList()
+        _tsListLD.value = emptyList()
 
         tsListListenerRegistration = db.collection("offers")
             .whereArrayContains("skills", skill) // TODO: check if the offer has been accepted

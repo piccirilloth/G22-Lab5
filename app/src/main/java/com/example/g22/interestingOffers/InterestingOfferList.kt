@@ -90,6 +90,33 @@ class InterestingOfferList {
             diffs.dispatchUpdatesTo(this)
         }
 
+        private fun showChat(adapterPos: Int) {
+            //TODO: show chat
+            val currentUser = Firebase.auth.currentUser
+            var receiver = ""
+            val actionId =
+                if (navController.currentDestination!!.id == R.id.nav_accepted_offers)
+                    R.id.action_nav_accepted_offers_to_chatFragment
+                else
+                    R.id.action_nav_interesting_offers_to_chatFragment
+
+
+            if(currentUser != null)
+                receiver = if(currentUser.uid == data[adapterPos].receiverUid)
+                    data[adapterPos].requestorUid
+                else
+                    data[adapterPos].receiverUid
+            navController.navigate(
+                actionId,
+                bundleOf(
+                    "receiver" to receiver,
+                    "offerId" to data[adapterPos].offerId,
+                    "offerTitle" to data[adapterPos].offerTitle,
+                    "receiverName" to data[adapterPos].receiverName
+                    )
+            )
+        }
+
         /**
          * Utilities
          */
@@ -120,33 +147,6 @@ class InterestingOfferList {
                         && oldList[oldItemPosition].status == newList[newItemPosition].status
 
             }
-        }
-
-        private fun showChat(adapterPos: Int) {
-            //TODO: show chat
-            val currentUser = Firebase.auth.currentUser
-            var receiver = ""
-            val actionId =
-                if (navController.currentDestination!!.id == R.id.nav_accepted_offers)
-                    R.id.action_nav_accepted_offers_to_chatFragment
-                else
-                    R.id.action_nav_interesting_offers_to_chatFragment
-
-
-            if(currentUser != null)
-                receiver = if(currentUser.uid == data[adapterPos].receiverUid)
-                    data[adapterPos].requestorUid
-                else
-                    data[adapterPos].receiverUid
-            navController.navigate(
-                actionId,
-                bundleOf(
-                    "receiver" to receiver,
-                    "offerId" to data[adapterPos].offerId,
-                    "offerTitle" to data[adapterPos].offerTitle,
-                    "receiverName" to data[adapterPos].receiverName
-                    )
-            )
         }
 
     }

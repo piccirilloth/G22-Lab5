@@ -25,7 +25,7 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_nav_timeslot_show_to_chatFragment"
-            app:destination="@id/chatFragment"
+            app:destination="@id/nav_chat_fragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_pop_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -189,7 +189,7 @@
             android:defaultValue="@null" />
     </fragment>
     <fragment
-        android:id="@+id/chatFragment"
+        android:id="@+id/nav_chat_fragment"
         android:name="com.example.g22.chat.ChatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" >
@@ -218,7 +218,7 @@
         tools:layout="@layout/fragment_interesting_offer_list" >
         <action
             android:id="@+id/action_nav_interesting_offers_to_chatFragment"
-            app:destination="@id/chatFragment"
+            app:destination="@id/nav_chat_fragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -231,7 +231,7 @@
         tools:layout="@layout/fragment_interesting_offer_list" >
         <action
             android:id="@+id/action_nav_accepted_offers_to_chatFragment"
-            app:destination="@id/chatFragment"
+            app:destination="@id/nav_chat_fragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"

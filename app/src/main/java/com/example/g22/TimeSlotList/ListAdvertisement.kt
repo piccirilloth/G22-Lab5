@@ -9,11 +9,15 @@ import androidx.cardview.widget.CardView
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.g22.R
 import com.example.g22.custom_format
+import com.example.g22.model.Conversation
 import com.example.g22.model.TimeSlot
 import com.example.g22.toAdvertisementList
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 data class Advertisement(val id: String, val title: String, val datetime: String, val duration: String) {
     companion object {
@@ -75,10 +79,11 @@ class AdvertisementAdapter(private var data: List<Advertisement>, private val sk
     }
 
     fun updateList(tsList: List<TimeSlot>) {
-        data = tsList.toAdvertisementList()
+        val newList = tsList.toAdvertisementList()
+        val diffs = DiffUtil.calculateDiff(AdvertisementListCallback(data, newList))
+        data = newList
+        diffs.dispatchUpdatesTo(this)
 
-        // TODO: provide a way to handle list modifications better
-        notifyDataSetChanged()
     }
 
     /**
@@ -105,4 +110,26 @@ class AdvertisementAdapter(private var data: List<Advertisement>, private val sk
             bundleOf("timeSlotId" to data[adapterPos].id)
         )
     }
+
+    class AdvertisementListCallback(
+        private val oldList: List<Advertisement>,
+        private val newList: List<Advertisement>
+    ): DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].id == newList[newItemPosition].id
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val same = oldList[oldItemPosition].datetime == newList[newItemPosition].datetime &&
+            oldList[oldItemPosition].title == newList[newItemPosition].title &&
+            oldList[oldItemPosition].duration == newList[newItemPosition].duration
+            return same
+        }
+    }
+
+
 }

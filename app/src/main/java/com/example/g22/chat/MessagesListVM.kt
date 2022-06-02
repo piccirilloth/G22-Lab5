@@ -127,6 +127,7 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                 val chatRef = db.collection("chats").document()
                 transaction.set(
                     chatRef, Message(
+                        chatRef.id,
                         timeSlotId,
                         receiver,
                         "${Firebase.auth.currentUser!!.uid}",

@@ -20,7 +20,6 @@ class InterestingOfferListVM(application: Application) : AndroidViewModel(applic
 
     private var intListListenerRegistration: ListenerRegistration? = null
 
-    var isStatusChanged: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
     var isIncoming: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
     private val _interOfferListLD: MutableLiveData<MutableList<Conversation>> = MutableLiveData<MutableList<Conversation>>().also {

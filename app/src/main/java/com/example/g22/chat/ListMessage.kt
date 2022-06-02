@@ -10,8 +10,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.g22.R
+import com.example.g22.model.Conversation
 import com.example.g22.model.Message
 import com.example.g22.model.TimeSlot
 import com.example.g22.toAdvertisementList
@@ -71,14 +73,37 @@ class MessageAdapter(private var data: List<Message>): RecyclerView.Adapter<Mess
     }
 
     fun updateList(messageList: List<Message>) {
+        val diffs = DiffUtil.calculateDiff(MessageListCallback(data, messageList))
         data = messageList
-        // TODO: provide a way to handle list modifications better
-        notifyDataSetChanged()
+        diffs.dispatchUpdatesTo(this)
     }
 
     fun addMessage(message: Message) {
         data = data.plus(message)
         notifyItemInserted(itemCount)
+    }
+
+    class MessageListCallback(
+        private val oldList: List<Message>,
+        private val newList: List<Message>
+    ): DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].messageId == newList[newItemPosition].messageId
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val same = oldList[oldItemPosition].sender == newList[newItemPosition].sender &&
+                    oldList[oldItemPosition].receiver == newList[newItemPosition].receiver &&
+                    oldList[oldItemPosition].text == newList[newItemPosition].text &&
+                    oldList[oldItemPosition].offer == newList[newItemPosition].offer &&
+                    oldList[oldItemPosition].conversationId == newList[newItemPosition].conversationId
+            return same
+
+        }
     }
 
 

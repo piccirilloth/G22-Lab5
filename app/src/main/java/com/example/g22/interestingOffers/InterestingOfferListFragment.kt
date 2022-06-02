@@ -17,14 +17,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.g22.R
 import com.example.g22.TimeSlotList.MessageAdapter
 import com.example.g22.chat.MessagesListVM
+import com.google.android.material.tabs.TabItem
+import com.google.android.material.tabs.TabLayout
 
 class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offer_list) {
     private val intOfferVM by activityViewModels<InterestingOfferListVM>()
 
     private lateinit var rv: RecyclerView
     private lateinit var adapter: InterestingOfferList.InterestingOfferAdapter
-    private lateinit var incomingBtn: Button
-    private lateinit var outcomingBtn : Button
+    private lateinit var tabLayout: TabLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,13 +39,44 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        rv = view.findViewById(R.id.interesting_offer_list_rv)
-        incomingBtn = view.findViewById(R.id.interesting_offer_list_incoming_button)
-        outcomingBtn = view.findViewById(R.id.interesting_offer_list_outcoming_button)
         val toolbar: Toolbar = requireActivity().findViewById(R.id.toolbar)
+        rv = view.findViewById(R.id.interesting_offer_list_rv)
+        tabLayout = view.findViewById(R.id.interesting_offer_list_tab_layout)
 
         if (savedInstanceState == null) {
+            intOfferVM.observeRequests(
+                false,
+                findNavController().currentDestination!!.id == R.id.nav_accepted_offers
+            )
+        }
 
+
+        tabLayout.selectTab(if (intOfferVM.isIncoming.value == false) tabLayout.getTabAt(0) else tabLayout.getTabAt(1))
+        toolbar.title = if (intOfferVM.isIncoming.value == false) "To buy" else "To sell"
+
+
+        tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val toBuy = tab!!.text == "To buy"
+                if (toBuy) {
+                    intOfferVM.isIncoming.value = false
+                    toolbar.title = "To buy"
+                }
+                else {
+                    intOfferVM.isIncoming.value = true
+                    toolbar.title = "To sell"
+                }
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+        })
+
+        intOfferVM.isIncoming.observe(viewLifecycleOwner) {
+            intOfferVM.observeRequests(it, findNavController().currentDestination!!.id == R.id.nav_accepted_offers)
         }
 
         // Recycler View configuration
@@ -52,32 +84,6 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
         adapter = InterestingOfferList.InterestingOfferAdapter(emptyList())
         rv.adapter = adapter
 
-        intOfferVM.isIncoming.observe(viewLifecycleOwner) {
-            if(it == true) {
-                toolbar.title = "Incoming"
-                incomingBtn.setBackgroundColor(resources.getColor(R.color.primaryDarkColor))
-                outcomingBtn.setBackgroundColor(resources.getColor(R.color.primaryColor))
-            } else {
-                toolbar.title = "Outcoming"
-                outcomingBtn.setBackgroundColor(resources.getColor(R.color.primaryDarkColor))
-                incomingBtn.setBackgroundColor(resources.getColor(R.color.primaryColor))
-            }
-            intOfferVM.observeRequests(it, findNavController().currentDestination!!.id == R.id.nav_accepted_offers)
-        }
-
-        incomingBtn.setOnClickListener {
-            if(intOfferVM.isIncoming.value == false) {
-                intOfferVM.isStatusChanged.value = true
-                intOfferVM.isIncoming.value = true
-            }
-        }
-
-        outcomingBtn.setOnClickListener {
-            if(intOfferVM.isIncoming.value == true) {
-                intOfferVM.isStatusChanged.value = true
-                intOfferVM.isIncoming.value = false
-            }
-        }
 
         intOfferVM.interOfferListLD.observe(viewLifecycleOwner) {
             adapter.updateList(it)
