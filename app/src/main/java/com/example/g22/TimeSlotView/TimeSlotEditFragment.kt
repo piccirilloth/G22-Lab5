@@ -1,5 +1,6 @@
 package com.example.g22.TimeSlotView
 
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.*
 import android.widget.*
@@ -30,6 +31,7 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
     private val timeslotListVM by activityViewModels<TimeSlotListVM>()
 
     // View references
+    private lateinit var sv: ScrollView
     private lateinit var titleEditText: EditText
     private lateinit var descriptionEditText: EditText
     private lateinit var datetimeTV: TextView
@@ -40,6 +42,7 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
     private lateinit var addSkillButton: Button
     private lateinit var adapter: ArrayAdapter<String>
     private lateinit var skillsChipGroup: ChipGroup
+    private lateinit var progressBar: ProgressBar
 
     // Others
     private lateinit var navController: NavController
@@ -63,6 +66,7 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
         setHasOptionsMenu(true)
 
         // Find view references
+        sv = requireActivity().findViewById(R.id.timeslot_edit_sv)
         titleEditText = requireActivity().findViewById(R.id.timeslot_edit_title_edittext)
         datetimeTV = requireActivity().findViewById(R.id.timeslot_edit_datetime_textview)
         durationHoursEditText = requireActivity().findViewById(R.id.timeslot_edit_duration_hour)
@@ -72,6 +76,7 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
         skillsMenu = requireActivity().findViewById(R.id.timeslot_edit_skills_menu)
         addSkillButton = requireActivity().findViewById(R.id.timeslot_edit_add_skill_button)
         skillsChipGroup = requireActivity().findViewById(R.id.timeslot_edit_skills_chipgroup)
+        progressBar = requireActivity().findViewById(R.id.timeslot_edit_progress_bar)
 
         navController = findNavController()
 
@@ -80,7 +85,7 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
             if (skillsMenu.editText?.text.toString() != "") {
                 timeslotVM.addSkill(skillsMenu.editText!!.text.toString())
                 skillsMenu.editText!!.setText("")
-
+                skillsMenu.error = ""
             }
             else {
                 skillsMenu.error = "No skill selected"
@@ -91,16 +96,31 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
 
         // Initialization
         if (savedInstanceState == null) {
-            // Set the current timeslot shown using the received id from the list (if this is the case)
-            timeslotVM.timeslotLoadedLD.value = false
-            if (navArguments.timeSlotId != "" && !timeslotVM.setCurrentTimeSlot(navArguments.timeSlotId, false))
-                navController.popBackStack()
-
-            if (navArguments.isAdd)
+            // Set the current timeslot shown (either empty or coming from the server)
+            if (navArguments.isAdd) {
                 timeslotVM.setCurrentTimeSlotEmpty()
+                bindTimeSlotData(timeslotVM.currTimeSlotLD.value!!)
+                progressBar.visibility = View.GONE
+            } else {
+                if (navArguments.timeSlotId != "") {
+                    timeslotVM.setCurrentTimeSlot(navArguments.timeSlotId, false)
+                } else {
+                    navController.popBackStack()
+                }
+            }
         }
 
         // Observers
+        if (!navArguments.isAdd) {
+            timeslotVM.timeslotLoadedLD.observe(viewLifecycleOwner) {
+                val contentVisibility = if (it) View.VISIBLE else View.GONE
+                val loadingVisibility = if (it) View.GONE else View.VISIBLE
+
+//                sv.visibility = contentVisibility
+                progressBar.visibility = loadingVisibility
+            }
+        }
+
         timeslotVM.skillsLD.observe(viewLifecycleOwner) {
             skillsChipGroup.removeAllViews()
             for (skill in it) {
@@ -190,6 +210,7 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
 
     private fun areFieldsValid(): Boolean {
         var err = false
+
         if(titleEditText.text.toString() == "") {
             titleEditText.error = "Title is empty!"
             err = true
@@ -225,7 +246,6 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
             }
         }
 
-
         if(locationEditText.text.toString() == "") {
             locationEditText.error = "Location is empty!"
             err = true
@@ -234,6 +254,11 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
             descriptionEditText.error = "Description is empty!"
             err = true
         }
+        if (timeslotVM.skillsLD.value?.isEmpty() != false) {
+            skillsMenu.error = "There must be at least one skill!"
+            err = true
+        }
+
         return !err
     }
 
@@ -244,15 +269,10 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
         val hours = durationHoursEditText.text.toString().toInt()
         val minutes = durationMinutesEditText.text.toString().toInt() + hours * 60
 
-        val updateOk = timeslotVM.saveEditedTimeSlot(titleEditText.text.toString(),
+        timeslotVM.saveEditedTimeSlot(titleEditText.text.toString(),
                                         minutes,
                                         locationEditText.text.toString(),
                                         descriptionEditText.text.toString())
-
-        // If the update has not succeed, revert the timeslot to the previous state
-        if (!updateOk) {
-            timeslotVM.setCurrentTimeSlot(timeslotVM.currTimeSlotLD.value!!.id, true)
-        }
 
         timeslotListVM.hasBeenEdited.value = true
 

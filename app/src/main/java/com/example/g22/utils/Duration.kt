@@ -37,14 +37,4 @@ class Duration(val minutes: Int) {
         val (days, hours, mins) = toUnits()
         return "$days days : $hours hours : $mins : min"
     }
-
-    fun toJSONString() : String {
-        return "$minutes"
-    }
-
-    companion object {
-        fun FromJSONString(s: String) : Duration {
-            return Duration(s.toInt())
-        }
-    }
 }

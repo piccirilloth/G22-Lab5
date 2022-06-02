@@ -1,7 +1,6 @@
 package com.example.g22.TimeSlotList
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,6 +12,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asExecutor
 import java.util.*
 
 class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
@@ -20,13 +21,13 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
 
     private var tsListListenerRegistration: ListenerRegistration? = null
 
-    //val tsListLD: LiveData<List<TimeSlot>> = repo.getAllTimeSlots()
     private val _tsListLD: MutableLiveData<List<TimeSlot>> =
         MutableLiveData<List<TimeSlot>>().also {
             it.value = emptyList()
         }
 
     val tsListLD: LiveData<List<TimeSlot>> = _tsListLD
+    val tsListLoadedLD = MutableLiveData<Boolean>(false)
 
     var hasBeenAdded: MutableLiveData<Boolean> = MutableLiveData(false)
     var hasBeenEdited: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -38,46 +39,49 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
     var dateFilter = ""
 
     fun addTimeslot(item: TimeSlot) {
-        //repo.addTimeSlot(item)
+        val newTSDocRef = db.collection("offers").document()
+        item.id = newTSDocRef.id
 
-        val doc_ref = db.collection("offers").document()
-        item.id = doc_ref.id
+        // Transaction to write on two collections (this should be done with lambda functions on server)
+        db.runTransaction { transaction ->
+            val toCreateSkills = emptyList<String>().toMutableList()
+            val toUpdateSkills = emptyMap<String, List<String>>().toMutableMap()
 
-        doc_ref
-            .set(item)
+            // Get operations
+            for (skill in item.skills) {
+                val docSnapshot = transaction.get(db.collection("skills").document(skill.toLowerCase()))
+                if (docSnapshot.exists()) {
+                    val docList = docSnapshot.get("offers") as List<String>
+                    toUpdateSkills[skill] = docList.plus(newTSDocRef.id)
+                } else {
+                    toCreateSkills.add(skill)
+                }
+            }
+
+            // Set operations
+            for (skill in toCreateSkills) {
+                transaction.set(
+                    db.collection("skills").document(skill),
+                    hashMapOf("offers" to listOf(newTSDocRef.id))
+                )
+            }
+
+            for (entry in toUpdateSkills.entries.iterator()) {
+                transaction.update(
+                    db.collection("skills").document(entry.key),
+                    "offers",
+                    entry.value
+                )
+            }
+
+            transaction.set(newTSDocRef, item)
+        }
             .addOnSuccessListener {
-                // TODO: add snackback
+
             }
             .addOnFailureListener {
-                // TODO: add error snackbar
+
             }
-        for (skill in item.skills) {
-            db.collection("skills")
-                .document(skill.toLowerCase())
-                .get()
-                .addOnSuccessListener {
-                    if (it != null && it.exists())
-                        updateSkillOffers(it, item, skill)
-                    else {
-                        val tmpList = hashMapOf("offers" to listOf(item.id))
-                        db.collection("skills")
-                            .document(skill.toLowerCase())
-                            .set(tmpList)
-                    }
-                }
-        }
-
-    }
-
-    fun updateSkillOffers(it: DocumentSnapshot, item: TimeSlot, skill: String) {
-        val tmpList = emptyList<String>().toMutableList()
-        if (it.get("offers") != null)
-            tmpList != it.get("offers") as MutableList<String>
-
-        tmpList.add(item.id)
-        db.collection("skills")
-            .document(skill.toLowerCase())
-            .update("offers", tmpList)
     }
 
     fun observeMyOffers() {
@@ -86,19 +90,23 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
         if (Firebase.auth.currentUser == null) {
             _tsListLD.value = emptyList()
         } else {
+            // Set a loading screen while fetching data..
+            tsListLoadedLD.value = false
+//            _tsListLD.value = emptyList()
+
             tsListListenerRegistration = db.collection("offers")
                 .whereEqualTo("owner", Firebase.auth.currentUser?.uid.toString())
-                .addSnapshotListener { value, error ->
+                .addSnapshotListener(Dispatchers.IO.asExecutor()) { value, error ->
                     if (error != null) {
-                        Log.d("error", "firebase failure")
                         return@addSnapshotListener
-                        //ToDo: add a snackbar
                     }
                     if (value != null) {
                         if (!value.isEmpty)
-                            _tsListLD.value = value.toObjects(TimeSlot::class.java)!!
+                            _tsListLD.postValue(value.toObjects(TimeSlot::class.java))
                         else
-                            _tsListLD.value = emptyList()
+                            _tsListLD.postValue(emptyList())
+
+                        tsListLoadedLD.postValue(true)
                     }
                 }
         }
@@ -106,20 +114,26 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
 
     fun observeSkillOffers(skill: String) {
         tsListListenerRegistration?.remove()
+
+        // Set a loading screen while fetching data..
+        tsListLoadedLD.value = false
+//        _tsListLD.value = emptyList()
+
         tsListListenerRegistration = db.collection("offers")
             .whereArrayContains("skills", skill) // TODO: check if the offer has been accepted
-            .addSnapshotListener { value, error ->
+            .addSnapshotListener(Dispatchers.IO.asExecutor()) { value, error ->
                 if (error != null) {
-                    Log.d("error", "firebase failure")
                     return@addSnapshotListener
-                    //ToDo: add a snackbar
                 }
                 if (value != null) {
                     if (!value.isEmpty)
-                        _tsListLD.value = value.toObjects(TimeSlot::class.java)!!
+                        _tsListLD.postValue(value.toObjects(TimeSlot::class.java))
                     else
-                        _tsListLD.value = emptyList()
+                        _tsListLD.postValue(emptyList())
+
                     restoreFilters(skill)
+
+                    tsListLoadedLD.postValue(true)
                 }
             }
     }

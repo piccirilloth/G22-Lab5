@@ -2,14 +2,20 @@ package com.example.g22.TimeSlotView
 
 import android.app.Application
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.g22.model.TimeSlot
 import com.example.g22.utils.Duration
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
 import java.util.*
+import java.util.concurrent.Executors
 
 class TimeSlotVM(application: Application): AndroidViewModel(application) {
     private val db = FirebaseFirestore.getInstance()
@@ -21,15 +27,9 @@ class TimeSlotVM(application: Application): AndroidViewModel(application) {
      *  Mutable live data for fields of TimeSlotShowFragment and TimeSlotEditFragment
      */
     private val _currTimeSlotLD = MutableLiveData(TimeSlot.Empty())
-
     private val _datetimeLD = MutableLiveData(Date())
-
     private val _skillsLD = MutableLiveData<List<String>>(emptyList())
-
     private val _ownerLD = MutableLiveData("")
-
-    val timeslotLoadedLD = MutableLiveData(false)
-
 
     /**
      * Exposed functionalities to activities / fragments
@@ -39,66 +39,77 @@ class TimeSlotVM(application: Application): AndroidViewModel(application) {
     val skillsLD: LiveData<List<String>> = _skillsLD
     val ownerLD: LiveData<String> = _ownerLD
 
-    fun setCurrentTimeSlot(id: String, keepUpdated: Boolean) : Boolean {
+    val timeslotLoadedLD = MutableLiveData(false)
+
+
+    fun setCurrentTimeSlot(id: String, keepUpdated: Boolean) {
         currTsListenerRegistration?.remove()
 
+        // Set a loading screen while fetching data..
+        timeslotLoadedLD.value = false
+        _currTimeSlotLD.value = TimeSlot.Empty()
+        _datetimeLD.value = Date()
+        _skillsLD.value = emptyList()
+        _ownerLD.value = ""
+
         if (keepUpdated) {
+            // Used for timeslot showing (keep update)
             currTsListenerRegistration = db.collection("offers")
                 .document(id)
-                .addSnapshotListener { value, e ->
+                .addSnapshotListener(Dispatchers.IO.asExecutor()) { value, e ->
                     if (e != null) {
                         Log.d("error", "firebase failure")
                         return@addSnapshotListener
-                        //ToDo: add a snackbar
                     }
                     if (value != null && value.exists()) {
-                        _currTimeSlotLD.value = value.toObject(TimeSlot::class.java)
-                        _datetimeLD.value = _currTimeSlotLD.value!!.date
+                        val ts = value.toObject(TimeSlot::class.java)!!
+                        _currTimeSlotLD.postValue(ts)
+                        _datetimeLD.postValue(ts.date)
 
                         // Load other profile data
                         otherProfileListenerRegistration?.remove()
                         otherProfileListenerRegistration = db.collection("users")
-                            .document(_currTimeSlotLD.value!!.owner)
-                            .addSnapshotListener { value, e ->
+                            .document(ts.owner)
+                            .addSnapshotListener(Dispatchers.IO.asExecutor()) { value, e ->
                                 if (e != null) {
                                     return@addSnapshotListener
                                 }
                                 if (value != null && value.exists()) {
-                                    _ownerLD.value = value.getString("fullname")
+                                    _ownerLD.postValue(value.getString("fullname"))
+                                    timeslotLoadedLD.postValue(true)
                                 }
                             }
-                    } else {
-                        // TODO: add snackback with error
                     }
                 }
         } else {
-            db.collection("offers")
-                .document(id)
-                .get()
-                .addOnSuccessListener {
-                    _currTimeSlotLD.value = it.toObject(TimeSlot::class.java)
-                    _datetimeLD.value = _currTimeSlotLD.value!!.date
-                    _skillsLD.value = _currTimeSlotLD.value!!.skills
-                    timeslotLoadedLD.value = true
+            // Used for timeslot edit (load only one time)
+            viewModelScope.launch(Dispatchers.IO) {
+                val tsRes = firestoreGetTimeSlot(id)
+                if (tsRes.isSuccess) {
+                    val ts = tsRes.getOrThrow()
+                    _currTimeSlotLD.postValue(ts)
+                    _datetimeLD.postValue(ts.date)
+                    _skillsLD.postValue(ts.skills)
+                    timeslotLoadedLD.postValue(true)
+                } else {
+                    Toast.makeText(getApplication(), "Error loading the timeslot", Toast.LENGTH_SHORT)
+                    // TODO: Set a flag to pop the back stack
                 }
-                .addOnFailureListener {
-                    // TODO: make snackback with error
-                }
+            }
         }
 
-        // TODO: No sense return value with async operations
-        return _currTimeSlotLD.value != null
     }
 
     fun setCurrentTimeSlotEmpty() {
         currTsListenerRegistration?.remove()
+        otherProfileListenerRegistration?.remove()
 
         _currTimeSlotLD.value = TimeSlot.Empty()
         _datetimeLD.value = Date()
         _skillsLD.value = emptyList()
     }
 
-    fun saveEditedTimeSlot(title: String, duration: Int, location: String, description: String) : Boolean{
+    fun saveEditedTimeSlot(title: String, duration: Int, location: String, description: String) {
         val tmp = _currTimeSlotLD.value!!.copy()
         tmp.title = title
         tmp.date = _datetimeLD.value!!
@@ -122,7 +133,7 @@ class TimeSlotVM(application: Application): AndroidViewModel(application) {
             for (skill in new) {
                 val tmpSnap = transaction.get(db.collection("skills").document(skill))
                 if (tmpSnap.exists()) {
-                    toAddSnapshots.put(skill, (tmpSnap.get("offers") as List<String>).plus(tmp.id))
+                    toAddSnapshots[skill] = (tmpSnap.get("offers") as List<String>).plus(tmp.id)
                 }
                 else {
                     toCreate.add(skill)
@@ -133,7 +144,7 @@ class TimeSlotVM(application: Application): AndroidViewModel(application) {
             for (skill in oldRemoved) {
                 val tmpSnap = transaction.get(db.collection("skills").document(skill))
                 if (tmpSnap.exists()) {
-                    toRemoveSnapshots.put(skill, (tmpSnap.get("offers") as List<String>).minus(tmp.id))
+                    toRemoveSnapshots[skill] = (tmpSnap.get("offers") as List<String>).minus(tmp.id)
                 }
                 else {
                     throw Exception("Skill not found. Failure")
@@ -145,7 +156,15 @@ class TimeSlotVM(application: Application): AndroidViewModel(application) {
             }
 
             for (entry in toRemoveSnapshots.entries.iterator()) {
-                transaction.update(db.collection("skills").document(entry.key), "offers", entry.value)
+                if (entry.value.isEmpty()) {
+                    transaction.delete(db.collection("skills").document(entry.key))
+                } else {
+                    transaction.update(
+                        db.collection("skills").document(entry.key),
+                        "offers",
+                        entry.value
+                    )
+                }
             }
 
             for (skill in toCreate) {
@@ -157,12 +176,29 @@ class TimeSlotVM(application: Application): AndroidViewModel(application) {
             .addOnSuccessListener {
             }
             .addOnFailureListener {
+                Toast.makeText(getApplication(), "Error editing the timeslot!", Toast.LENGTH_SHORT)
                 //ToDo snackbar
+                setCurrentTimeSlot(_currTimeSlotLD.value!!.id, true)
             }
-
-        return true
     }
 
+
+    /**
+     * Firestore async suspend functions
+     */
+
+    private suspend fun firestoreGetTimeSlot(id: String): Result<TimeSlot> {
+        return try {
+            val documentSnapshot = db.collection("offers")
+                .document(id)
+                .get()
+                .await()
+            return Result.success(documentSnapshot.toObject(TimeSlot::class.java)!!)
+        } catch (e: Exception) {
+            return Result.failure(e)
+        }
+
+    }
 
     /**
      * Functions to handle date and time pickers

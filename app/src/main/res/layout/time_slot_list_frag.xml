@@ -5,112 +5,131 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/time_slot_list_search_edit_text"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/timeslot_list_content_cl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/time_slot_list_search_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:ems="10"
+            android:hint="Insert title here"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            app:layout_constraintBottom_toTopOf="@+id/timeslot_edit_sort_menu"
+            app:layout_constraintEnd_toStartOf="@id/time_slot_list_search_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/time_slot_list_search_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/rounded_corner_secondary"
+            android:backgroundTint="@color/secondaryColor"
+            android:elevation="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/time_slot_list_search_edit_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/time_slot_list_search_edit_text"
+            app:srcCompat="@drawable/ic_baseline_search_24"
+            app:tint="?attr/colorOnPrimary" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/timeslot_list_rv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/timeslot_edit_sort_menu">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/timeslot_list_add_btn_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="16dp"
+            android:contentDescription="Create a new time slot"
+            android:src="@drawable/ic_baseline_add_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="?attr/colorOnPrimary" />
+
+        <TextView
+            android:id="@+id/timeslot_list_empty_ts_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="There are no offers yet!"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            app:layout_constraintBottom_toBottomOf="@+id/timeslot_list_rv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.492"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/timeslot_list_rv"
+            app:layout_constraintVertical_bias="0.35000002" />
+
+        <ImageButton
+            android:id="@+id/time_slot_list_apply_sort_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/rounded_corner_secondary"
+            android:backgroundTint="@color/secondaryColor"
+            android:elevation="8dp"
+            android:minHeight="48dp"
+            app:layout_constraintBottom_toBottomOf="@+id/timeslot_edit_sort_menu"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/timeslot_edit_sort_menu"
+            app:srcCompat="@drawable/ic_baseline_save_changes_24"
+            app:tint="?attr/colorOnPrimary"
+            tools:layout_editor_absoluteY="70dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/timeslot_edit_sort_menu"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:hint="Sort"
+            app:layout_constraintBottom_toTopOf="@+id/timeslot_list_rv"
+            app:layout_constraintEnd_toStartOf="@+id/time_slot_list_apply_sort_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/time_slot_list_search_edit_text">
+
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="8dp"
+                android:inputType="none"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/timeslot_list_progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:ems="10"
-        android:hint="Insert title here"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/timeslot_edit_sort_menu"
-        app:layout_constraintEnd_toStartOf="@id/time_slot_list_search_button"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/time_slot_list_search_button"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_margin="8dp"
-        android:background="@drawable/rounded_corner_secondary"
-        android:backgroundTint="@color/secondaryColor"
-        android:elevation="8dp"
-        app:layout_constraintBottom_toBottomOf="@id/time_slot_list_search_edit_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/time_slot_list_search_edit_text"
-        app:srcCompat="@drawable/ic_baseline_search_24"
-        app:tint="?attr/colorOnPrimary" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/timeslot_list_rv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timeslot_edit_sort_menu">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/timeslot_list_add_btn_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_margin="16dp"
-        android:contentDescription="Create a new time slot"
-        android:src="@drawable/ic_baseline_add_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:tint="?attr/colorOnPrimary" />
-
-    <TextView
-        android:id="@+id/timeslot_list_empty_ts_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="There are no offers yet!"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:layout_constraintBottom_toBottomOf="@+id/timeslot_list_rv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/timeslot_list_rv"
-        app:layout_constraintVertical_bias="0.35000002" />
-
-    <ImageButton
-        android:id="@+id/time_slot_list_apply_sort_button"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/rounded_corner_secondary"
-        android:backgroundTint="@color/secondaryColor"
-        android:elevation="8dp"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toBottomOf="@+id/timeslot_edit_sort_menu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/timeslot_edit_sort_menu"
-        app:srcCompat="@drawable/ic_baseline_save_changes_24"
-        app:tint="?attr/colorOnPrimary"
-        tools:layout_editor_absoluteY="70dp" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/timeslot_edit_sort_menu"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:hint="Sort"
-        app:layout_constraintBottom_toTopOf="@+id/timeslot_list_rv"
-        app:layout_constraintEnd_toStartOf="@+id/time_slot_list_apply_sort_button"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_slot_list_search_edit_text">
-
-        <AutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="8dp"
-            android:inputType="none"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

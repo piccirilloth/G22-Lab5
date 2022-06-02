@@ -3,6 +3,8 @@ package com.example.g22.TimeSlotView
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -27,6 +29,7 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
     private val timeslotListVM by activityViewModels<TimeSlotListVM>()
 
     // View references
+    private lateinit var sv: ScrollView
     private lateinit var titleTV: TextView
     private lateinit var datetimeTV: TextView
     private lateinit var durationTV: TextView
@@ -35,6 +38,7 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
     private lateinit var skillsCG: ChipGroup
     private lateinit var ownerBtn: Button
     private lateinit var contactButton: Button
+    private lateinit var progressBar: ProgressBar
 
     // Others
     private lateinit var navController: NavController
@@ -47,6 +51,7 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
         navController = findNavController()
 
         // Find view references
+        sv = requireActivity().findViewById(R.id.timeslot_show_sv)
         titleTV = requireActivity().findViewById(R.id.timeslot_show_title_textview)
         datetimeTV = requireActivity().findViewById(R.id.timeslot_show_datetime_textview)
         durationTV = requireActivity().findViewById(R.id.timeslot_show_duration_textview)
@@ -55,7 +60,9 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
         skillsCG = requireActivity().findViewById(R.id.timeslot_show_skills_chipgroup)
         ownerBtn = requireActivity().findViewById(R.id.timeslot_show_owner_button)
         contactButton = requireActivity().findViewById(R.id.timeslot_show_contact_button)
+        progressBar = requireActivity().findViewById(R.id.timeslot_show_progress_bar)
 
+        // Other profile button listener
         ownerBtn.setOnClickListener {
             navController.navigate(R.id.action_nav_timeslot_show_to_nav_show_other_profile,
             bundleOf("profileId" to timeslotVM.currTimeSlotLD.value?.owner))
@@ -63,8 +70,13 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
 
         if (savedInstanceState == null) {
             // Set the current timeslot shown using the received id from the list (if this is the case)
-            if (navArguments.timeSlotId != "" && !timeslotVM.setCurrentTimeSlot(navArguments.timeSlotId, true))
+            if (navArguments.timeSlotId != "") {
+                timeslotVM.setCurrentTimeSlot(navArguments.timeSlotId, true)
+            } else {
                 navController.popBackStack()
+            }
+        //            if (navArguments.timeSlotId != "" && !timeslotVM.setCurrentTimeSlot(navArguments.timeSlotId, true))
+//                navController.popBackStack()
         }
 
         Firebase.auth.addAuthStateListener {
@@ -72,6 +84,14 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
         }
 
         // Observe any change to the current timeslot to update the views
+        timeslotVM.timeslotLoadedLD.observe(viewLifecycleOwner) {
+            val contentVisibility = if (it) View.VISIBLE else View.GONE
+            val loadingVisibility = if (it) View.GONE else View.VISIBLE
+
+//            sv.visibility = contentVisibility
+            progressBar.visibility = loadingVisibility
+        }
+
         timeslotVM.currTimeSlotLD.observe(viewLifecycleOwner) {
             bindTimeSlotData(it)
         }
