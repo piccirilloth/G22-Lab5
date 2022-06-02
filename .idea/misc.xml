@@ -3,8 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../../mnt/hard_ubuntu/development/university/mad/G22-Lab5/app/src/main/res/drawable/ic_baseline_arrow_drop_down_24.xml" value="0.222" />
+        <entry key="../../../../../../mnt/hard_ubuntu/development/university/mad/G22-Lab5/app/src/main/res/drawable/ic_baseline_calendar_month_tool.xml" value="0.3125" />
+        <entry key="../../../../../../mnt/hard_ubuntu/development/university/mad/G22-Lab5/app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.222" />
+        <entry key="../../../../../../mnt/hard_ubuntu/development/university/mad/G22-Lab5/app/src/main/res/drawable/ic_baseline_location_on_tool.xml" value="0.3125" />
+        <entry key="../../../../../../mnt/hard_ubuntu/development/university/mad/G22-Lab5/app/src/main/res/drawable/ic_baseline_send_24.xml" value="0.222" />
+        <entry key="../../../../../../mnt/hard_ubuntu/development/university/mad/G22-Lab5/app/src/main/res/drawable/ic_baseline_sort_24.xml" value="0.222" />
+        <entry key="../../../../../../mnt/hard_ubuntu/development/university/mad/G22-Lab5/app/src/main/res/drawable/ic_baseline_title_tool.xml" value="0.3125" />
+        <entry key="../../../../../../mnt/hard_ubuntu/development/university/mad/G22-Lab5/app/src/main/res/drawable/sort_down.xml" value="0.222" />
         <entry key="../../../../../../mnt/hard_ubuntu/development/university/mad/G22-Lab5/app/src/main/res/layout/time_slot_edit_frag.xml" value="0.2509057971014493" />
         <entry key="../../../../../../mnt/hard_ubuntu/development/university/mad/G22-Lab5/app/src/main/res/layout/time_slot_list_frag.xml" value="0.2513586956521739" />
+        <entry key="../../../../../../mnt/hard_ubuntu/development/university/mad/G22-Lab5/app/src/main/res/layout/time_slot_list_new_frag.xml" value="0.2515865820489574" />
         <entry key="../../../../../../mnt/hard_ubuntu/development/university/mad/G22-Lab5/app/src/main/res/layout/time_slot_show_frag.xml" value="0.2513586956521739" />
         <entry key="../../../../../layout/custom_preview.xml" value="0.21944444444444444" />
         <entry key="../../../../layout/custom_preview.xml" value="0.3374094202898551" />
