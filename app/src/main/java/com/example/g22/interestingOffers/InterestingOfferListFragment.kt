@@ -2,12 +2,7 @@ package com.example.g22.interestingOffers
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
@@ -15,9 +10,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.g22.R
-import com.example.g22.TimeSlotList.MessageAdapter
-import com.example.g22.chat.MessagesListVM
-import com.google.android.material.tabs.TabItem
 import com.google.android.material.tabs.TabLayout
 
 class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offer_list) {

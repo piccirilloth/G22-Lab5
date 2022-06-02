@@ -2,10 +2,8 @@ package com.example.g22.TimeSlotView
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.ScrollView
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -22,7 +20,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
+class TimeSlotShowFragment : Fragment(R.layout.time_slot_show_frag) {
 
     // ViewModels
     private val timeslotVM by activityViewModels<TimeSlotVM>()
@@ -39,6 +37,7 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
     private lateinit var ownerBtn: Button
     private lateinit var contactButton: Button
     private lateinit var progressBar: ProgressBar
+    private lateinit var toolbar: Toolbar
 
     // Others
     private lateinit var navController: NavController
@@ -61,11 +60,14 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
         ownerBtn = requireActivity().findViewById(R.id.timeslot_show_owner_button)
         contactButton = requireActivity().findViewById(R.id.timeslot_show_contact_button)
         progressBar = requireActivity().findViewById(R.id.timeslot_show_progress_bar)
+        toolbar = requireActivity().findViewById(R.id.toolbar)
 
         // Other profile button listener
         ownerBtn.setOnClickListener {
-            navController.navigate(R.id.action_nav_timeslot_show_to_nav_show_other_profile,
-            bundleOf("profileId" to timeslotVM.currTimeSlotLD.value?.owner))
+            navController.navigate(
+                R.id.action_nav_timeslot_show_to_nav_show_other_profile,
+                bundleOf("profileId" to timeslotVM.currTimeSlotLD.value?.owner)
+            )
         }
 
         if (savedInstanceState == null) {
@@ -75,7 +77,7 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
             } else {
                 navController.popBackStack()
             }
-        //            if (navArguments.timeSlotId != "" && !timeslotVM.setCurrentTimeSlot(navArguments.timeSlotId, true))
+            //            if (navArguments.timeSlotId != "" && !timeslotVM.setCurrentTimeSlot(navArguments.timeSlotId, true))
 //                navController.popBackStack()
         }
 
@@ -93,48 +95,58 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
         }
 
         timeslotVM.currTimeSlotLD.observe(viewLifecycleOwner) {
+            val menu = toolbar.menu
+            val editIcon = menu.findItem(R.id.edit_item)
+            if (navArguments.readOnly == true)
+                editIcon?.setVisible(false)
+            else {
+                if (it.proposalsCounter > 0 || it.accepted || editIcon == null)
+                    editIcon?.setVisible(false)
+                else
+                    editIcon?.setVisible(true)
+            }
             bindTimeSlotData(it)
         }
 
         timeslotVM.ownerLD.observe(viewLifecycleOwner) {
             if (Firebase.auth.currentUser != null &&
-                timeslotVM.currTimeSlotLD.value!!.owner == Firebase.auth.currentUser!!.uid) {
+                timeslotVM.currTimeSlotLD.value!!.owner == Firebase.auth.currentUser!!.uid
+            ) {
                 ownerBtn.text = "Myself"
                 ownerBtn.isEnabled = false
                 contactButton.visibility = View.GONE
-            }
-            else {
+            } else {
                 ownerBtn.text = it
                 ownerBtn.isEnabled = true
                 contactButton.visibility = View.VISIBLE
                 contactButton.setOnClickListener {
                     navController.navigate(
                         R.id.action_nav_timeslot_show_to_chatFragment,
-                        bundleOf("receiver" to timeslotVM.currTimeSlotLD.value?.owner,
+                        bundleOf(
+                            "receiver" to timeslotVM.currTimeSlotLD.value?.owner,
                             "offerId" to timeslotVM.currTimeSlotLD.value?.id,
-                        "receiverName" to ownerBtn.text.toString(),
-                            "offerTitle" to timeslotVM.currTimeSlotLD.value?.title)
+                            "receiverName" to ownerBtn.text.toString(),
+                            "offerTitle" to timeslotVM.currTimeSlotLD.value?.title
+                        )
                     ) //TODO:
                 }
             }
         }
 
         timeslotListVM.hasBeenEdited.observe(viewLifecycleOwner) {
-            if(it) {
-                Snackbar.make(requireView(), "Offer successfully edited", Snackbar.LENGTH_LONG).show()
+            if (it) {
+                Snackbar.make(requireView(), "Offer successfully edited", Snackbar.LENGTH_LONG)
+                    .show()
                 timeslotListVM.hasBeenEdited.value = false
             }
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater){
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.edit_menu, menu)
         val editIcon = menu.findItem(R.id.edit_item)
-        if (navArguments.readOnly == true)
-            editIcon.setVisible(false)
-        else
-            editIcon.setVisible(true)
+        editIcon.setVisible(false)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -178,7 +190,7 @@ class TimeSlotShowFragment: Fragment(R.layout.time_slot_show_frag) {
             R.id.action_timeSlotShowMyOffersFragment_to_timeSlotEditFragment,
             bundleOf("isAdd" to false, "timeSlotId" to timeslotVM.currTimeSlotLD.value!!.id)
         )
-            //.actionTimeSlotShowFragmentToTimeSlotEditFragment(isAdd = false, timeSlotId = timeslotVM.currTimeSlotLD.value!!.id)
+        //.actionTimeSlotShowFragmentToTimeSlotEditFragment(isAdd = false, timeSlotId = timeslotVM.currTimeSlotLD.value!!.id)
         //navController.navigate(action)
     }
 }

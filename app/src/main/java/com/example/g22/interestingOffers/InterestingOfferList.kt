@@ -1,5 +1,6 @@
 package com.example.g22.interestingOffers
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -37,20 +38,29 @@ class InterestingOfferList {
                 titleTV.text = item.offerTitle
                 fullnameTV.text = if(item.requestorUid == Firebase.auth.currentUser!!.uid) item.receiverName else item.requestorName
                 notChip.text = if(item.requestorUid == Firebase.auth.currentUser!!.uid) item.requestorUnseen.toString() else item.receiverUnseen.toString()
+                if (notChip.text.toString().toInt() == 0) {
+                    notChip.visibility = View.GONE
+                }
+                else {
+                    notChip.visibility = View.VISIBLE
+                }
+
                 cardView.setOnClickListener { onCardViewClickCallback(bindingAdapterPosition) }
                 if (item.status == Status.REJECTED) {
-                    notChip.visibility = View.VISIBLE
+                    notChip.visibility = View.GONE
                     rateButton.visibility = View.GONE
                     itemCl.setBackgroundResource(R.drawable.rounded_corner_rejected)
                 }
                 else if (item.status == Status.CONFIRMED) {
-                    notChip.visibility = View.GONE
+                    if (notChip.text.toString().toInt() > 0)
+                        notChip.visibility = View.VISIBLE
                     rateButton.visibility = View.VISIBLE
                     itemCl.setBackgroundResource(R.drawable.rounder_corner_accepted)
                 }
                 else {
                     rateButton.visibility = View.GONE
-                    notChip.visibility = View.VISIBLE
+                    if (notChip.text.toString().toInt() > 0)
+                        notChip.visibility = View.VISIBLE
                     itemCl.setBackgroundResource(R.drawable.rounded_corner)
                 }
             }

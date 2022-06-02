@@ -139,7 +139,8 @@ class AdvertisementAdapter(private var data: List<Advertisement>, private val sk
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val same = oldList[oldItemPosition].datetime == newList[newItemPosition].datetime &&
             oldList[oldItemPosition].title == newList[newItemPosition].title &&
-            oldList[oldItemPosition].duration == newList[newItemPosition].duration
+            oldList[oldItemPosition].duration == newList[newItemPosition].duration &&
+            oldList[oldItemPosition].proposalsCounter == newList[newItemPosition].proposalsCounter
             return same
         }
     }
