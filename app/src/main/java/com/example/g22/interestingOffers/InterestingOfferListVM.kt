@@ -43,12 +43,17 @@ class InterestingOfferListVM(application: Application) : AndroidViewModel(applic
                         return@addSnapshotListener
                     }
                     if (value != null && !value.isEmpty) {
-                        val result = emptyList<Conversation>().toMutableList()
+                        /*val result = emptyList<Conversation>().toMutableList()
                         val tmp = value.toObjects(Conversation::class.java)
                         for (conv in tmp) {
                             result.add(if (conv.status == Status.REJECTED) max(result.size, 0) else 0, conv)
-                        }
-                        _interOfferListLD.value = result
+                        }*/
+                        _interOfferListLD.value = value.toObjects(Conversation::class.java).sortedBy {
+                            if (it.status == Status.REJECTED)
+                                 1
+                            else
+                                 0
+                        }.toMutableList()
                     }
                     else {
                         _interOfferListLD.value = emptyList<Conversation>().toMutableList()

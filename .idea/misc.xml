@@ -147,7 +147,7 @@
         <entry key="app/src/main/res/layout/fragment_chat.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_interesting_offer_list.xml" value="0.27445652173913043" />
         <entry key="app/src/main/res/layout/interesting_offer_list_item.xml" value="0.5" />
-        <entry key="app/src/main/res/layout/message_item.xml" value="0.27445652173913043" />
+        <entry key="app/src/main/res/layout/message_item.xml" value="0.5" />
         <entry key="app/src/main/res/layout/show_profile_frag.xml" value="0.34375" />
         <entry key="app/src/main/res/layout/skill_item.xml" value="0.5" />
         <entry key="app/src/main/res/layout/skills_list_frag.xml" value="0.4296875" />

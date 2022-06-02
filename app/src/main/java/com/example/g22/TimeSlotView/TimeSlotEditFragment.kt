@@ -294,7 +294,8 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
             locationEditText.text.toString(),
             "${Firebase.auth.currentUser?.uid}",
             timeslotVM.skillsLD.value ?: emptyList(),
-            false
+            false,
+            0
         )
         timeslotListVM.addTimeslot(newTS)
         timeslotListVM.hasBeenAdded.value = true

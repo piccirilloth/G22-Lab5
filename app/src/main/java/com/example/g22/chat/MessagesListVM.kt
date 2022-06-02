@@ -116,6 +116,10 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
             var oldReceiverUnseen = 0
             var oldRequestorUnseen = 0
             if (user != null) {
+                val oldProposalsCounter = transaction.get(
+                    db.collection("offers").document(timeSlotId),
+                ).getLong("proposalsCounter")
+
                 if (conversationId.value!! != "") {
                     val updateNotRef =
                         db.collection("conversations").document(conversationId.value!!)
@@ -150,6 +154,11 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                             0,
                             Status.PENDING
                         )
+                    )
+                    transaction.update(
+                        db.collection("offers").document(timeSlotId),
+                        "proposalsCounter",
+                        oldProposalsCounter?.plus(1)
                     )
                 } else {
                     val updateNotRef =
@@ -201,10 +210,9 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                 transaction.update(convRef, "status", Status.CONFIRMED)
                 transaction.update(offerRef, "isAccepted", true)
                 transaction.update(receiverRef, "credit", creditRec + offerDuration)
-            }
-            else {
+            } else {
                 val rejRef = db.collection("conversations")
-                                .document(conversationId.value!!)
+                    .document(conversationId.value!!)
                 transaction.update(rejRef, "status", Status.REJECTED)
             }
 
@@ -213,12 +221,23 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
     }
 
     fun rejectRequest() {
-        db.collection("conversations")
-            .document(conversationId.value!!)
-            .update("status", Status.REJECTED)
+        db.runTransaction { transaction ->
+            val convRef = db.collection("conversations")
+                .document(conversationId.value!!)
+
+            val offerRef = db.collection("offers").document(_messageListLD.value!!.first().offer)
+            val oldCounter = transaction.get(offerRef)
+                .getLong("proposalsCounter")
+
+            transaction.update(convRef,"status", Status.REJECTED)
+
+            transaction.update(offerRef, "proposalsCounter", oldCounter!!.minus(1))
+
+        }
             .addOnSuccessListener {
                 _conversationStatusLD.value = Status.REJECTED
             }
+
     }
 
     override fun onCleared() {

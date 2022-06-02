@@ -102,7 +102,7 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
                     }
                     if (value != null) {
                         if (!value.isEmpty)
-                            _tsListLD.postValue(value.toObjects(TimeSlot::class.java))
+                            _tsListLD.postValue(value.toObjects(TimeSlot::class.java).sortedBy { it.accepted })
                         else
                             _tsListLD.postValue(emptyList())
 
@@ -120,7 +120,8 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
         _tsListLD.value = emptyList()
 
         tsListListenerRegistration = db.collection("offers")
-            .whereArrayContains("skills", skill) // TODO: check if the offer has been accepted
+            .whereEqualTo("accepted", false)
+            .whereArrayContains("skills", skill)
             .addSnapshotListener(Dispatchers.IO.asExecutor()) { value, error ->
                 if (error != null) {
                     return@addSnapshotListener

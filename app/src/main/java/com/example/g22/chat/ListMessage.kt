@@ -32,10 +32,39 @@ class MessageAdapter(private var data: List<Message>): RecyclerView.Adapter<Mess
             timeTV.text = time
             val cs = ConstraintSet()
             cs.clone(cl)
-            if(sender == "${Firebase.auth.currentUser!!.uid}")
-                cs.clear(R.id.message_item_card, ConstraintSet.START)
+            cs.clear(R.id.message_item_card, ConstraintSet.START)
+            cs.clear(R.id.message_item_card, ConstraintSet.END)
+            cs.clear(R.id.message_time_textview, ConstraintSet.START)
+            cs.clear(R.id.message_time_textview, ConstraintSet.END)
+            if(sender == "${Firebase.auth.currentUser!!.uid}") {
+                cs.connect(
+                    R.id.message_item_card,
+                    ConstraintSet.END,
+                    ConstraintSet.PARENT_ID,
+                    ConstraintSet.END
+                )
+                cs.connect(
+                    R.id.message_time_textview,
+                    ConstraintSet.END,
+                    R.id.message_item_card,
+                    ConstraintSet.END
+                )
+            }
             else
-                cs.clear(R.id.message_item_card, ConstraintSet.END)
+            {
+                cs.connect(
+                    R.id.message_item_card,
+                    ConstraintSet.START,
+                    ConstraintSet.PARENT_ID,
+                    ConstraintSet.START
+                )
+                cs.connect(
+                    R.id.message_time_textview,
+                    ConstraintSet.START,
+                    R.id.message_item_card,
+                    ConstraintSet.START
+                )
+            }
             cs.applyTo(cl)
         }
 
