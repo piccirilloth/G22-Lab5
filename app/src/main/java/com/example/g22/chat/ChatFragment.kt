@@ -81,7 +81,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     rejectMessage.text = "You have rejected user's proposal."
                 }
             }
-            if (it == Status.REJECTED_BALANCE && !messageListVM.messageListLD.value!!.isEmpty()) {
+            else if (it == Status.REJECTED_BALANCE && !messageListVM.messageListLD.value!!.isEmpty()) {
                 rejectMessage.visibility = View.VISIBLE
                 messageEditText.isEnabled = false
                 sendBtn.isEnabled = false
@@ -101,6 +101,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     rejectMessage.text = "Your proposal has been accepted!"
                 }
                 else {
+                    acceptBtn.visibility = View.GONE
+                    rejectBtn.visibility = View.GONE
                     rejectMessage.text = "Your have accepted user's proposal!"
 
                 }

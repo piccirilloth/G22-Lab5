@@ -206,6 +206,7 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                         transaction.set(
                             ref,
                             Conversation(
+                                ref.id,
                                 timeSlotId,
                                 user.uid,
                                 receiver,
