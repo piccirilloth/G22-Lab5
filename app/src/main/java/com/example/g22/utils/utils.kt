@@ -2,7 +2,6 @@ package com.example.g22
 
 import com.example.g22.TimeSlotList.Advertisement
 import com.example.g22.model.TimeSlot
-import java.sql.Time
 import java.text.DateFormat
 import java.util.*
 
@@ -15,10 +14,6 @@ fun List<TimeSlot>.toAdvertisementList() : List<Advertisement> {
     val l: MutableList<Advertisement> = mutableListOf()
     this.forEach { l.add(Advertisement.FromTimeSlot(it)) }
     return l
-}
-
-fun String.isValidFirebaseID(): Boolean {
-    return this != ""
 }
 
 // Profile pictures handling

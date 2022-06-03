@@ -9,16 +9,21 @@ import androidx.cardview.widget.CardView
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.g22.R
 import com.example.g22.custom_format
+import com.example.g22.model.Conversation
+import com.example.g22.model.Status
 import com.example.g22.model.TimeSlot
 import com.example.g22.toAdvertisementList
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
-data class Advertisement(val id: String, val title: String, val datetime: String, val duration: String) {
+data class Advertisement(val id: String, val title: String, val datetime: String, val duration: String, val accepted: Boolean, val proposalsCounter: Int) {
     companion object {
         fun FromTimeSlot(ts: TimeSlot) : Advertisement {
-            return Advertisement(ts.id, ts.title, ts.date.custom_format(), ts.duration.toShortString())
+            return Advertisement(ts.id, ts.title, ts.date.custom_format(), ts.duration.toShortString(), ts.accepted, ts.proposalsCounter)
         }
     }
 }
@@ -36,12 +41,24 @@ class AdvertisementAdapter(private var data: List<Advertisement>, private val sk
             datetimeTV.text = item.datetime
             durationTV.text = item.duration
             cardView.setOnClickListener { onCardViewClickCallback(bindingAdapterPosition) }
-            if (skill == null ) {
+            if (skill == null) {
                 editButtonImgBtn.setOnClickListener { onEditButtonClickCallback(bindingAdapterPosition) }
-                editButtonImgBtn.visibility = View.VISIBLE
+                if (item.proposalsCounter > 0) {
+                    editButtonImgBtn.visibility = View.GONE
+                }
+                else {
+                    editButtonImgBtn.visibility = View.VISIBLE
+                }
             }
             else {
-                editButtonImgBtn.visibility = View.INVISIBLE
+                editButtonImgBtn.visibility = View.GONE
+            }
+
+            if (item.accepted) {
+                cardView.setBackgroundResource(R.drawable.rounder_corner_accepted)
+            }
+            else {
+                cardView.setBackgroundResource(R.drawable.rounded_corner)
             }
         }
 
@@ -75,10 +92,11 @@ class AdvertisementAdapter(private var data: List<Advertisement>, private val sk
     }
 
     fun updateList(tsList: List<TimeSlot>) {
-        data = tsList.toAdvertisementList()
+        val newList = tsList.toAdvertisementList()
+        val diffs = DiffUtil.calculateDiff(AdvertisementListCallback(data, newList))
+        data = newList
+        diffs.dispatchUpdatesTo(this)
 
-        // TODO: provide a way to handle list modifications better
-        notifyDataSetChanged()
     }
 
     /**
@@ -105,4 +123,27 @@ class AdvertisementAdapter(private var data: List<Advertisement>, private val sk
             bundleOf("timeSlotId" to data[adapterPos].id)
         )
     }
+
+    class AdvertisementListCallback(
+        private val oldList: List<Advertisement>,
+        private val newList: List<Advertisement>
+    ): DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].id == newList[newItemPosition].id
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val same = oldList[oldItemPosition].datetime == newList[newItemPosition].datetime &&
+            oldList[oldItemPosition].title == newList[newItemPosition].title &&
+            oldList[oldItemPosition].duration == newList[newItemPosition].duration &&
+            oldList[oldItemPosition].proposalsCounter == newList[newItemPosition].proposalsCounter
+            return same
+        }
+    }
+
+
 }

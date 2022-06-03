@@ -24,20 +24,26 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
     private val db = FirebaseFirestore.getInstance()
 
     private var msgListListenerRegistration: ListenerRegistration? = null
+    private var convStatusListenerRegistration: ListenerRegistration? = null
 
     private val _messageListLD: MutableLiveData<List<Message>> =
         MutableLiveData<List<Message>>().also {
             it.value = emptyList()
         }
 
+
     val messageListLD: LiveData<List<Message>> = _messageListLD
 
     var conversationId: MutableLiveData<String> = MutableLiveData<String>("")
 
+    private val _conversationStatusLD: MutableLiveData<Status?> = MutableLiveData<Status?>()
+
+    val conversationStatusLD = _conversationStatusLD
+
+
     fun observeMessages(receiver: String, timeSlotId: String) {
         val users = listOf<String>("${Firebase.auth.currentUser!!.uid}", receiver)
         msgListListenerRegistration?.remove()
-        clearList()
         msgListListenerRegistration = db.collection("chats")
             .whereEqualTo("offer", timeSlotId)
             .whereIn("sender", users)
@@ -50,54 +56,129 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                     val result = value.toObjects(Message::class.java).filter {
                         users.contains(it.receiver)
                     }
-                    conversationId.value = result[0].conversationId
-                    _messageListLD.value = result.sortedBy { it.time.toString() }
-                }
-                else {
+                    if (!result.isEmpty()) {
+                        conversationId.value = result[0].conversationId
+                        _messageListLD.value = result.sortedBy { it.time.toString() }
+                    } else {
+                        _messageListLD.value = emptyList()
+                    }
+                } else {
                     _messageListLD.value = emptyList()
                 }
 
             }
     }
 
+    fun observeConversationStatus() {
+        convStatusListenerRegistration?.remove()
+        if (conversationId.value != "") {
+            convStatusListenerRegistration = db.collection("conversations")
+                .document(conversationId.value!!)
+                .addSnapshotListener { value, error ->
+                    val tmpStatus = value!!.get("status").toString()
+                    if (tmpStatus == "CONFIRMED")
+                        _conversationStatusLD.value = Status.CONFIRMED
+                    else if (tmpStatus == "REJECTED")
+                        _conversationStatusLD.value = Status.REJECTED
+                    else
+                        _conversationStatusLD.value = Status.PENDING
+                }
+        }
+    }
+
     fun resetNotifications() {
         db.runTransaction { transaction ->
             val convRef = db.collection("conversations").document(conversationId.value!!)
             val requestorUid = transaction.get(convRef).get("requestorUid")
-            transaction.update(convRef, if(requestorUid == Firebase.auth.currentUser!!.uid) "requestorUnseen" else "receiverUnseen", 0)
+            transaction.update(
+                convRef,
+                if (requestorUid == Firebase.auth.currentUser!!.uid) "requestorUnseen" else "receiverUnseen",
+                0
+            )
         }
     }
 
-    fun createMessage(receiver: String, timeSlotId: String, message: String, offerTitle: String, receiverName: String) {
+    fun resetConversationStatus() {
+        _conversationStatusLD.value = null
+    }
+
+    fun createMessage(
+        receiver: String,
+        timeSlotId: String,
+        message: String,
+        offerTitle: String,
+        receiverName: String
+    ) {
         val user = Firebase.auth.currentUser
         val ref = db.collection("conversations").document()
         db.runTransaction { transaction ->
             var requestorUid = ""
             var oldReceiverUnseen = 0
             var oldRequestorUnseen = 0
-            if(user != null) {
-                if(conversationId.value!! != "") {
-                    val updateNotRef = db.collection("conversations").document(conversationId.value!!)
+            if (user != null) {
+                val oldProposalsCounter = transaction.get(
+                    db.collection("offers").document(timeSlotId),
+                ).getLong("proposalsCounter")
+
+                if (conversationId.value!! != "") {
+                    val updateNotRef =
+                        db.collection("conversations").document(conversationId.value!!)
                     val queryResult = transaction.get(updateNotRef)
                     requestorUid = queryResult.get("requestorUid").toString()
                     oldReceiverUnseen = queryResult.get("receiverUnseen").toString().toInt()
                     oldRequestorUnseen = queryResult.get("requestorUnseen").toString().toInt()
                 }
                 val chatRef = db.collection("chats").document()
-                transaction.set(chatRef, Message(timeSlotId, receiver, "${Firebase.auth.currentUser!!.uid}",
-                    message, Timestamp.now().toDate(), if(conversationId.value!! == "") ref.id else conversationId.value!!))
+                transaction.set(
+                    chatRef, Message(
+                        chatRef.id,
+                        timeSlotId,
+                        receiver,
+                        "${Firebase.auth.currentUser!!.uid}",
+                        message,
+                        Timestamp.now().toDate(),
+                        if (conversationId.value!! == "") ref.id else conversationId.value!!
+                    )
+                )
                 if (messageListLD.value?.size == 0) {
-                    transaction.set(ref, Conversation(timeSlotId, user.uid, receiver, offerTitle, user.displayName.toString(), receiverName, 1, 0, Status.PENDING))
+                    transaction.set(
+                        ref,
+                        Conversation(
+                            timeSlotId,
+                            user.uid,
+                            receiver,
+                            offerTitle,
+                            user.displayName.toString(),
+                            receiverName,
+                            1,
+                            0,
+                            Status.PENDING
+                        )
+                    )
+                    transaction.update(
+                        db.collection("offers").document(timeSlotId),
+                        "proposalsCounter",
+                        oldProposalsCounter?.plus(1)
+                    )
                 } else {
-                    val updateNotRef = db.collection("conversations").document(conversationId.value!!)
-                    val userToNotify = if(receiver == requestorUid) "requestorUnseen" else "receiverUnseen"
-                    transaction.update(updateNotRef, userToNotify, if(userToNotify == "requestorUnseen") oldRequestorUnseen+1 else oldReceiverUnseen+1)
+                    val updateNotRef =
+                        db.collection("conversations").document(conversationId.value!!)
+                    val userToNotify =
+                        if (receiver == requestorUid) "requestorUnseen" else "receiverUnseen"
+                    transaction.update(
+                        updateNotRef,
+                        userToNotify,
+                        if (userToNotify == "requestorUnseen") oldRequestorUnseen + 1 else oldReceiverUnseen + 1
+                    )
                 }
             }
         }.addOnSuccessListener {
-            if(conversationId.value!! == "")
+            if (conversationId.value!! == "")
                 conversationId.value = ref.id
+        }.addOnFailureListener {
+            Log.d("Creazione:errore", it.message.toString())
         }
+
 
     }
 
@@ -109,9 +190,9 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
         db.runTransaction { transaction ->
             val convRef = db.collection("conversations").document(conversationId.value!!)
             val convResult = transaction.get(convRef)
-            val requestorUid: String = convResult.getString("requestorUid")?: return@runTransaction
-            val receiverUid: String = convResult.getString("receiverUid")?: return@runTransaction
-            val offerId: String = convResult.getString("offerId")?: return@runTransaction
+            val requestorUid: String = convResult.getString("requestorUid") ?: return@runTransaction
+            val receiverUid: String = convResult.getString("receiverUid") ?: return@runTransaction
+            val offerId: String = convResult.getString("offerId") ?: return@runTransaction
 
             val requestorRef = db.collection("users").document(requestorUid)
             val creditReq: Int = transaction.get(requestorRef).get("credit").toString().toInt()
@@ -120,16 +201,49 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
             val creditRec: Int = transaction.get(receiverRef).get("credit").toString().toInt()
 
             val offerRef = db.collection("offers").document(offerId)
-            val offerDuration = transaction.get(offerRef).get("duration", Duration::class.java)?.minutes?: return@runTransaction
-            if(creditReq >= offerDuration) {
+            val offerDuration =
+                transaction.get(offerRef).get("duration", Duration::class.java)?.minutes
+                    ?: return@runTransaction
+            if (creditReq >= offerDuration) {
                 // the user has enough credits
                 transaction.update(requestorRef, "credit", creditReq - offerDuration)
                 transaction.update(convRef, "status", Status.CONFIRMED)
                 transaction.update(offerRef, "isAccepted", true)
                 transaction.update(receiverRef, "credit", creditRec + offerDuration)
+            } else {
+                val rejRef = db.collection("conversations")
+                    .document(conversationId.value!!)
+                transaction.update(rejRef, "status", Status.REJECTED)
             }
 
         }
 
     }
+
+    fun rejectRequest() {
+        db.runTransaction { transaction ->
+            val convRef = db.collection("conversations")
+                .document(conversationId.value!!)
+
+            val offerRef = db.collection("offers").document(_messageListLD.value!!.first().offer)
+            val oldCounter = transaction.get(offerRef)
+                .getLong("proposalsCounter")
+
+            transaction.update(convRef,"status", Status.REJECTED)
+
+            transaction.update(offerRef, "proposalsCounter", oldCounter!!.minus(1))
+
+        }
+            .addOnSuccessListener {
+                _conversationStatusLD.value = Status.REJECTED
+            }
+
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        convStatusListenerRegistration?.remove()
+        msgListListenerRegistration?.remove()
+    }
+
 }

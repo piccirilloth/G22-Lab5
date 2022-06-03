@@ -17,6 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/interesting_offer_list_card_cl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/rounded_corner">
@@ -50,6 +51,22 @@
                 app:layout_constraintEnd_toStartOf="@+id/interesting_offers_list_item_count_notification_chip"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/interesting_offer_list_item_offerTitle_text_view" />
+
+            <ImageButton
+                android:id="@+id/interesting_offer_list_rate_button"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="0"
+                android:background="@drawable/circle"
+                android:contentDescription="Rate the user"
+                android:elevation="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_star_rate_24"
+                app:tint="?attr/colorOnPrimary" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/interesting_offers_list_item_count_notification_chip"

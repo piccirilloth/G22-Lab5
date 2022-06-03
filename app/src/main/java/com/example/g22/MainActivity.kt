@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var myOffersItem: MenuItem
     private lateinit var profileItem: MenuItem
     private lateinit var intOffersItem: MenuItem
+    private lateinit var acceptedOffersItem: MenuItem
 
     lateinit var oneTapClient: SignInClient
     lateinit var signInRequest: BeginSignInRequest
@@ -95,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         myOffersItem = navView.menu.findItem(R.id.nav_timeslot_list_my_offers)
         profileItem = navView.menu.findItem(R.id.nav_show_profile)
         intOffersItem = navView.menu.findItem(R.id.nav_interesting_offers)
+        acceptedOffersItem = navView.menu.findItem(R.id.nav_accepted_offers)
 
         // Set the navigation drawer header
         val navHeader: View = navView.getHeaderView(0)
@@ -124,7 +126,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_timeslot_list_my_offers,
                 R.id.nav_show_profile,
                 R.id.nav_skills_list,
-                R.id.nav_interesting_offers
+                R.id.nav_interesting_offers,
+                R.id.nav_accepted_offers
             ), drawerLayout
         )
 
@@ -139,6 +142,8 @@ class MainActivity : AppCompatActivity() {
                 myOffersItem.isEnabled = false
                 profileItem.isEnabled = false
                 intOffersItem.isEnabled = false
+                acceptedOffersItem.isEnabled = false
+
 
                 navHeaderProfilePic.visibility = View.GONE
                 navHeaderProfileName.visibility = View.GONE
@@ -146,10 +151,15 @@ class MainActivity : AppCompatActivity() {
 
                 navHeaderLoginLabel.visibility = View.VISIBLE
                 navHeaderGoogleLoginButton.visibility = View.VISIBLE
-                if (navController.currentDestination?.id == R.id.nav_timeslot_list_my_offers ||
+                if (
+                    navController.currentDestination?.id == R.id.nav_show_profile ||
+                    navController.currentDestination?.id == R.id.nav_edit_profile ||
+                    navController.currentDestination?.id == R.id.nav_chat_fragment ||
+                    navController.currentDestination?.id == R.id.nav_timeslot_list_my_offers ||
                     navController.currentDestination?.id == R.id.nav_timeslot_edit ||
                     navController.currentDestination?.id == R.id.nav_timeslot_show_my_offers ||
-                    navController.currentDestination?.id == R.id.nav_interesting_offers
+                    navController.currentDestination?.id == R.id.nav_interesting_offers ||
+                    navController.currentDestination?.id == R.id.nav_accepted_offers
                 ) {
                     // if (navController.currentDestination?.id != R.id.nav_skills_list)
                     navController.navigate(R.id.nav_to_home)
@@ -158,6 +168,7 @@ class MainActivity : AppCompatActivity() {
                 myOffersItem.isEnabled = true
                 profileItem.isEnabled = true
                 intOffersItem.isEnabled = true
+                acceptedOffersItem.isEnabled = true
 
                 navHeaderProfilePic.visibility = View.VISIBLE
                 navHeaderProfileName.visibility = View.VISIBLE

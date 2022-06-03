@@ -3,6 +3,7 @@ package com.example.g22.model
 import java.util.Date
 
 data class Message(
+    val messageId: String,
     var offer: String,
     var receiver: String,
     var sender: String,
@@ -11,6 +12,7 @@ data class Message(
     var conversationId: String
 ) {
     constructor(): this(
+        "",
         "",
         "",
         "",

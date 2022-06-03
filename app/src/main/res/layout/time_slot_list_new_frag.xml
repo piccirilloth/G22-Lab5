@@ -5,12 +5,84 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/timeslot_list_content_cl"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/timeslot_list_tools_cl"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+            <ImageView
+                android:id="@+id/timeslot_list_date_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_list_date_icon5"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_list_date_icon4"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_calendar_month_tool" />
+
+            <ImageView
+                android:id="@+id/timeslot_list_date_icon2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_list_date_icon6"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_list_date_icon5"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_location_on_tool" />
+
+            <ImageView
+                android:id="@+id/timeslot_list_date_icon3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_list_date_icon4"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_title_tool" />
+
+            <ImageView
+                android:id="@+id/timeslot_list_date_icon4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_list_date_icon"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_list_date_icon3"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24" />
+
+            <ImageView
+                android:id="@+id/timeslot_list_date_icon5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/timeslot_list_date_icon2"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_list_date_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24" />
+
+            <ImageView
+                android:id="@+id/timeslot_list_date_icon6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/timeslot_list_date_icon2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <EditText
             android:id="@+id/time_slot_list_search_edit_text"
@@ -21,6 +93,7 @@
             android:hint="Insert title here"
             android:inputType="textPersonName"
             android:minHeight="48dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/timeslot_edit_sort_menu"
             app:layout_constraintEnd_toStartOf="@id/time_slot_list_search_button"
             app:layout_constraintHorizontal_bias="0.5"
@@ -35,6 +108,7 @@
             android:background="@drawable/rounded_corner_secondary"
             android:backgroundTint="@color/secondaryColor"
             android:elevation="8dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/time_slot_list_search_edit_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/time_slot_list_search_edit_text"
@@ -50,7 +124,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/timeslot_edit_sort_menu">
+            app:layout_constraintTop_toBottomOf="@+id/timeslot_list_tools_cl">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -90,12 +164,12 @@
             android:backgroundTint="@color/secondaryColor"
             android:elevation="8dp"
             android:minHeight="48dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/timeslot_edit_sort_menu"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/timeslot_edit_sort_menu"
             app:srcCompat="@drawable/ic_baseline_save_changes_24"
-            app:tint="?attr/colorOnPrimary"
-            tools:layout_editor_absoluteY="70dp" />
+            app:tint="?attr/colorOnPrimary" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/timeslot_edit_sort_menu"
@@ -104,6 +178,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:hint="Sort"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/timeslot_list_rv"
             app:layout_constraintEnd_toStartOf="@+id/time_slot_list_apply_sort_button"
             app:layout_constraintHorizontal_bias="0.5"
