@@ -90,6 +90,8 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                             tmpStatus = Status.CONFIRMED
                         else if (tmpStatusStr == "REJECTED")
                             tmpStatus = Status.REJECTED
+                        else if (tmpStatusStr == "REJECTED_BALANCE")
+                            tmpStatus = Status.REJECTED_BALANCE
                         else
                             tmpStatus = Status.PENDING
 

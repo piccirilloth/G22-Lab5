@@ -34,7 +34,7 @@ class InterestingOfferList {
             private val itemCl: ConstraintLayout = v.findViewById(R.id.interesting_offer_list_card_cl)
             private val rateButton: ImageButton = v.findViewById(R.id.interesting_offer_list_rate_button)
 
-            fun bind(item: Conversation, onCardViewClickCallback: (Int) -> Unit) {
+            fun bind(item: Conversation, onCardViewClickCallback: (Int) -> Unit, onRateBtnClickCallback: (Int) -> Unit) {
                 titleTV.text = item.offerTitle
                 fullnameTV.text = if(item.requestorUid == Firebase.auth.currentUser!!.uid) item.receiverName else item.requestorName
                 notChip.text = if(item.requestorUid == Firebase.auth.currentUser!!.uid) item.requestorUnseen.toString() else item.receiverUnseen.toString()
@@ -46,7 +46,7 @@ class InterestingOfferList {
                 }
 
                 cardView.setOnClickListener { onCardViewClickCallback(bindingAdapterPosition) }
-                if (item.status == Status.REJECTED) {
+                if (item.status == Status.REJECTED || item.status == Status.REJECTED_BALANCE) {
                     notChip.visibility = View.GONE
                     rateButton.visibility = View.GONE
                     itemCl.setBackgroundResource(R.drawable.rounded_corner_rejected)
@@ -55,6 +55,7 @@ class InterestingOfferList {
                     if (notChip.text.toString().toInt() > 0)
                         notChip.visibility = View.VISIBLE
                     rateButton.visibility = View.VISIBLE
+                    rateButton.setOnClickListener { onRateBtnClickCallback(bindingAdapterPosition) }
                     itemCl.setBackgroundResource(R.drawable.rounder_corner_accepted)
                 }
                 else {
@@ -67,6 +68,7 @@ class InterestingOfferList {
 
             fun unbind() {
                 cardView.setOnClickListener(null)
+                rateButton.setOnClickListener(null)
             }
         }
 
@@ -83,7 +85,7 @@ class InterestingOfferList {
         override fun onBindViewHolder(holder: InterestingOfferViewHolder, position: Int) {
             val item = data[position]
 
-            holder.bind(item, ::showChat)
+            holder.bind(item, ::showChat, ::rateUser)
         }
 
         override fun getItemCount(): Int = data.size
@@ -124,6 +126,15 @@ class InterestingOfferList {
                     "offerTitle" to data[adapterPos].offerTitle,
                     "receiverName" to data[adapterPos].receiverName
                     )
+            )
+        }
+
+        fun rateUser(adapterPos: Int) {
+            val revieweeId = if (Firebase.auth.currentUser!!.uid == data[adapterPos].requestorUid) data[adapterPos].receiverUid else data[adapterPos].requestorUid
+            val reviewType = if (Firebase.auth.currentUser!!.uid == data[adapterPos].requestorUid) "offerer" else "requestor"
+            navController.navigate(
+                R.id.action_nav_accepted_offers_to_createReviewFragment,
+                bundleOf("revieweeId" to revieweeId, "conversationId" to data[adapterPos].id, "reviewType" to reviewType)
             )
         }
 

@@ -34,7 +34,7 @@ class InterestingOfferListVM(application: Application) : AndroidViewModel(applic
         intListListenerRegistration?.remove()
 
         val uid = if(isIncoming) "receiverUid" else "requestorUid"
-        val status = if (isAccepted) listOf(Status.CONFIRMED) else listOf(Status.PENDING, Status.REJECTED)
+        val status = if (isAccepted) listOf(Status.CONFIRMED) else listOf(Status.PENDING, Status.REJECTED, Status.REJECTED_BALANCE)
         val user = Firebase.auth.currentUser
 
         if(user != null) {
