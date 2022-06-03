@@ -17,40 +17,65 @@ class UserReviewsListVM(application: Application) : AndroidViewModel(application
 
     private var reviewsListListenerRegistration: ListenerRegistration? = null
 
-    private val _reviewsListLD: MutableLiveData<List<Review>> =
+    private val _reviewsOffererListLD: MutableLiveData<List<Review>> =
         MutableLiveData<List<Review>>().also {
             it.value = emptyList()
         }
 
-    val reviewListLD: LiveData<List<Review>> = _reviewsListLD
+    private val _numOffererReviewsLD : MutableLiveData<Int> = MutableLiveData<Int>(0)
+    private val _avgOffererScoreLD : MutableLiveData<Float> = MutableLiveData<Float>("0.0".toFloat())
 
-    fun observeReviews() {
-        val reviewee = "${Firebase.auth.currentUser!!.uid}"
+    private val _reviewsRequestorListLD: MutableLiveData<List<Review>> =
+        MutableLiveData<List<Review>>().also {
+            it.value = emptyList()
+        }
+
+    private val _numRequestorReviewsLD : MutableLiveData<Int> = MutableLiveData<Int>(0)
+    private val _avgRequestorScoreLD : MutableLiveData<Float> = MutableLiveData<Float>("0.0".toFloat())
+
+    val reviewsOffererListLD: LiveData<List<Review>> = _reviewsOffererListLD
+    val numOffererReviewsLD : LiveData<Int> = _numOffererReviewsLD
+    val avgOffererScoreLD : LiveData<Float> = _avgOffererScoreLD
+
+    val reviewsRequestorListLD: LiveData<List<Review>> = _reviewsRequestorListLD
+    val numRequestorReviewsLD : LiveData<Int> = _numRequestorReviewsLD
+    val avgRequestorScoreLD : LiveData<Float> = _avgRequestorScoreLD
+
+    fun observeReviews(revieweeId: String) {
         reviewsListListenerRegistration?.remove()
         db.collection("reviews")
-            //.whereEqualTo("reviewee", reviewee)
+            .whereEqualTo("revieweeId", revieweeId)
             .addSnapshotListener { value, error ->
                 if(error != null) {
                     Log.d("error", "firebase failure")
                     return@addSnapshotListener
                 }
                 if(value != null && !value.isEmpty) {
-                    _reviewsListLD.value = value.toObjects<Review?>(Review::class.java)
+                    _reviewsOffererListLD.value = value.toObjects(Review::class.java).filter { it.reviewType == "offerer" }
                         .sortedBy { it.date.toString() }
+                    _numOffererReviewsLD.value = _reviewsOffererListLD.value!!.size
+                    _avgOffererScoreLD.value = _reviewsOffererListLD.value!!.map { it -> it.rating.toFloat() }.average()
+                                .toFloat().let { if(it.isNaN()) "0.0".toFloat() else it }
+                    _reviewsRequestorListLD.value = value.toObjects(Review::class.java).filter { it.reviewType == "requestor" }
+                        .sortedBy { it.date.toString() }
+                    _numRequestorReviewsLD.value = _reviewsRequestorListLD.value!!.size
+                    _avgRequestorScoreLD.value = _reviewsRequestorListLD.value!!.map { it -> it.rating.toFloat() }.average()
+                        .toFloat().let { if(it.isNaN()) "0.0".toFloat() else it }
                 } else {
-                    _reviewsListLD.value = emptyList()
+                    _reviewsOffererListLD.value = emptyList()
+                    _numOffererReviewsLD.value = 0
+                    _avgOffererScoreLD.value = "0.0".toFloat()
+                    _reviewsRequestorListLD.value = emptyList()
+                    _numRequestorReviewsLD.value = 0
+                    _avgRequestorScoreLD.value = "0.0".toFloat()
                 }
             }
     }
 
-    fun createReview(reviewee: String, rating: String, description: String, skill: String){
+    fun createReview(reviewType: String, reviewer: String, reviewee: String, revieweeId: String, rating: String, description: String, timeSlotTitle: String){
         db.collection("reviews")
             .document()
-            .set(Review("${Firebase.auth.currentUser!!.uid}", reviewee, rating,
-                description, skill, Date(System.currentTimeMillis())))
-    }
-
-    fun numReviewsPerUSer() {
-        //TODO
+            .set(Review(reviewType, reviewer,"${Firebase.auth.currentUser!!.uid}", reviewee, revieweeId, rating,
+                description, timeSlotTitle, Date(System.currentTimeMillis())))
     }
 }
