@@ -231,7 +231,7 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
                     return@addSnapshotListener
                 }
                 if (value != null && value.exists()) {
-                    _otherProfileLD.value = value.toObject(Profile::class.java)
+                    _otherProfileLD.postValue(value.toObject(Profile::class.java))
                 }
             }
 

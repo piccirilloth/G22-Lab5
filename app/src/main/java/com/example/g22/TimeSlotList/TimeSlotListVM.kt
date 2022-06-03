@@ -17,10 +17,13 @@ import kotlinx.coroutines.asExecutor
 import java.util.*
 
 class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
+
+    // Firebase
     private val db = FirebaseFirestore.getInstance()
 
     private var tsListListenerRegistration: ListenerRegistration? = null
 
+    // Live data
     private val _tsListLD: MutableLiveData<List<TimeSlot>> =
         MutableLiveData<List<TimeSlot>>().also {
             it.value = emptyList()
@@ -254,10 +257,10 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
     fun sortByTitle() { _tsListLD.value = _tsListLD.value?.sortedBy { it.title } }
     fun sortByLocation() { _tsListLD.value = _tsListLD.value?.sortedBy { it.location } }
 
-override fun onCleared() {
-    super.onCleared()
+    override fun onCleared() {
+        super.onCleared()
 
-    // Clear all snapshot listeners
-    tsListListenerRegistration?.remove()
-}
+        // Clear all snapshot listeners
+        tsListListenerRegistration?.remove()
+    }
 }

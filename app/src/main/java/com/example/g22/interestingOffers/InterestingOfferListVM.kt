@@ -13,6 +13,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asExecutor
 import java.lang.Integer.max
 
 class InterestingOfferListVM(application: Application) : AndroidViewModel(application) {
@@ -29,36 +31,34 @@ class InterestingOfferListVM(application: Application) : AndroidViewModel(applic
     val interOfferListLD: LiveData<MutableList<Conversation>> = _interOfferListLD
 
     fun observeRequests(isIncoming: Boolean, isAccepted: Boolean) {
+        intListListenerRegistration?.remove()
+
         val uid = if(isIncoming) "receiverUid" else "requestorUid"
         val status = if (isAccepted) listOf(Status.CONFIRMED) else listOf(Status.PENDING, Status.REJECTED)
-        intListListenerRegistration?.remove()
         val user = Firebase.auth.currentUser
+
         if(user != null) {
-        intListListenerRegistration = db.collection("conversations")
+            intListListenerRegistration = db.collection("conversations")
                 .whereEqualTo(uid, user.uid)
                 .whereIn("status", status)
-                .addSnapshotListener { value, error ->
+                .addSnapshotListener(Dispatchers.IO.asExecutor()) { value, error ->
                     if (error != null) {
-                        Log.d("error", "firebase failure")
                         return@addSnapshotListener
                     }
                     if (value != null && !value.isEmpty) {
-                        /*val result = emptyList<Conversation>().toMutableList()
-                        val tmp = value.toObjects(Conversation::class.java)
-                        for (conv in tmp) {
-                            result.add(if (conv.status == Status.REJECTED) max(result.size, 0) else 0, conv)
-                        }*/
-                        _interOfferListLD.value = value.toObjects(Conversation::class.java).sortedBy {
+                        _interOfferListLD.postValue(value.toObjects(Conversation::class.java).sortedBy {
                             if (it.status == Status.REJECTED)
                                  1
                             else
                                  0
-                        }.toMutableList()
+                        }.toMutableList())
                     }
                     else {
-                        _interOfferListLD.value = emptyList<Conversation>().toMutableList()
+                        _interOfferListLD.postValue(emptyList<Conversation>().toMutableList())
                     }
                 }
+        } else {
+            _interOfferListLD.value = emptyList<Conversation>().toMutableList()
         }
     }
 
