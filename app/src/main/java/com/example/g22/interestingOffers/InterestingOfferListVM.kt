@@ -30,7 +30,7 @@ class InterestingOfferListVM(application: Application) : AndroidViewModel(applic
 
     fun observeRequests(isIncoming: Boolean, isAccepted: Boolean) {
         val uid = if(isIncoming) "receiverUid" else "requestorUid"
-        val status = if (isAccepted) listOf(Status.CONFIRMED) else listOf(Status.PENDING, Status.REJECTED)
+        val status = if (isAccepted) listOf(Status.CONFIRMED) else listOf(Status.PENDING, Status.REJECTED, Status.REJECTED_BALANCE)
         intListListenerRegistration?.remove()
         val user = Firebase.auth.currentUser
         if(user != null) {
@@ -49,7 +49,7 @@ class InterestingOfferListVM(application: Application) : AndroidViewModel(applic
                             result.add(if (conv.status == Status.REJECTED) max(result.size, 0) else 0, conv)
                         }*/
                         _interOfferListLD.value = value.toObjects(Conversation::class.java).sortedBy {
-                            if (it.status == Status.REJECTED)
+                            if (it.status == Status.REJECTED || it.status == Status.REJECTED_BALANCE)
                                  1
                             else
                                  0

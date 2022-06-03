@@ -80,6 +80,8 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                         _conversationStatusLD.value = Status.CONFIRMED
                     else if (tmpStatus == "REJECTED")
                         _conversationStatusLD.value = Status.REJECTED
+                    else if (tmpStatus == "REJECTED_BALANCE")
+                        _conversationStatusLD.value = Status.REJECTED_BALANCE
                     else
                         _conversationStatusLD.value = Status.PENDING
                 }
@@ -144,6 +146,7 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                     transaction.set(
                         ref,
                         Conversation(
+                            ref.id,
                             timeSlotId,
                             user.uid,
                             receiver,
@@ -213,7 +216,7 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
             } else {
                 val rejRef = db.collection("conversations")
                     .document(conversationId.value!!)
-                transaction.update(rejRef, "status", Status.REJECTED)
+                transaction.update(rejRef, "status", Status.REJECTED_BALANCE)
             }
 
         }

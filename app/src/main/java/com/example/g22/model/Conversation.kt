@@ -3,10 +3,12 @@ package com.example.g22.model
 enum class Status {
     PENDING,
     REJECTED,
+    REJECTED_BALANCE,
     CONFIRMED
 }
 
 data class Conversation(
+    val id: String,
     val offerId: String,
     val requestorUid: String,
     val receiverUid: String,
@@ -18,6 +20,7 @@ data class Conversation(
     val status: Status
 ) {
     constructor(): this(
+        "",
         "",
         "",
         "",

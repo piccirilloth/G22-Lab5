@@ -81,6 +81,30 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     rejectMessage.text = "You have rejected user's proposal."
                 }
             }
+            if (it == Status.REJECTED_BALANCE && !messageListVM.messageListLD.value!!.isEmpty()) {
+                rejectMessage.visibility = View.VISIBLE
+                messageEditText.isEnabled = false
+                sendBtn.isEnabled = false
+                if (messageListVM.messageListLD.value!!.first().sender == Firebase.auth.currentUser!!.uid) {
+                    rejectMessage.text = "Your proposal can't be accepted. Insufficient credit."
+                }
+                else {
+                    acceptBtn.visibility = View.GONE
+                    rejectBtn.visibility = View.GONE
+                    rejectMessage.text = "User's proposal can't be accepted. User's credit is not sufficient."
+                }
+            }
+
+            else if (it == Status.CONFIRMED && !messageListVM.messageListLD.value!!.isEmpty()) {
+                rejectMessage.visibility = View.VISIBLE
+                if (messageListVM.messageListLD.value!!.first().sender == Firebase.auth.currentUser!!.uid) {
+                    rejectMessage.text = "Your proposal has been accepted!"
+                }
+                else {
+                    rejectMessage.text = "Your have accepted user's proposal!"
+
+                }
+            }
         }
 
         acceptBtn.setOnClickListener {
