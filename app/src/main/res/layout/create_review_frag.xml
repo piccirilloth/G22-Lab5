@@ -15,12 +15,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:cardCornerRadius="20dp"
+        app:cardElevation="8dp"
+        android:layout_margin="8dp"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
+            android:layout_margin="8dp"
             >
 
             <TextView
@@ -48,22 +50,22 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/create_review_frag_profile_picture"
-                android:layout_width="165dp"
-                android:layout_height="165dp"
-                tools:src="@tools:sample/avatars"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@tools:sample/avatars" />
 
             <RatingBar
                 android:id="@+id/ratingBar"
-                android:layout_width="237dp"
+                android:layout_width="wrap_content"
                 android:layout_height="54dp"
                 android:scaleX="0.7"
                 android:scaleY="0.7"
-                app:layout_constraintTop_toBottomOf="@id/create_review_frag_profile_name"
+                app:layout_constraintEnd_toEndOf="@id/create_review_frag_profile_name"
                 app:layout_constraintStart_toStartOf="@id/create_review_frag_profile_name"
-                app:layout_constraintEnd_toEndOf="@id/create_review_frag_profile_name"/>
+                app:layout_constraintTop_toBottomOf="@id/create_review_frag_profile_name" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
@@ -102,13 +104,15 @@
         android:id="@+id/create_review_frag_text_input_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Review"
-        app:boxStrokeColor="@color/primaryColor"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
+        android:hint="Insert your review here.."
+        app:boxStrokeColor="@color/primaryColor"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:layout_constraintVertical_bias="0.0"
         app:startIconDrawable="@drawable/ic_baseline_star_rate_24">
 
         <com.google.android.material.textfield.TextInputEditText
