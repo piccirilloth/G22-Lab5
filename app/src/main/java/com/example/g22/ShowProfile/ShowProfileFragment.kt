@@ -7,6 +7,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -16,6 +17,7 @@ import com.example.g22.R
 import com.example.g22.isValidImagePath
 import com.example.g22.loadFromDisk
 import com.example.g22.model.Profile
+import com.example.g22.reviews.UserReviewsListVM
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
@@ -25,6 +27,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
 
     // View models
     val profileVM by activityViewModels<ProfileVM>()
+    val reviewsVM by activityViewModels<UserReviewsListVM>()
 
     // View references
     private lateinit var profilePictureImgView: ImageView
@@ -37,7 +40,12 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
     private lateinit var descriptionTV: TextView
     private lateinit var toolbar: Toolbar
     private lateinit var creditTV: TextView
-    private lateinit var showReviewsButton: ImageButton
+    private lateinit var showOffererReviewsButton: ImageButton
+    private lateinit var showRequestorReviewsButton: ImageButton
+    private lateinit var requestorReviewsAvg: TextView
+    private lateinit var offererReviewsAvg: TextView
+    private lateinit var requestorNumReviews: TextView
+    private lateinit var offererNumReviews: TextView
 
     // Others
     private lateinit var navController: NavController
@@ -50,7 +58,8 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
         navController = findNavController()
 
         // Find view references
-        profilePictureImgView = requireActivity().findViewById(R.id.show_profile_profile_image_imgview)
+        profilePictureImgView =
+            requireActivity().findViewById(R.id.show_profile_profile_image_imgview)
         fullnameTV = requireActivity().findViewById(R.id.show_profile_fullname_textview)
         emailTV = requireActivity().findViewById(R.id.show_profile_email_textview)
         nicknameTV = requireActivity().findViewById(R.id.show_profile_nickname_textview)
@@ -60,7 +69,19 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
         descriptionTV = requireActivity().findViewById(R.id.show_profile_description_textview)
         toolbar = requireActivity().findViewById(R.id.toolbar)
         creditTV = requireActivity().findViewById(R.id.show_profile_credit_textview)
-        showReviewsButton = requireActivity().findViewById(R.id.show_profile_show_reviews_button)
+        showOffererReviewsButton =
+            requireActivity().findViewById(R.id.show_profile_show_offerer_reviews_button)
+        showRequestorReviewsButton =
+            requireActivity().findViewById(R.id.show_profile_show_requestor_reviews_button)
+        requestorReviewsAvg =
+            requireActivity().findViewById(R.id.show_profile_requestor_reviews_avg_textview)
+        requestorNumReviews =
+            requireActivity().findViewById(R.id.show_profile_requestor_num_reviews_textview)
+        offererReviewsAvg =
+            requireActivity().findViewById(R.id.show_profile_offerer_reviews_avg_textview)
+        offererNumReviews =
+            requireActivity().findViewById(R.id.show_profile_offerer_num_reviews_textview)
+
 
         setScrollableImage()
 
@@ -86,59 +107,113 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
 
         // Snackbar handling
         profileVM.snackbarMessageLD.observe(viewLifecycleOwner) {
-            if(it != "") {
+            if (it != "") {
                 Snackbar.make(requireView(), it, Snackbar.LENGTH_LONG).show()
                 profileVM.snackbarMessageLD.value = ""
             }
         }
 
-        showReviewsButton.setOnClickListener{
-            navController.navigate(R.id.action_nav_show_profile_to_userReviewsListFragment)
+        reviewsVM.numOffererReviewsLD.observe(viewLifecycleOwner) {
+            offererNumReviews.text = " - $it Reviews"
         }
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater){
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.edit_menu, menu)
-        menu.findItem(R.id.edit_item).isVisible = navArguments.profileId == null
-    }
+        reviewsVM.avgOffererScoreLD.observe(viewLifecycleOwner) {
+            offererReviewsAvg.text = "$it/5"
+        }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.edit_item -> {
-                navController.navigate(R.id.action_showProfileFragment_to_editProfileFragment)
-                true
+        reviewsVM.numRequestorReviewsLD.observe(viewLifecycleOwner) {
+            requestorNumReviews.text = " - $it Reviews"
+        }
+
+        reviewsVM.avgRequestorScoreLD.observe(viewLifecycleOwner) {
+            requestorReviewsAvg.text = "$it/5"
+        }
+
+        reviewsVM.observeReviews(profileVM.profileLD.value!!.id)
+
+        showOffererReviewsButton.setOnClickListener {
+            if (navController.currentDestination?.id == R.id.nav_show_profile) {
+                navController.navigate(
+                    R.id.action_nav_show_profile_to_nav_reviews_list,
+                    bundleOf(
+                        "revieweeId" to profileVM.profileLD.value?.id,
+                        "reviewType" to "offerer"
+                    )
+                )
+            } else {
+                navController.navigate(
+                    R.id.action_nav_show_other_profile_to_nav_reviews_list,
+                    bundleOf(
+                        "revieweeId" to profileVM.otherProfileLD.value?.id,
+                        "reviewType" to "offerer"
+                    )
+                )
             }
-            else -> super.onOptionsItemSelected(item)
+        }
+
+        showRequestorReviewsButton.setOnClickListener {
+            if (navController.currentDestination?.id == R.id.nav_show_profile) {
+                navController.navigate(
+                    R.id.action_nav_show_profile_to_nav_reviews_list,
+                    bundleOf(
+                        "revieweeId" to profileVM.profileLD.value?.id,
+                        "reviewType" to "requestor"
+                    )
+                )
+            } else {
+                navController.navigate(
+                    R.id.action_nav_show_other_profile_to_nav_reviews_list,
+                    bundleOf(
+                        "revieweeId" to profileVM.otherProfileLD.value?.id,
+                        "reviewType" to "requestor"
+                    )
+                )
+            }
         }
     }
 
-
-    /**
-     * Utilities
-     */
-    fun bindProfileData(profile: Profile) {
-        fullnameTV.text = profile.fullname
-        emailTV.text = profile.email
-        nicknameTV.text = profile.nickname
-        locationTV.text = profile.location
-        phoneTV.text = profile.phone
-        descriptionTV.text = profile.description
-
-        val hours: Int = profile.credit / 60
-        val minutes: Int = profile.credit % 60
-        creditTV.text = "${hours}h ${minutes}m"
-
-        skillsCG.removeAllViews()
-        profile.skills.forEach { s ->
-            val chip = Chip(requireActivity())
-            chip.text = s
-            chip.setChipBackgroundColorResource(R.color.primaryColor)
-            chip.setTextColor(resources.getColor(R.color.primaryTextColor))
-            chip.setCloseIconTintResource(R.color.primaryTextColor)
-            skillsCG.addView(chip)
+        override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+            super.onCreateOptionsMenu(menu, inflater)
+            inflater.inflate(R.menu.edit_menu, menu)
+            menu.findItem(R.id.edit_item).isVisible = navArguments.profileId == null
         }
-    }
+
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
+            return when (item.itemId) {
+                R.id.edit_item -> {
+                    navController.navigate(R.id.action_showProfileFragment_to_editProfileFragment)
+                    true
+                }
+                else -> super.onOptionsItemSelected(item)
+            }
+        }
+
+
+        /**
+         * Utilities
+         */
+        fun bindProfileData(profile: Profile) {
+            fullnameTV.text = profile.fullname
+            emailTV.text = profile.email
+            nicknameTV.text = profile.nickname
+            locationTV.text = profile.location
+            phoneTV.text = profile.phone
+            descriptionTV.text = profile.description
+
+            val hours: Int = profile.credit / 60
+            val minutes: Int = profile.credit % 60
+            creditTV.text = "${hours}h ${minutes}m"
+
+            skillsCG.removeAllViews()
+            profile.skills.forEach { s ->
+                val chip = Chip(requireActivity())
+                chip.text = s
+                chip.setChipBackgroundColorResource(R.color.primaryColor)
+                chip.setTextColor(resources.getColor(R.color.primaryTextColor))
+                chip.setCloseIconTintResource(R.color.primaryTextColor)
+                skillsCG.addView(chip)
+            }
+        }
 
     private fun updateProfileImage(localPath: String) {
         profilePictureImgView.loadFromDisk(requireActivity().application, lifecycleScope, localPath)

@@ -141,8 +141,8 @@
             app:nullable="true"
             android:defaultValue="@null" />
         <action
-            android:id="@+id/action_nav_show_profile_to_userReviewsListFragment"
-            app:destination="@id/nav_reviews_list"
+            android:id="@+id/action_nav_show_profile_to_nav_reviews_list"
+            app:destination="@id/nav_reviews_list" />
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -187,6 +187,9 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_nav_show_other_profile_to_nav_reviews_list"
+            app:destination="@id/nav_reviews_list" />
     </fragment>
     <fragment
         android:id="@+id/nav_chat_fragment"
@@ -210,7 +213,14 @@
         android:id="@+id/nav_reviews_list"
         android:name="com.example.g22.reviews.UserReviewsListFragment"
         android:label="fragment_user_reviews_list"
-        tools:layout="@layout/user_reviews_list_frag"/>
+        tools:layout="@layout/user_reviews_list_frag">
+        <argument
+            android:name="revieweeId"
+            app:argType="string" />
+        <argument
+            android:name="reviewType"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/nav_interesting_offers"
         android:name="com.example.g22.interestingOffers.InterestingOfferListFragment"
@@ -237,4 +247,5 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
+
 </navigation>
