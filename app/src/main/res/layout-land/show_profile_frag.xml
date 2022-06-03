@@ -37,6 +37,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
         <ScrollView
             android:id="@+id/show_profile_sv"
             android:layout_width="0dp"
@@ -47,7 +48,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/show_profile_cl"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="16dp">
 
                 <TextView
@@ -60,6 +61,62 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/credit_constraint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:paddingBottom="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/show_profile_fullname_textview">
+
+                    <TextView
+                        android:id="@+id/show_profile_credit_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Credit"
+                        android:textColor="?attr/colorOnPrimarySurface"
+                        android:textColorHint="?attr/colorOnPrimarySurface"
+                        app:layout_constraintBottom_toTopOf="@id/show_profile_hourglass_imgview"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/show_profile_hourglass_imgview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="6dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_baseline_hourglass_empty_24"
+                        android:textColor="?attr/colorOnPrimarySurface"
+                        android:textColorHint="?attr/colorOnPrimarySurface"
+                        app:layout_constraintBottom_toBottomOf="@id/show_profile_credit_textview"
+                        app:layout_constraintEnd_toStartOf="@+id/show_profile_credit_textview"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/show_profile_credit_textview" />
+
+                    <TextView
+                        android:id="@+id/show_profile_credit_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="55"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                        android:textColor="?attr/colorOnPrimarySurface"
+                        android:textColorHint="?attr/colorOnPrimarySurface"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/show_profile_hourglass_imgview"
+                        app:layout_constraintTop_toBottomOf="@id/show_profile_credit_label" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <View
                     android:id="@+id/show_profile_divider2"
                     android:layout_width="0dp"
@@ -68,7 +125,7 @@
                     android:background="?android:attr/listDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/show_profile_fullname_textview" />
+                    app:layout_constraintTop_toBottomOf="@+id/credit_constraint" />
 
                 <TextView
                     android:id="@+id/show_profile_email_label"
@@ -217,6 +274,116 @@
                     app:layout_constraintTop_toBottomOf="@+id/show_profile_phone_textview" />
 
                 <TextView
+                    android:id="@+id/show_profile_offerer_reviews_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Offerer reviews"
+                    app:layout_constraintStart_toStartOf="@+id/show_profile_offerer_reviews_avg_textview"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_divider3" />
+
+                <TextView
+                    android:id="@+id/show_profile_offerer_reviews_avg_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:focusable="true"
+                    android:hint="4.0/5 "
+                    android:layout_marginStart="16dp"
+                    android:longClickable="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/show_profile_offerer_reviews_icon_imgview"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_offerer_reviews_label" />
+
+                <TextView
+                    android:id="@+id/show_profile_offerer_num_reviews_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint=" - 10 Reviews"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    app:layout_constraintStart_toEndOf="@id/show_profile_offerer_reviews_avg_textview"
+                    app:layout_constraintTop_toTopOf="@id/show_profile_offerer_reviews_avg_textview"
+                    app:layout_constraintBottom_toBottomOf="@id/show_profile_offerer_reviews_avg_textview"
+                    app:layout_constraintEnd_toStartOf="@id/show_profile_show_offerer_reviews_button"/>
+
+                <ImageButton
+                    android:id="@+id/show_profile_show_offerer_reviews_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@id/show_profile_offerer_reviews_avg_textview"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/show_profile_offerer_reviews_avg_textview"
+                    app:srcCompat="@drawable/ic_baseline_arrow_forward_24" />
+
+                <ImageView
+                    android:id="@+id/show_profile_offerer_reviews_icon_imgview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/show_profile_offerer_reviews_avg_textview"
+                    app:layout_constraintEnd_toStartOf="@+id/show_profile_offerer_reviews_avg_textview"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/show_profile_offerer_reviews_avg_textview"
+                    app:srcCompat="@drawable/ic_baseline_star_rate_24" />
+
+                <TextView
+                    android:id="@+id/show_profile_requestor_reviews_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Requestor reviews"
+                    app:layout_constraintStart_toStartOf="@+id/show_profile_requestor_reviews_avg_textview"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_offerer_reviews_avg_textview" />
+
+                <TextView
+                    android:id="@+id/show_profile_requestor_reviews_avg_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:focusable="true"
+                    android:layout_marginStart="16dp"
+                    android:hint="4.0/5 "
+                    android:longClickable="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/show_profile_requestor_reviews_icon_imgview"
+                    app:layout_constraintTop_toBottomOf="@+id/show_profile_requestor_reviews_label" />
+
+                <TextView
+                    android:id="@+id/show_profile_requestor_num_reviews_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint=" - 10 Reviews"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    app:layout_constraintStart_toEndOf="@id/show_profile_requestor_reviews_avg_textview"
+                    app:layout_constraintTop_toTopOf="@id/show_profile_requestor_reviews_avg_textview"
+                    app:layout_constraintBottom_toBottomOf="@id/show_profile_requestor_reviews_avg_textview"
+                    app:layout_constraintEnd_toStartOf="@id/show_profile_show_requestor_reviews_button"/>
+
+                <ImageButton
+                    android:id="@+id/show_profile_show_requestor_reviews_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@id/show_profile_requestor_reviews_avg_textview"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/show_profile_requestor_reviews_avg_textview"
+                    app:srcCompat="@drawable/ic_baseline_arrow_forward_24" />
+
+                <ImageView
+                    android:id="@+id/show_profile_requestor_reviews_icon_imgview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/show_profile_requestor_reviews_avg_textview"
+                    app:layout_constraintEnd_toStartOf="@+id/show_profile_requestor_reviews_avg_textview"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/show_profile_requestor_reviews_avg_textview"
+                    app:srcCompat="@drawable/ic_baseline_star_rate_24" />
+
+                <TextView
                     android:id="@+id/show_profile_skills_label"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -225,7 +392,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/show_profile_skills_icon_imgview"
-                    app:layout_constraintTop_toBottomOf="@id/show_profile_divider3"
+                    app:layout_constraintTop_toBottomOf="@id/show_profile_requestor_reviews_avg_textview"
                     tools:layout_editor_absoluteY="374dp" />
 
 
