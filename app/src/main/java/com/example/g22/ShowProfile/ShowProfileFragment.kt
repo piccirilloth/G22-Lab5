@@ -8,11 +8,13 @@ import androidx.fragment.app.Fragment
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.g22.R
 import com.example.g22.isValidImagePath
+import com.example.g22.loadFromDisk
 import com.example.g22.model.Profile
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -139,21 +141,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
     }
 
     private fun updateProfileImage(localPath: String) {
-        if (!localPath.isValidImagePath()) {
-            profilePictureImgView.setImageBitmap(
-                BitmapFactory.decodeResource(resources, R.drawable.user_icon)
-            )
-            return
-        }
-
-        // TODO: use coroutine
-        val appDir = requireActivity().filesDir
-        val localFile = File(appDir.path, localPath)
-        val inputStream = localFile.inputStream()
-        val bitmap = BitmapFactory.decodeStream(inputStream)
-        inputStream.close()
-
-        profilePictureImgView.setImageBitmap(bitmap)
+        profilePictureImgView.loadFromDisk(requireActivity().application, lifecycleScope, localPath)
     }
 
     fun setScrollableImage() {

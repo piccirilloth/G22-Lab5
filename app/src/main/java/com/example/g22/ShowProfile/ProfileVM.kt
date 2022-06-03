@@ -2,19 +2,25 @@ package com.example.g22.ShowProfile
 
 import android.app.Application
 import android.net.Uri
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.g22.LOCAL_PERSISTENT_PROFILE_PICTURE_PATH
 import com.example.g22.LOCAL_TMP_PROFILE_PICTURE_PATH
+import com.example.g22.LoadingImagePath
 import com.example.g22.NullImagePath
 import com.example.g22.model.Profile
+import com.example.g22.model.TimeSlot
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
 import java.io.*
 
 class ProfileVM(application: Application) : AndroidViewModel(application) {
@@ -34,7 +40,6 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
 
     private val _otherProfileLD = MutableLiveData<Profile>()
     private val _otherProfileImageLD: MutableLiveData<String> = MutableLiveData(String.NullImagePath())
-
 
     // EDIT-MODE: For temporary skills during edit mode
     private val _editSkillsLD = MutableLiveData<List<String>>()
@@ -63,10 +68,24 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
             // It gets called when subscribed and whenever a login/logout happens
             observeRemoteUser()
             if (it.currentUser != null)
-                downloadProfileImageFromFirebase(null)
+                downloadProfileImage(null)
         }
     }
 
+    // LiveData public handling
+    fun addSkill(skill: String) {
+        _editSkillsLD.value = _editSkillsLD.value?.plus(skill)
+    }
+
+    fun removeSkill(skill: String) {
+        _editSkillsLD.value = _editSkillsLD.value?.minus(skill)
+    }
+
+    fun updateEditingProfileData(profile: Profile) {
+        _editSkillsLD.value = profile.skills
+    }
+
+    // Save the updated profile to database
     fun saveEditedProfile(fullname: String, email: String, nickname: String, location: String,
                           phone: String, description: String) {
         if (Firebase.auth.currentUser == null)
@@ -82,27 +101,41 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
         tmp.skills = _editSkillsLD.value?.map { it.lowercase() } ?: emptyList()
         tmp.description = description
 
-        db.collection("users")
-            .document(Firebase.auth.currentUser?.uid ?: return)
-            .set(tmp)
-            .addOnSuccessListener {
-                uploadNewProfileImageToFirebase()
-                snackbarMessageLD.value = snackbarMessageLD.value + "Profile has been updated!"
-            }.addOnFailureListener {
-                snackbarMessageLD.value = snackbarMessageLD.value + "Error while saving profile to database!"
+        // We use global scope to ensure the db writing independently from the view model lifecycle
+        GlobalScope.launch {
+            val result = firestoreSetProfile(tmp)
+
+            if (result.isSuccess) {
+
+                val resultUpload = uploadNewProfileImageToFirebase()
+
+                if (resultUpload.isFailure) {
+
+                    // Cause the snackbar to be visualized
+                    viewModelScope.launch {
+                        snackbarMessageLD.postValue(
+                            snackbarMessageLD.value +
+                                    "\nError while uploading profile image!"
+                        )
+                    }
+
+                }
+                // Cause the update of the profile picture
+                viewModelScope.launch {
+                    _profileImageLD.value = LOCAL_PERSISTENT_PROFILE_PICTURE_PATH
+                }
+            } else {
+
+                // Cause the snackbar to be visualized
+                viewModelScope.launch {
+                    snackbarMessageLD.postValue(
+                        snackbarMessageLD.value +
+                                "\nError updating the profile!"
+                    )
+                }
+
             }
-    }
-
-    fun addSkill(skill: String) {
-        _editSkillsLD.value = _editSkillsLD.value?.plus(skill)
-    }
-
-    fun removeSkill(skill: String) {
-        _editSkillsLD.value = _editSkillsLD.value?.minus(skill)
-    }
-
-    fun updateEditingProfileData(profile: Profile) {
-        _editSkillsLD.value = profile.skills
+        }
     }
 
     private fun observeRemoteUser() {
@@ -112,20 +145,21 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
             val uid = Firebase.auth.currentUser!!.uid
             profileListenerRegistration = db.collection("users")
                 .document(uid)
-                .addSnapshotListener { value, e ->
+                .addSnapshotListener(Dispatchers.IO.asExecutor()) { value, e ->
                     if (e != null) {
-                        snackbarMessageLD.value = snackbarMessageLD.value +
-                                "Error while retrieving user from database!"
+                        snackbarMessageLD.postValue(snackbarMessageLD.value +
+                                "Error while retrieving user from database!")
                         return@addSnapshotListener
                     }
                     if (value != null && value.exists()) {
                         // Profile found
-                        onFirebaseProfileUpdate(value)
+                        val profile = value.toObject(Profile::class.java)
+                        _profileLD.postValue(profile!!)
                     } else {
                         // Create profile
                         createProfileFromAuthUser()
                     }
-                    profileLoadedLD.value = true
+                    profileLoadedLD.postValue(true)
                 }
         } else {
             _profileLD.value = Profile()
@@ -133,100 +167,55 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun uploadNewProfileImageToFirebase() {
-        if (hasBeenModifiedProfileImageLD.value == false)
-            return
+    private fun downloadProfileImage(profileId: String?) {
+        // Temporary show loading image
+        if (profileId == null)
+            _profileImageLD.value = String.LoadingImagePath()
+        else
+            _otherProfileImageLD.value = String.LoadingImagePath()
 
-        // Firebase storage file reference
-        val storageImgRef = storage.child("${Firebase.auth.currentUser!!.uid}.jpg")
+        viewModelScope.launch {
+            val res = downloadProfileImageFromFirebase(profileId)
 
-        // Upload temporary edited image to Firebase
-        val appDir = getApplication<Application>().filesDir
-        val localFile = File(appDir.path, LOCAL_TMP_PROFILE_PICTURE_PATH)
-        val localFileUri = Uri.fromFile(localFile)
-        storageImgRef.putFile(localFileUri)
-            .addOnSuccessListener {
-                // If the upload has succeed, copy the temporary image in the persistent one
-                localFile.copyTo(File(appDir.path, LOCAL_PERSISTENT_PROFILE_PICTURE_PATH), true)
-                _profileImageLD.value = LOCAL_PERSISTENT_PROFILE_PICTURE_PATH
-            }
-            .addOnFailureListener {
-                snackbarMessageLD.value = snackbarMessageLD.value +
-                        "\nError while uploading profile image!"
-            }
-    }
-
-    fun downloadProfileImageFromFirebase(profileId: String?) {
-        val localPath = if (profileId == null) {
-            LOCAL_PERSISTENT_PROFILE_PICTURE_PATH
-        } else {
-            "$profileId.jpg"
-        }
-
-        // Reference to Firebase storage profile picture
-//        val storagePathRef = storage.child("${Firebase.auth.currentUser?.uid}.jpg")
-        val storagePathRef = if (profileId == null) {
-            storage.child("${Firebase.auth.currentUser?.uid}.jpg")
-        } else {
-            storage.child(localPath)
-        }
-
-        // Create or overwrite profile image on disk
-        val appDir = getApplication<Application>().filesDir
-        val localFile = File(appDir.path, localPath)
-        localFile.createNewFile()
-
-        // Download
-        storagePathRef.getFile(localFile)
-            .addOnSuccessListener {
-                if (it.error == null) {
-                    if (profileId == null)
-                        _profileImageLD.value = localPath
-                    else
-                        _otherProfileImageLD.value = localPath
+            if (res.isSuccess) {
+                val localPath = if (profileId == null) {
+                    LOCAL_PERSISTENT_PROFILE_PICTURE_PATH
                 } else {
-                    if (profileId == null)
-                        _profileImageLD.value = String.NullImagePath()
-                    else
-                        _otherProfileImageLD.value = String.NullImagePath()
+                    "$profileId.jpg"
                 }
-            }
-            .addOnFailureListener {
+
+                if (profileId == null)
+                    _profileImageLD.value = localPath
+                else
+                    _otherProfileImageLD.value = localPath
+            } else {
                 if (profileId == null)
                     _profileImageLD.value = String.NullImagePath()
                 else
                     _otherProfileImageLD.value = String.NullImagePath()
             }
-    }
-
-    private fun onFirebaseProfileUpdate(snapshot: DocumentSnapshot) {
-        val profile = snapshot.toObject(Profile::class.java)
-        _profileLD.value = profile!!
+        }
     }
 
     private fun createProfileFromAuthUser() {
-        val currUser = Firebase.auth.currentUser!!
-        val uid = currUser.uid
+        // We use global scope to ensure the db writing independently from the view model lifecycle
+        GlobalScope.launch {
+            val currUser = Firebase.auth.currentUser!!
 
-        // Set user document
-        db.collection("users")
-            .document(uid)
-            .set(Profile.FromFirebaseUser(currUser))
-            .addOnFailureListener {
-                snackbarMessageLD.value = snackbarMessageLD.value +
-                        "Unable to create profile from Google account!"
+            val result = firestoreSetProfile(Profile.FromFirebaseUser(currUser))
+
+            if (result.isSuccess) {
+                viewModelScope.launch {
+                    Toast.makeText(getApplication(), "Profile created from Google account!", Toast.LENGTH_SHORT
+                    )
+                }
+            } else {
+                viewModelScope.launch {
+                    Toast.makeText(getApplication(), "Profile created from Google account!", Toast.LENGTH_SHORT
+                    )
+                }
             }
-
-        // Load google profile image to firebase storage
-//        val storageImgRef = storage.child("${uid}.jpg")
-//        val urlStream = URL(currUser.photoUrl.toString()).openStream()
-//        storageImgRef.putStream(urlStream)
-//            .addOnSuccessListener {
-//                // upload ok
-//            }
-//            .addOnFailureListener {
-//                // TODO: snackback problem with uploading of picture
-//            }
+        }
     }
 
     fun loadOtherProfile(profileId: String) {
@@ -237,7 +226,7 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
 
         otherProfileListenerRegistration = db.collection("users")
             .document(profileId)
-            .addSnapshotListener { value, e ->
+            .addSnapshotListener(Dispatchers.IO.asExecutor()) { value, e ->
                 if (e != null) {
                     return@addSnapshotListener
                 }
@@ -246,7 +235,87 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
                 }
             }
 
-        downloadProfileImageFromFirebase(profileId)
+        downloadProfileImage(profileId)
+    }
+
+    /**
+     * Firestore async suspend functions
+     */
+
+    private suspend fun firestoreSetProfile(profile: Profile): Result<Boolean> {
+        return withContext(Dispatchers.IO) {
+            return@withContext try {
+                db.collection("users")
+                    .document(profile.id)
+                    .set(profile)
+                    .await()
+                return@withContext Result.success(true)
+            } catch (e: Exception) {
+                return@withContext Result.failure(e)
+            }
+        }
+    }
+
+    private suspend fun uploadNewProfileImageToFirebase(): Result<Boolean> {
+        if (hasBeenModifiedProfileImageLD.value == false)
+            return Result.success(true)
+
+        val result = withContext(Dispatchers.IO) {
+            try {
+                // Firebase storage file reference
+                val storageImgRef = storage.child("${Firebase.auth.currentUser!!.uid}.jpg")
+
+                // Upload temporary edited image to Firebase
+                val appDir = getApplication<Application>().filesDir
+                val localFile = File(appDir.path, LOCAL_TMP_PROFILE_PICTURE_PATH)
+                val localFileUri = Uri.fromFile(localFile)
+
+                storageImgRef.putFile(localFileUri).await()
+
+                // If the upload has succeeded, copy temporary file to persistent file (local)
+                localFile.copyTo(
+                    File(appDir.path, LOCAL_PERSISTENT_PROFILE_PICTURE_PATH),
+                    true
+                )
+                return@withContext Result.success(true)
+            } catch (e: Exception) {
+                return@withContext Result.failure(e)
+            }
+        }
+
+        return result
+    }
+
+    private suspend fun downloadProfileImageFromFirebase(profileId: String?): Result<Boolean> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val localPath = if (profileId == null) {
+                    LOCAL_PERSISTENT_PROFILE_PICTURE_PATH
+                } else {
+                    "$profileId.jpg"
+                }
+
+                // Reference to Firebase storage profile picture
+                val storagePathRef = if (profileId == null) {
+                    storage.child("${Firebase.auth.currentUser?.uid}.jpg")
+                } else {
+                    storage.child(localPath)
+                }
+
+                // Create or overwrite profile image on disk
+                val appDir = getApplication<Application>().filesDir
+                val localFile = File(appDir.path, localPath)
+                localFile.createNewFile()
+
+                // Download
+                storagePathRef.getFile(localFile).await()
+
+                // Success
+                return@withContext Result.success(true)
+            } catch (e: Exception) {
+                return@withContext Result.failure(e)
+            }
+        }
     }
 
 

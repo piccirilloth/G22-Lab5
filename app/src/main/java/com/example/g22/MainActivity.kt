@@ -17,6 +17,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navArgument
@@ -212,20 +213,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateProfileImage(localPath: String) {
-        if (!localPath.isValidImagePath()) {
-            navHeaderProfilePic.setImageBitmap(
-                BitmapFactory.decodeResource(resources, R.drawable.user_icon)
-            )
-            return
-        }
-
-        // TODO: use coroutine
-        val localFile = File(filesDir.path, localPath)
-        val inputStream = localFile.inputStream()
-        val bitmap = BitmapFactory.decodeStream(inputStream)
-        inputStream.close()
-
-        navHeaderProfilePic.setImageBitmap(bitmap)
+        navHeaderProfilePic.loadFromDisk(application, lifecycleScope, localPath)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -245,17 +233,10 @@ class MainActivity : AppCompatActivity() {
                                 .addOnCompleteListener(this) { task ->
                                     if (task.isSuccessful) {
                                         // Sign in success, update UI with the signed-in user's information
-                                        Log.d(TAG, "signInWithCredential:success")
                                         invalidateMenu()
 
-                                        // TODO: improve firestore observe management
-                                        // profileVM.observeAuthenticatedUser()
-                                        // tsListVM.observeMyOffers()
-
-                                        // TODO: updateUI(user)
                                     } else {
                                         // If sign in fails, display a message to the user.
-                                        Log.w(TAG, "signInWithCredential:failure", task.exception)
                                         // TODO: updateUI(null) you can sign out with Firebase.auth.signOut()
                                     }
                                 }

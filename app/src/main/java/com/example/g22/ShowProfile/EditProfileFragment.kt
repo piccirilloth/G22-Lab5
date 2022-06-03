@@ -16,15 +16,18 @@ import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.children
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.g22.LOCAL_TMP_PROFILE_PICTURE_PATH
 import com.example.g22.R
 import com.example.g22.isValidImagePath
+import com.example.g22.loadFromDisk
 import com.example.g22.model.Profile
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.*
 import java.io.File
 
 
@@ -147,43 +150,66 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_frag) {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // Handle bitmap coming from the camera
-            (data?.extras?.get("data") as Bitmap?)?.let {
-                setAndSaveTmpPicture(it)
+            // Handle bitmap coming from the camera (in a background thread)
+            lifecycleScope.launch {
+                val bitmap = withContext(Dispatchers.IO) {
+                    return@withContext data?.extras?.get("data") as Bitmap?
+                }
+
+                if (bitmap != null)
+                    setAndSaveTmpPicture(bitmap)
             }
 
         } else if (requestCode == REQUEST_CODE_PICK_FROM_GALLERY && resultCode == RESULT_OK) {
             // Handle Uri of the picture coming from the gallery
-            val uri = data?.data
-            uri?.let {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    val source = ImageDecoder.createSource(requireActivity().contentResolver, uri)
-                    val bitmap = ImageDecoder.decodeBitmap(source)
-                    setAndSaveTmpPicture(bitmap)
-                } else {
-                    val bitmap = MediaStore.Images.Media.getBitmap(
-                        requireActivity().contentResolver,
-                        uri
-                    )
-                    setAndSaveTmpPicture(bitmap)
+            lifecycleScope.launch {
+                // Get bitmap in a background thread
+                val bitmap = withContext(Dispatchers.IO) {
+                    try {
+                        val uri = data?.data
+                        uri?.let {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                val source =
+                                    ImageDecoder.createSource(
+                                        requireActivity().contentResolver,
+                                        uri
+                                    )
+                                val bitmap = ImageDecoder.decodeBitmap(source)
+                                return@withContext bitmap
+                            } else {
+                                val bitmap = MediaStore.Images.Media.getBitmap(
+                                    requireActivity().contentResolver,
+                                    uri
+                                )
+                                return@withContext bitmap
+                            }
+                        }
+                    } catch (e: Exception) {
+                        return@withContext null
+                    }
                 }
+
+                if (bitmap != null)
+                    setAndSaveTmpPicture(bitmap)
             }
         }
     }
 
-    private fun setAndSaveTmpPicture(bitmap: Bitmap) {
+    private suspend fun setAndSaveTmpPicture(bitmap: Bitmap) {
         profileImageImgView.setImageBitmap(bitmap)
         profileVM.hasBeenModifiedProfileImageLD.value = true
         saveTmpProfilePicture(bitmap)
     }
 
-    private fun saveTmpProfilePicture(bitmap: Bitmap) {
-        // TODO: use coroutine
-        val appDir = requireActivity().filesDir
-        val localFile = File(appDir.path, LOCAL_TMP_PROFILE_PICTURE_PATH)
-        val outStream = localFile.outputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outStream)
-        outStream.close()
+    private suspend fun saveTmpProfilePicture(bitmap: Bitmap) {
+        withContext(Dispatchers.IO) {
+            val appDir = requireActivity().filesDir
+            val localFile = File(appDir.path, LOCAL_TMP_PROFILE_PICTURE_PATH)
+            val outStream = localFile.outputStream()
+            outStream.use {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 85, it)
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -285,7 +311,7 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_frag) {
             }
             .setPositiveButton("Discard") { dialog, which ->
                 dialog.cancel()
-                profileVM.downloadProfileImageFromFirebase(null)
+//                profileVM.downloadProfileImageFromFirebase(null)
                 navController.popBackStack()
             }
             .show()
@@ -298,21 +324,7 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_frag) {
     }
 
     private fun updateProfileImage(localPath: String) {
-        if (!localPath.isValidImagePath()) {
-            profileImageImgView.setImageBitmap(
-                BitmapFactory.decodeResource(resources, R.drawable.user_icon)
-            )
-            return
-        }
-
-        // TODO: use coroutine
-        val appDir = requireActivity().filesDir
-        val localFile = File(appDir.path, localPath)
-        val inputStream = localFile.inputStream()
-        val bitmap = BitmapFactory.decodeStream(inputStream)
-        inputStream.close()
-
-        profileImageImgView.setImageBitmap(bitmap)
+        profileImageImgView.loadFromDisk(requireActivity().application, lifecycleScope, localPath)
     }
 
     private fun takePicture() {

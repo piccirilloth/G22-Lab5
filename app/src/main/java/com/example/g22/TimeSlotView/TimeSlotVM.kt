@@ -83,7 +83,7 @@ class TimeSlotVM(application: Application): AndroidViewModel(application) {
                 }
         } else {
             // Used for timeslot edit (load only one time)
-            viewModelScope.launch(Dispatchers.IO) {
+            GlobalScope.launch(Dispatchers.IO) {
                 val tsRes = firestoreGetTimeSlot(id)
                 if (tsRes.isSuccess) {
                     val ts = tsRes.getOrThrow()
