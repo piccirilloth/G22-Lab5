@@ -12,7 +12,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="G22"
             android:theme="@style/Theme.G22.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
