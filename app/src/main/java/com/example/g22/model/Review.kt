@@ -8,7 +8,7 @@ data class Review (
     var reviewerId : String,
     var reviewee : String,
     var revieweeId : String,
-    var rating : String,
+    var rating : Double,
     var description : String,
     var timeSlotTitle : String,
     var date : Date
@@ -19,7 +19,7 @@ data class Review (
         "",
         "" ,
         "",
-        "",
+        0.0,
         "",
         "",
         Date()

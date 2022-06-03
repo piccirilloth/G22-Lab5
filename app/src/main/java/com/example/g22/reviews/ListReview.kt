@@ -24,7 +24,7 @@ class ReviewAdapter(private var context: Context, private var data: List<Review>
         private val skill : TextView = v.findViewById(R.id.skill_review_item)
         private val reviewerImage : CircleImageView = v.findViewById(R.id.reviewer_image_review_item)
 
-        fun bind(reviewerId: String, reviewer: String, description: String, rating: String, timeSlotTitle: String, context: Context) {
+        fun bind(reviewerId: String, reviewer: String, description: String, rating: Double, timeSlotTitle: String, context: Context) {
             reviewerName.text = reviewer
             reviewDescription.text = description
             ratingBar.rating = rating.toFloat()

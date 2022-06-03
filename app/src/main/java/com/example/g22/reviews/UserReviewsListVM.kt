@@ -72,7 +72,7 @@ class UserReviewsListVM(application: Application) : AndroidViewModel(application
             }
     }
 
-    fun createReview(reviewType: String, reviewer: String, reviewee: String, revieweeId: String, rating: String, description: String, timeSlotTitle: String){
+    fun createReview(reviewType: String, reviewer: String, reviewee: String, revieweeId: String, rating: Double, description: String, timeSlotTitle: String){
         db.collection("reviews")
             .document()
             .set(Review(reviewType, reviewer,"${Firebase.auth.currentUser!!.uid}", reviewee, revieweeId, rating,
