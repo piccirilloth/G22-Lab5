@@ -9,13 +9,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.g22.model.TimeSlot
 import com.example.g22.utils.Duration
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.util.*
-import java.util.concurrent.Executors
 
 class TimeSlotVM(application: Application): AndroidViewModel(application) {
     private val db = FirebaseFirestore.getInstance()
@@ -83,7 +81,7 @@ class TimeSlotVM(application: Application): AndroidViewModel(application) {
                 }
         } else {
             // Used for timeslot edit (load only one time)
-            GlobalScope.launch(Dispatchers.IO) {
+            viewModelScope.launch {
                 val tsRes = firestoreGetTimeSlot(id)
                 if (tsRes.isSuccess) {
                     val ts = tsRes.getOrThrow()
@@ -118,68 +116,98 @@ class TimeSlotVM(application: Application): AndroidViewModel(application) {
         tmp.description = description
         tmp.skills = _skillsLD.value?.map { it.lowercase() } ?: emptyList()
 
-        val docRef = db.collection("offers")
-            .document(tmp.id)
+        // We use GlobalScope to ensure that the writing to db is independent from the view model lifecycle
+        GlobalScope.launch {
 
-        db.runTransaction { transaction ->
-            val oldSnapshot = transaction.get(docRef)
-            val old = oldSnapshot.get("skills") as List<String>
-            val new = tmp.skills.minus(old)
-            val oldRemoved = old.minus(tmp.skills)
-            val toCreate = emptyList<String>().toMutableList()
+            val res = firestoreUpdateTimeslot(tmp)
 
-            val toAddSnapshots = emptyMap<String, List<String>>().toMutableMap()
-
-            for (skill in new) {
-                val tmpSnap = transaction.get(db.collection("skills").document(skill))
-                if (tmpSnap.exists()) {
-                    toAddSnapshots[skill] = (tmpSnap.get("offers") as List<String>).plus(tmp.id)
-                }
-                else {
-                    toCreate.add(skill)
+            if (res.isSuccess) {
+                // TODO: notify to snackbar that the timeslot has been updated
+            } else {
+                Toast.makeText(
+                    getApplication(),
+                    "Error updating the timeslot!",
+                    Toast.LENGTH_SHORT
+                )
+                viewModelScope.launch {
+                    setCurrentTimeSlot(_currTimeSlotLD.value!!.id, true)
                 }
             }
 
-            val toRemoveSnapshots = emptyMap<String, List<String>>().toMutableMap()
-            for (skill in oldRemoved) {
-                val tmpSnap = transaction.get(db.collection("skills").document(skill))
-                if (tmpSnap.exists()) {
-                    toRemoveSnapshots[skill] = (tmpSnap.get("offers") as List<String>).minus(tmp.id)
-                }
-                else {
-                    throw Exception("Skill not found. Failure")
-                }
-            }
-
-            for (entry in toAddSnapshots.entries.iterator()) {
-                transaction.update(db.collection("skills").document(entry.key), "offers", entry.value)
-            }
-
-            for (entry in toRemoveSnapshots.entries.iterator()) {
-                if (entry.value.isEmpty()) {
-                    transaction.delete(db.collection("skills").document(entry.key))
-                } else {
-                    transaction.update(
-                        db.collection("skills").document(entry.key),
-                        "offers",
-                        entry.value
-                    )
-                }
-            }
-
-            for (skill in toCreate) {
-                transaction.set(db.collection("skills").document(skill), hashMapOf("offers" to listOf(tmp.id)))
-            }
-
-            transaction.set(db.collection("offers").document(tmp.id), tmp)
         }
-            .addOnSuccessListener {
+    }
+
+    private suspend fun firestoreUpdateTimeslot(ts: TimeSlot): Result<Unit> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val docRef = db.collection("offers")
+                    .document(ts.id)
+
+                db.runTransaction { transaction ->
+                    val oldSnapshot = transaction.get(docRef)
+                    val old = oldSnapshot.get("skills") as List<String>
+                    val new = ts.skills.minus(old)
+                    val oldRemoved = old.minus(ts.skills)
+                    val toCreate = emptyList<String>().toMutableList()
+
+                    val toAddSnapshots = emptyMap<String, List<String>>().toMutableMap()
+
+                    for (skill in new) {
+                        val tmpSnap = transaction.get(db.collection("skills").document(skill))
+                        if (tmpSnap.exists()) {
+                            toAddSnapshots[skill] =
+                                (tmpSnap.get("offers") as List<String>).plus(ts.id)
+                        } else {
+                            toCreate.add(skill)
+                        }
+                    }
+
+                    val toRemoveSnapshots = emptyMap<String, List<String>>().toMutableMap()
+                    for (skill in oldRemoved) {
+                        val tmpSnap = transaction.get(db.collection("skills").document(skill))
+                        if (tmpSnap.exists()) {
+                            toRemoveSnapshots[skill] =
+                                (tmpSnap.get("offers") as List<String>).minus(ts.id)
+                        } else {
+                            throw Exception("Skill not found. Failure")
+                        }
+                    }
+
+                    for (entry in toAddSnapshots.entries.iterator()) {
+                        transaction.update(
+                            db.collection("skills").document(entry.key),
+                            "offers",
+                            entry.value
+                        )
+                    }
+
+                    for (entry in toRemoveSnapshots.entries.iterator()) {
+                        if (entry.value.isEmpty()) {
+                            transaction.delete(db.collection("skills").document(entry.key))
+                        } else {
+                            transaction.update(
+                                db.collection("skills").document(entry.key),
+                                "offers",
+                                entry.value
+                            )
+                        }
+                    }
+
+                    for (skill in toCreate) {
+                        transaction.set(
+                            db.collection("skills").document(skill),
+                            hashMapOf("offers" to listOf(ts.id))
+                        )
+                    }
+
+                    transaction.set(db.collection("offers").document(ts.id), ts)
+                }.await()
+
+                return@withContext Result.success(Unit)
+            } catch (e: Exception) {
+                return@withContext Result.failure(e)
             }
-            .addOnFailureListener {
-                Toast.makeText(getApplication(), "Error editing the timeslot!", Toast.LENGTH_SHORT)
-                //ToDo snackbar
-                setCurrentTimeSlot(_currTimeSlotLD.value!!.id, true)
-            }
+        }
     }
 
 
@@ -188,16 +216,17 @@ class TimeSlotVM(application: Application): AndroidViewModel(application) {
      */
 
     private suspend fun firestoreGetTimeSlot(id: String): Result<TimeSlot> {
-        return try {
-            val documentSnapshot = db.collection("offers")
-                .document(id)
-                .get()
-                .await()
-            return Result.success(documentSnapshot.toObject(TimeSlot::class.java)!!)
-        } catch (e: Exception) {
-            return Result.failure(e)
+        return withContext(Dispatchers.IO) {
+            try {
+                val documentSnapshot = db.collection("offers")
+                    .document(id)
+                    .get()
+                    .await()
+                return@withContext Result.success(documentSnapshot.toObject(TimeSlot::class.java)!!)
+            } catch (e: Exception) {
+                return@withContext Result.failure(e)
+            }
         }
-
     }
 
     /**

@@ -274,6 +274,7 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
                                         locationEditText.text.toString(),
                                         descriptionEditText.text.toString())
 
+        // TODO: remove this - we are asynchronously updating the db and we must notify the snackbar asynchronously when the edit is completed successfully
         timeslotListVM.hasBeenEdited.value = true
 
         navController.popBackStack()
