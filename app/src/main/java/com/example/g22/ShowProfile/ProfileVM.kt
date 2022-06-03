@@ -244,7 +244,7 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
 
     private suspend fun firestoreSetProfile(profile: Profile): Result<Boolean> {
         return withContext(Dispatchers.IO) {
-            return@withContext try {
+            try {
                 db.collection("users")
                     .document(profile.id)
                     .set(profile)
