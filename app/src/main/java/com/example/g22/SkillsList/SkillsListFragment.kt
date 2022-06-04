@@ -1,12 +1,20 @@
 package com.example.g22.SkillsList
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.g22.R
@@ -22,10 +30,12 @@ class SkillsListFragment : Fragment(R.layout.skills_list_frag) {
     private lateinit var adapter: SkillAdapter
     private lateinit var msgEmptySkillsTextView: TextView
     private lateinit var searchBar: EditText
-    private lateinit var searchButton: ImageButton
+    private lateinit var deleteTextButton: ImageButton
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setHasOptionsMenu(true)
 
         timeslotListVM.clearFilters()
 
@@ -39,12 +49,26 @@ class SkillsListFragment : Fragment(R.layout.skills_list_frag) {
         rv.adapter = adapter
 
         searchBar = requireActivity().findViewById(R.id.skills_list_search_edit_text)
-        searchButton = requireActivity().findViewById(R.id.skills_list_search_button)
+        deleteTextButton = requireActivity().findViewById(R.id.skills_list_delete_text_button)
 
-        searchButton.setOnClickListener {
-            val skill = searchBar.text.toString()
-            skillsListVM.searchBySkill(skill.lowercase())
+        deleteTextButton.setOnClickListener {
+            searchBar.text.clear()
         }
+
+        //live search
+        searchBar.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // Do Nothing
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                skillsListVM.searchBySkill(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // Do Nothing
+            }
+        })
 
         // Observe any change of the skills list
         skillsListVM.skillsListLD.observe(viewLifecycleOwner) {
@@ -54,6 +78,28 @@ class SkillsListFragment : Fragment(R.layout.skills_list_frag) {
             } else {
                 msgEmptySkillsTextView.visibility = View.INVISIBLE
             }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater){
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.search_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.search_item -> {
+                if(searchBar.isVisible)
+                    searchBar.visibility = View.GONE
+                else
+                    searchBar.visibility = View.VISIBLE
+                if(deleteTextButton.isVisible)
+                    deleteTextButton.visibility = View.GONE
+                else
+                    deleteTextButton.visibility = View.VISIBLE
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

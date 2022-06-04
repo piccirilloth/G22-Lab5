@@ -80,5 +80,4 @@ class CreateReviewFragment : Fragment(R.layout.create_review_frag) {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
 }
