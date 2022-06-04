@@ -291,7 +291,7 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                         // the user has enough credits
                         transaction.update(requestorRef, "credit", creditReq - offerDuration)
                         transaction.update(convRef, "status", Status.CONFIRMED)
-                        transaction.update(offerRef, "isAccepted", true)
+                        transaction.update(offerRef, "accepted", true)
                         transaction.update(receiverRef, "credit", creditRec + offerDuration)
                     } else {
                         val rejRef = db.collection("conversations")

@@ -179,10 +179,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     rejectBtn.visibility = View.VISIBLE
                 }
             }
-            else {
-                acceptBtn.visibility = View.GONE
-                rejectBtn.visibility = View.GONE
-            }
 
         }
 
