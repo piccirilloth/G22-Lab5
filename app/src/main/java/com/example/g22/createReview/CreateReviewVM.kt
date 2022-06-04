@@ -5,7 +5,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.g22.model.Review
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import java.util.*
 
 class CreateReviewVM(application: Application) : AndroidViewModel(application) {
     private val db = FirebaseFirestore.getInstance()
@@ -46,8 +50,29 @@ class CreateReviewVM(application: Application) : AndroidViewModel(application) {
                     _currentRevieweeCounterReviewsLD.value = 0
                 }
             }
-
     }
 
+    fun createReview(revieweeId: String, reviewType: String, offerId: String, rating: Double, description: String, conversationId: String) {
+        val reviewerId = Firebase.auth.currentUser!!.uid
+        db.runTransaction { transaction ->
+            val reviewee = currentRevieweeLD.value?: ""
+
+            val reviewerRef = db.collection("users").document(reviewerId)
+            val reviewer = transaction.get(reviewerRef).getString("fullname")?: ""
+
+            val offerRef = db.collection("offers").document(offerId)
+            val offerTitle = transaction.get(offerRef).getString("title")?: ""
+
+            val review = Review(reviewType, reviewer, reviewerId, reviewee, revieweeId, rating,
+                description, offerTitle, Timestamp.now().toDate())
+
+            val reviewRef = db.collection("reviews").document()
+
+            val convRef = db.collection("conversations").document(conversationId)
+            transaction.update(convRef, "reviewed", true)
+
+            transaction.set(reviewRef, review)
+        }
+    }
 
 }

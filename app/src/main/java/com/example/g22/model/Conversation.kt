@@ -17,7 +17,8 @@ data class Conversation(
     val receiverName: String,
     val receiverUnseen: Int,
     val requestorUnseen: Int,
-    val status: Status
+    val status: Status,
+    val reviewed: Boolean = false
 ) {
     constructor(): this(
         "",
@@ -29,6 +30,7 @@ data class Conversation(
         "",
         0,
         0,
-        Status.PENDING
+        Status.PENDING,
+        false
     )
 }

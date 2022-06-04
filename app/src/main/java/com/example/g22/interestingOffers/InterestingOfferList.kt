@@ -134,7 +134,7 @@ class InterestingOfferList {
             val reviewType = if (Firebase.auth.currentUser!!.uid == data[adapterPos].requestorUid) "offerer" else "requestor"
             navController.navigate(
                 R.id.action_nav_accepted_offers_to_createReviewFragment,
-                bundleOf("revieweeId" to revieweeId, "conversationId" to data[adapterPos].id, "reviewType" to reviewType)
+                bundleOf("revieweeId" to revieweeId, "conversationId" to data[adapterPos].id, "reviewType" to reviewType, "offerId" to data[adapterPos].offerId)
             )
         }
 
