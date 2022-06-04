@@ -66,7 +66,7 @@ class CreateReviewFragment : Fragment(R.layout.create_review_frag) {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater){
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.save_changes_menu, menu)
+        inflater.inflate(R.menu.save_only_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

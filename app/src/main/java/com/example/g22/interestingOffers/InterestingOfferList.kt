@@ -176,6 +176,8 @@ class InterestingOfferList {
                         && oldName == newName
                         && oldNot == newNot
                         && oldList[oldItemPosition].status == newList[newItemPosition].status
+                        && oldList[oldItemPosition].reviewedRequestor == newList[newItemPosition].reviewedRequestor
+                        && oldList[oldItemPosition].reviewedOfferer == newList[newItemPosition].reviewedOfferer
 
             }
         }
