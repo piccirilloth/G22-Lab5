@@ -23,11 +23,15 @@ class ReviewAdapter(private var context: Context, private var data: List<Review>
         private val ratingBar : RatingBar = v.findViewById(R.id.ratingBar_review_item)
         private val skill : TextView = v.findViewById(R.id.skill_review_item)
         private val reviewerImage : CircleImageView = v.findViewById(R.id.reviewer_image_review_item)
+        private val dateReview: TextView = v.findViewById(R.id.date_review_item)
+        private val score: TextView = v.findViewById(R.id.avg_score_review_item)
 
-        fun bind(reviewerId: String, reviewer: String, description: String, rating: Double, timeSlotTitle: String, context: Context) {
+        fun bind(reviewerId: String, reviewer: String, description: String, rating: Double, timeSlotTitle: String, date: String, context: Context) {
             reviewerName.text = reviewer
             reviewDescription.text = description
             ratingBar.rating = rating.toFloat()
+            dateReview.text = date
+            score.text = rating.toString()
             this.skill.text = timeSlotTitle
             val storage = Firebase.storage("gs://time-banking-9318d.appspot.com").reference
             storage.child("$reviewerId.jpg").downloadUrl.addOnSuccessListener {
@@ -54,8 +58,10 @@ class ReviewAdapter(private var context: Context, private var data: List<Review>
 
     override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         val item = data[position]
+        val d = item.date
+        val strDate = "${d.date}/${d.month+1}/${d.year-100}"
 
-        holder.bind(item.reviewerId, item.reviewer, item.description, item.rating, item.timeSlotTitle, context)
+        holder.bind(item.reviewerId, item.reviewer, item.description, item.rating, item.timeSlotTitle, strDate, context)
     }
 
     override fun getItemCount(): Int = data.size

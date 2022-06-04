@@ -106,6 +106,16 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     rejectMessage.text = "Your have accepted user's proposal!"
 
                 }
+            } else {
+                rejectMessage.visibility = View.GONE
+                if (messageListVM.messageListLD.value!!.first().sender == Firebase.auth.currentUser!!.uid) {
+                    acceptBtn.visibility = View.VISIBLE
+                    rejectBtn.visibility = View.VISIBLE
+                }
+                else {
+                    acceptBtn.visibility = View.GONE
+                    rejectBtn.visibility = View.GONE
+                }
             }
         }
 

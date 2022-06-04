@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.g22.R
@@ -73,6 +74,7 @@ class CreateReviewFragment : Fragment(R.layout.create_review_frag) {
             R.id.save_changes_item -> {
                 createReviewVM.createReview(navArguments.revieweeId, navArguments.reviewType, navArguments.offerId,
                     rate.rating.toDouble(), descriptionEdit.text.toString(), navArguments.conversationId)
+                findNavController().popBackStack()
                 true
             }
             else -> super.onOptionsItemSelected(item)

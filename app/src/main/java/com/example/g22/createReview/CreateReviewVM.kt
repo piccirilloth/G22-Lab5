@@ -69,7 +69,11 @@ class CreateReviewVM(application: Application) : AndroidViewModel(application) {
             val reviewRef = db.collection("reviews").document()
 
             val convRef = db.collection("conversations").document(conversationId)
-            transaction.update(convRef, "reviewed", true)
+            /*
+                reviewedOfferer = true -> offerer reviewed
+                reviewedRequestor = true -> requestor reviewed
+             */
+            if(reviewType == "offerer") transaction.update(convRef, "reviewedOfferer", true) else transaction.update(convRef, "reviewedRequestor", true)
 
             transaction.set(reviewRef, review)
         }

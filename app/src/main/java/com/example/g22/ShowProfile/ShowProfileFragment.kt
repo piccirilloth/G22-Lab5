@@ -89,6 +89,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
         if (navArguments.profileId == null) {
             profileVM.profileLD.observe(viewLifecycleOwner) {
                 bindProfileData(it)
+                reviewsVM.observeReviews(it.id)
             }
             profileVM.profileImageLD.observe(viewLifecycleOwner) {
                 updateProfileImage(it)
@@ -99,6 +100,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
             profileVM.otherProfileLD.observe(viewLifecycleOwner) {
                 bindProfileData(it)
                 toolbar.title = it.fullname
+                reviewsVM.observeReviews(it.id)
             }
             profileVM.otherProfileImageLD.observe(viewLifecycleOwner) {
                 updateProfileImage(it)
@@ -112,6 +114,11 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
                 profileVM.snackbarMessageLD.value = ""
             }
         }
+
+        /*if (navController.currentDestination?.id == R.id.nav_show_profile)
+            reviewsVM.observeReviews(profileVM.profileLD.value!!.id)
+        else
+            reviewsVM.observeReviews(profileVM.otherProfileLD.value!!.id)*/
 
         reviewsVM.numOffererReviewsLD.observe(viewLifecycleOwner) {
             offererNumReviews.text = " - $it Reviews"
@@ -128,8 +135,6 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
         reviewsVM.avgRequestorScoreLD.observe(viewLifecycleOwner) {
             requestorReviewsAvg.text = "$it/5"
         }
-
-        reviewsVM.observeReviews(profileVM.profileLD.value!!.id)
 
         showOffererReviewsButton.setOnClickListener {
             if (navController.currentDestination?.id == R.id.nav_show_profile) {

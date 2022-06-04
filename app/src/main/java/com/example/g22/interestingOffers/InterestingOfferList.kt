@@ -54,7 +54,17 @@ class InterestingOfferList {
                 else if (item.status == Status.CONFIRMED) {
                     if (notChip.text.toString().toInt() > 0)
                         notChip.visibility = View.VISIBLE
-                    rateButton.visibility = View.VISIBLE
+
+                    if(item.receiverUid == Firebase.auth.currentUser!!.uid)
+                        if(item.reviewedRequestor)
+                            rateButton.visibility = View.GONE
+                        else
+                            rateButton.visibility = View.VISIBLE
+                    else
+                        if(item.reviewedOfferer)
+                            rateButton.visibility = View.GONE
+                        else
+                            rateButton.visibility = View.VISIBLE
                     rateButton.setOnClickListener { onRateBtnClickCallback(bindingAdapterPosition) }
                     itemCl.setBackgroundResource(R.drawable.rounder_corner_accepted)
                 }
