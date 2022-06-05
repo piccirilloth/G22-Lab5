@@ -290,6 +290,7 @@
                     android:ems="10"
                     android:hint="insert a new skill"
                     android:inputType="textPersonName"
+                    android:maxLength="20"
                     android:minHeight="48dp"
                     app:layout_constraintEnd_toStartOf="@+id/edit_profile_add_skill_button"
                     app:layout_constraintHorizontal_bias="0.5"

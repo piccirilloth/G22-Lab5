@@ -101,14 +101,13 @@ class TimeSlotListFragment: Fragment(R.layout.time_slot_list_frag) {
             })
 
             sortMenu.editText!!.doOnTextChanged { text, start, before, count ->
+                listVM.sortParam = text.toString()
                 applySort()
             }
 
             var items = listOf("Date", "Title", "Location")
             adapterSortMenu = ArrayAdapter(requireContext(), R.layout.skills_list_item, items)
             (sortMenu.editText as? AutoCompleteTextView)?.setAdapter(adapterSortMenu)
-
-
         }
         else {
             searchEditText.visibility = View.GONE
@@ -136,6 +135,8 @@ class TimeSlotListFragment: Fragment(R.layout.time_slot_list_frag) {
         listVM.tsListLoadedLD.observe(viewLifecycleOwner) {
             val contentVisibility = if (it) View.VISIBLE else View.GONE
             val loadingVisibility = if (it) View.GONE else View.VISIBLE
+            if(it && navArguments.skill != null)
+                listVM.restoreFilters(navArguments.skill!!)
 
 //            contentCl.visibility = contentVisibility
             progressBar.visibility = loadingVisibility
@@ -163,7 +164,6 @@ class TimeSlotListFragment: Fragment(R.layout.time_slot_list_frag) {
                 listVM.hasBeenEdited.value = false
             }
         }
-
 
     }
 

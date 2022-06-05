@@ -135,8 +135,6 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
                     else
                         _tsListLD.postValue(emptyList())
 
-                    restoreFilters(skill)
-
                     tsListLoadedLD.postValue(true)
                 }
             }
@@ -205,7 +203,7 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
                             filterByLocationAndDate(location, date, it)
                         }
                     } else
-                        _tsListLD.value = emptyList()
+                        _tsListLD.postValue(emptyList())
                 }
         }
         else {
@@ -256,9 +254,9 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
         sortParam = ""
     }
 
-    fun sortByDate() { _tsListLD.value = _tsListLD.value?.sortedBy { it.date.toString() } }
-    fun sortByTitle() { _tsListLD.value = _tsListLD.value?.sortedBy { it.title } }
-    fun sortByLocation() { _tsListLD.value = _tsListLD.value?.sortedBy { it.location } }
+    fun sortByDate() { _tsListLD.postValue(_tsListLD.value?.sortedBy { it.date.toString() }) }
+    fun sortByTitle() { _tsListLD.postValue(_tsListLD.value?.sortedBy { it.title.toString() }) }
+    fun sortByLocation() { _tsListLD.postValue(_tsListLD.value?.sortedBy { it.location.toString() }) }
 
     override fun onCleared() {
         super.onCleared()
