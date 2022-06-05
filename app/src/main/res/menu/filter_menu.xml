@@ -7,4 +7,11 @@
         android:title="@string/top_bar_item_filter_title"
         android:orderInCategory="1"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/search_item"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="@string/top_bar_item_filter_title"
+        android:orderInCategory="2"
+        app:showAsAction="ifRoom" />
 </menu>

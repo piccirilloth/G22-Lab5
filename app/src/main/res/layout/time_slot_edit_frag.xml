@@ -255,7 +255,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="New skill"
-                app:layout_constraintEnd_toStartOf="@+id/timeslot_edit_add_skill_button"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/timeslot_edit_skills_chipgroup">
 
@@ -266,24 +266,6 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/timeslot_edit_add_skill_button"
-                style="@style/Widget.AppCompat.Button.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginRight="8dp"
-                android:background="@drawable/circle"
-                android:text="+"
-                android:textColor="?attr/colorOnPrimary"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/timeslot_edit_skills_menu"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/timeslot_edit_skills_menu"
-                app:layout_constraintTop_toTopOf="@+id/timeslot_edit_skills_menu" />
 
             <View
                 android:id="@+id/timeslot_edit_divider"

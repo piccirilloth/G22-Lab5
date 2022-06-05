@@ -95,13 +95,13 @@
             android:minHeight="48dp"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/timeslot_edit_sort_menu"
-            app:layout_constraintEnd_toStartOf="@id/time_slot_list_search_button"
+            app:layout_constraintEnd_toStartOf="@id/time_slot_list_clear_button"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/time_slot_list_search_button"
+            android:id="@+id/time_slot_list_clear_button"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_margin="8dp"

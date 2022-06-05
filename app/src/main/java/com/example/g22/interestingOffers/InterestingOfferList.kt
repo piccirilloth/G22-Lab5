@@ -66,7 +66,7 @@ class InterestingOfferList {
                         else
                             rateButton.visibility = View.VISIBLE
                     rateButton.setOnClickListener { onRateBtnClickCallback(bindingAdapterPosition) }
-                    itemCl.setBackgroundResource(R.drawable.rounder_corner_accepted)
+                    itemCl.setBackgroundResource(R.drawable.rounded_corner)
                 }
                 else {
                     rateButton.visibility = View.GONE

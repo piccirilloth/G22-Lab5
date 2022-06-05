@@ -146,6 +146,7 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
         if(title == "") {
             db.collection("offers")
                 .whereArrayContains("skills", skill)
+                .whereEqualTo("accepted", false)
                 .get()
                 .addOnSuccessListener {
                     if(it.isEmpty)
@@ -156,6 +157,7 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
         } else  {
             db.collection("offers")
                 .whereArrayContains("skills", skill)
+                .whereEqualTo("accepted", false)
                 .get()
                 .addOnSuccessListener {
                     if(it.isEmpty)
@@ -185,6 +187,7 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
     fun applyFilters(owner: String, location: String, date: String, skill: String) {
         val filteredUsersList = emptyList<String>().toMutableList()
         var query = db.collection("offers")
+            .whereEqualTo("accepted", false)
             .whereArrayContains("skills", skill)
         if (owner != "") {
             db.collection("users")

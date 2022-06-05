@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Time Banking</string>
+    <string name="app_name">TimmyBank</string>
 
     <!-- Navigation -->
     <string name="navigation_drawer_open">Open navigation drawer</string>

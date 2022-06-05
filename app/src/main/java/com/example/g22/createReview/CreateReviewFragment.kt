@@ -28,6 +28,7 @@ class CreateReviewFragment : Fragment(R.layout.create_review_frag) {
     lateinit var profName: TextView
     lateinit var score: TextView
     lateinit var profilePic: CircleImageView
+    lateinit var overallRatingBar: RatingBar
 
     lateinit var descriptionEdit: EditText
     lateinit var rate: RatingBar
@@ -42,6 +43,7 @@ class CreateReviewFragment : Fragment(R.layout.create_review_frag) {
         profilePic = view.findViewById(R.id.create_review_frag_profile_picture)
         descriptionEdit = view.findViewById(R.id.create_review_frag_edit_text)
         rate = view.findViewById(R.id.create_review_frag_rating_bar)
+        overallRatingBar = view.findViewById(R.id.create_review_frag_overall_rating)
 
         if(savedInstanceState == null) {
             createReviewVM.observeCurrentReviewInfo(navArguments.revieweeId, navArguments.reviewType)
@@ -60,6 +62,7 @@ class CreateReviewFragment : Fragment(R.layout.create_review_frag) {
 
         createReviewVM.currentRevieweeScoreLD.observe(viewLifecycleOwner) {
             score.text = "${it}/5 (${createReviewVM.currentRevieweeCounterReviewsLD.value} reviews)"
+            overallRatingBar.rating = it.toFloat()
         }
 
     }

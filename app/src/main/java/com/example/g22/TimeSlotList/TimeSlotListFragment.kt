@@ -2,6 +2,8 @@ package com.example.g22.TimeSlotList
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -10,6 +12,8 @@ import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -39,10 +43,9 @@ class TimeSlotListFragment: Fragment(R.layout.time_slot_list_frag) {
     private lateinit var addFab: View
     private lateinit var msgEmptyTimeSlotsTextView: TextView
     private lateinit var searchEditText: EditText
-    private lateinit var searchButton: ImageButton
+    private lateinit var clearButton: ImageButton
     private lateinit var sortMenu: TextInputLayout
     private lateinit var adapterSortMenu: ArrayAdapter<String>
-    private lateinit var applySortButton: ImageButton
     private lateinit var progressBar: ProgressBar
 
     // Others
@@ -60,9 +63,8 @@ class TimeSlotListFragment: Fragment(R.layout.time_slot_list_frag) {
         rv = requireActivity().findViewById(R.id.timeslot_list_rv)
         msgEmptyTimeSlotsTextView = requireActivity().findViewById(R.id.timeslot_list_empty_ts_message)
         searchEditText = requireActivity().findViewById(R.id.time_slot_list_search_edit_text)
-        searchButton = requireActivity().findViewById(R.id.time_slot_list_search_button)
+        clearButton = requireActivity().findViewById(R.id.time_slot_list_clear_button)
         sortMenu = requireActivity().findViewById(R.id.timeslot_edit_sort_menu)
-        applySortButton = requireActivity().findViewById(R.id.time_slot_list_apply_sort_button)
         progressBar = requireActivity().findViewById(R.id.timeslot_list_progress_bar)
 
         // Recycler View configuration
@@ -76,27 +78,42 @@ class TimeSlotListFragment: Fragment(R.layout.time_slot_list_frag) {
             listVM.observeSkillOffers(navArguments.skill!!)
             val toolbar: Toolbar = requireActivity().findViewById(R.id.toolbar)
             toolbar.title = navArguments.skill
-            searchEditText.visibility = View.VISIBLE
-            searchButton.visibility = View.VISIBLE
+            searchEditText.visibility = View.GONE
+            clearButton.visibility = View.GONE
             sortMenu.visibility = View.VISIBLE
-            applySortButton.visibility = View.VISIBLE
-            searchButton.setOnClickListener {
-                listVM.titleSearched = searchEditText.text.toString()
-                listVM.searchByTitle(searchEditText.text.toString(), navArguments.skill.toString())
+            clearButton.setOnClickListener {
+                searchEditText.text.clear()
+            }
+
+            searchEditText.addTextChangedListener(object: TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    // Do Nothing
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    listVM.titleSearched = searchEditText.text.toString()
+                    listVM.searchByTitle(searchEditText.text.toString(), navArguments.skill.toString())
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    // Do Nothing
+                }
+            })
+
+            sortMenu.editText!!.doOnTextChanged { text, start, before, count ->
+                applySort()
             }
 
             var items = listOf("Date", "Title", "Location")
             adapterSortMenu = ArrayAdapter(requireContext(), R.layout.skills_list_item, items)
             (sortMenu.editText as? AutoCompleteTextView)?.setAdapter(adapterSortMenu)
 
-            applySortButton.setOnClickListener { applySort() }
 
         }
         else {
             searchEditText.visibility = View.GONE
-            searchButton.visibility = View.GONE
+            clearButton.visibility = View.GONE
             sortMenu.visibility = View.GONE
-            applySortButton.visibility = View.GONE
             addFab.visibility = View.VISIBLE
             listVM.observeMyOffers()
         }
@@ -223,6 +240,17 @@ class TimeSlotListFragment: Fragment(R.layout.time_slot_list_frag) {
         return when (item.itemId) {
             R.id.filter_item -> {
                 showSelectFiltersPopup()
+                true
+            }
+            R.id.search_item -> {
+                if(searchEditText.isVisible)
+                    searchEditText.visibility = View.GONE
+                else
+                    searchEditText.visibility = View.VISIBLE
+                if(clearButton.isVisible)
+                    clearButton.visibility = View.GONE
+                else
+                    clearButton.visibility = View.VISIBLE
                 true
             }
             else -> super.onOptionsItemSelected(item)

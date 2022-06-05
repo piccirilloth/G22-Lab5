@@ -98,5 +98,4 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
             adapter.updateList(it)
         }
     }
-
 }

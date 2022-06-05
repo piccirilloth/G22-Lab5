@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
@@ -39,7 +40,6 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
     private lateinit var durationMinutesEditText: EditText
     private lateinit var locationEditText: EditText
     private lateinit var skillsMenu: TextInputLayout
-    private lateinit var addSkillButton: Button
     private lateinit var adapter: ArrayAdapter<String>
     private lateinit var skillsChipGroup: ChipGroup
     private lateinit var progressBar: ProgressBar
@@ -74,21 +74,16 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
         locationEditText = requireActivity().findViewById(R.id.timeslot_edit_location_edittext)
         descriptionEditText = requireActivity().findViewById(R.id.timeslot_edit_description_edittext)
         skillsMenu = requireActivity().findViewById(R.id.timeslot_edit_skills_menu)
-        addSkillButton = requireActivity().findViewById(R.id.timeslot_edit_add_skill_button)
         skillsChipGroup = requireActivity().findViewById(R.id.timeslot_edit_skills_chipgroup)
         progressBar = requireActivity().findViewById(R.id.timeslot_edit_progress_bar)
 
         navController = findNavController()
 
-        // Listeners
-        addSkillButton.setOnClickListener {
-            if (skillsMenu.editText?.text.toString() != "") {
-                timeslotVM.addSkill(skillsMenu.editText!!.text.toString())
+        skillsMenu.editText!!.doOnTextChanged { text, start, before, count ->
+            if (text.toString() != "") {
+                timeslotVM.addSkill(text.toString())
                 skillsMenu.editText!!.setText("")
                 skillsMenu.error = ""
-            }
-            else {
-                skillsMenu.error = "No skill selected"
             }
         }
 
