@@ -69,6 +69,8 @@ class CreateReviewFragment : Fragment(R.layout.create_review_frag) {
 
         // Snackbar handling
         createReviewVM.snackbarMessages.observeAndShow(viewLifecycleOwner, requireView(), lifecycleScope)
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater){

@@ -27,8 +27,6 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
     private var msgListListenerRegistration: ListenerRegistration? = null
     private var convStatusListenerRegistration: ListenerRegistration? = null
 
-    private var convId = null
-
     private val _messageListLD: MutableLiveData<List<Message>> =
         MutableLiveData<List<Message>>().also {
             it.value = emptyList()
@@ -43,49 +41,15 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
 
     val conversationStatusLD = _conversationStatusLD
 
-    fun createConversationIfNotExist(receiver: String, timeSlotId: String) {
-        // Check
-        viewModelScope.launch {
-            val convResult = firebaseGetConversations(receiver, Firebase.auth.currentUser!!.uid, timeSlotId)
-            if (convResult.isSuccess) {
-                val conversations = convResult.getOrNull()!!
-                if (conversations.isEmpty()) {
-                    conversationId.value = db.collection("conversations").document().id
-                } else {
-                    var convId: String? = null
-                    for (c in conversations) {
-                        if (c.status == Status.PENDING)
-                            convId = c.id
-                    }
-                    conversationId.value = convId ?: db.collection("conversations").document().id
-                }
-            }
-        }
-    }
 
-    private suspend fun firebaseGetConversations(receiver: String, requestor: String, timeSlotId: String): Result<List<Conversation>> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val conversations = db.collection("conversations")
-                    .whereEqualTo("receiverUid", receiver)
-                    .whereEqualTo("requestorUid", Firebase.auth.currentUser!!.uid)
-                    .whereEqualTo("offerId", timeSlotId)
-                    .get().await().toObjects(Conversation::class.java)
-
-                return@withContext Result.success(conversations)
-            } catch(e: Exception) {
-                return@withContext Result.failure(e)
-            }
-        }
-    }
-
-    fun observeMessages(convId: String, receiver: String, timeSlotId: String) {
+    fun observeMessages(receiver: String, timeSlotId: String) {
         val users = listOf<String>("${Firebase.auth.currentUser!!.uid}", receiver)
 
         msgListListenerRegistration?.remove()
 
         msgListListenerRegistration = db.collection("chats")
-            .whereEqualTo("conversationId", convId)
+            .whereEqualTo("offer", timeSlotId)
+            .whereIn("sender", users)
             .addSnapshotListener(Dispatchers.IO.asExecutor()) { value, error ->
                 if (error != null) {
                     return@addSnapshotListener
@@ -333,7 +297,7 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                     } else {
                         val rejRef = db.collection("conversations")
                             .document(conversationId)
-                        transaction.update(rejRef, "status", Status.REJECTED_BALANCE)
+                        transaction.update(rejRef, "status", Status.REJECTED)
                     }
 
                 }.await()
