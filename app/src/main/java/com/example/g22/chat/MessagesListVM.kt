@@ -207,7 +207,7 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
         return withContext(Dispatchers.IO) {
 
             try {
-                val ref = db.collection("conversations").document(conversationId.value!!)
+                val ref = db.collection("conversations").document()
                 db.runTransaction { transaction ->
                     var requestorUid = ""
                     var oldReceiverUnseen = 0
@@ -217,8 +217,9 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                         db.collection("offers").document(timeSlotId),
                     ).getLong("proposalsCounter")
 
-                    if (messageListLD.value!!.isNotEmpty()) {
-                        val updateNotRef = ref
+                    if (conversationId.value!! != "") {
+                        val updateNotRef =
+                            db.collection("conversations").document(conversationId.value!!)
                         val queryResult = transaction.get(updateNotRef)
                         requestorUid = queryResult.get("requestorUid").toString()
                         oldReceiverUnseen = queryResult.get("receiverUnseen").toString().toInt()
