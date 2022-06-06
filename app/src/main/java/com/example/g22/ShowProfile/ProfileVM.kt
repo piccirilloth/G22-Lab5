@@ -60,6 +60,10 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
     val snackbarMessages: LiveData<List< Event<SnackbarMessage> >>
         get() = _snackbarMessages
 
+    fun addMessage(msg: String, duration: Int) {
+        _snackbarMessages.addMessage(msg, duration)
+    }
+
 
     init {
         Firebase.auth.addAuthStateListener {

@@ -26,16 +26,20 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.g22.ShowProfile.ProfileVM
+import com.google.android.gms.auth.api.identity.*
 import com.google.android.material.navigation.NavigationView
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.Identity
-import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -139,6 +143,7 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         Firebase.auth.addAuthStateListener {
+            // Based on the authentication state, disable destinations
             if (it.currentUser == null) {
                 myOffersItem.isEnabled = false
                 profileItem.isEnabled = false
@@ -162,7 +167,6 @@ class MainActivity : AppCompatActivity() {
                     navController.currentDestination?.id == R.id.nav_interesting_offers ||
                     navController.currentDestination?.id == R.id.nav_accepted_offers
                 ) {
-                    // if (navController.currentDestination?.id != R.id.nav_skills_list)
                     navController.navigate(R.id.nav_to_home)
                 }
             } else {
@@ -180,6 +184,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Profile snackbar handling
         profileVM.snackbarMessages.observeAndShow(this, toolbar, lifecycleScope)
     }
 
@@ -210,6 +215,7 @@ class MainActivity : AppCompatActivity() {
         } else if (item.itemId == R.id.google_logout_item) {
             auth.signOut()
             invalidateMenu()
+            profileVM.addMessage("Logout successfully!", Snackbar.LENGTH_LONG)
         }
         return super.onOptionsItemSelected(item)
     }
@@ -230,19 +236,18 @@ class MainActivity : AppCompatActivity() {
                         idToken != null -> {
                             // Got an ID token from Google. Use it to authenticate
                             // with Firebase.
-                            val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
-                            auth.signInWithCredential(firebaseCredential)
-                                .addOnCompleteListener(this) { task ->
-                                    if (task.isSuccessful) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        invalidateMenu()
+                            lifecycleScope.launch {
+                                val result = signinWithCredential(idToken)
 
-                                    } else {
-                                        // If sign in fails, display a message to the user.
-                                        // TODO: updateUI(null) you can sign out with Firebase.auth.signOut()
-                                    }
+                                if (result.isSuccess) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    invalidateMenu()
+                                    profileVM.addMessage("Logged in successfully!", Snackbar.LENGTH_LONG)
+                                } else {
+                                    // Sign in failed
+                                    profileVM.addMessage("Signin not succeeded. Try again!", Snackbar.LENGTH_LONG)
                                 }
-                            Log.d(TAG, "Got ID token.")
+                            }
                         }
                         else -> {
                             // Shouldn't happen.
@@ -257,22 +262,52 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun googleLogin() {
-        oneTapClient.beginSignIn(signInRequest)
-            .addOnSuccessListener(this) { result ->
+        lifecycleScope.launch {
+            val result = googleBeginSignin()
+
+            if (result.isSuccess) {
+                val beginSignInResult = result.getOrThrow()
+
                 try {
                     startIntentSenderForResult(
-                        result.pendingIntent.intentSender, 2,
+                        beginSignInResult.pendingIntent.intentSender, REQ_ONE_TAP,
                         null, 0, 0, 0, null
                     )
                 } catch (e: IntentSender.SendIntentException) {
-                    Log.e(TAG, "Couldn't start One Tap UI: ${e.localizedMessage}")
+                    profileVM.addMessage("Couldn't start One Tap UI: ${e.localizedMessage}", Snackbar.LENGTH_LONG)
                 }
+
+            } else {
+                profileVM.addMessage("No saved credentials found. Connect your google account to your phone!", Snackbar.LENGTH_LONG)
             }
-            .addOnFailureListener(this) { e ->
-                // No saved credentials found. Launch the One Tap sign-up flow, or
-                // do nothing and continue presenting the signed-out UI.
-                Log.d(TAG, e.localizedMessage)
+        }
+    }
+
+    private suspend fun googleBeginSignin(): Result<BeginSignInResult> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val result = oneTapClient.beginSignIn(signInRequest).await()
+
+                return@withContext Result.success(result)
+            } catch (e: Exception) {
+                return@withContext Result.failure(e)
             }
+        }
+    }
+
+    private suspend fun signinWithCredential(idToken: String): Result<Unit> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val credential =
+                    GoogleAuthProvider.getCredential(idToken, null)
+
+                auth.signInWithCredential(credential).await()
+
+                return@withContext Result.success(Unit)
+            } catch (e: Exception) {
+                return@withContext Result.failure(e)
+            }
+        }
     }
 
     private fun googleBtnUI() {
