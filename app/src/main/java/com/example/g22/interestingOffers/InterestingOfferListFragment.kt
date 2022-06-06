@@ -6,14 +6,18 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.g22.R
+import com.example.g22.createReview.CreateReviewVM
+import com.example.g22.observeAndShow
 import com.google.android.material.tabs.TabLayout
 
 class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offer_list) {
     private val intOfferVM by activityViewModels<InterestingOfferListVM>()
+    private val createReviewVM by activityViewModels<CreateReviewVM>()
 
     private lateinit var rv: RecyclerView
     private lateinit var adapter: InterestingOfferList.InterestingOfferAdapter
@@ -97,5 +101,8 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
         intOfferVM.interOfferListLD.observe(viewLifecycleOwner) {
             adapter.updateList(it)
         }
+
+        // Snackbar handling
+        createReviewVM.snackbarMessages.observeAndShow(viewLifecycleOwner, requireView(), lifecycleScope)
     }
 }

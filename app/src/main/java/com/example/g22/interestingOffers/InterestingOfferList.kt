@@ -131,6 +131,7 @@ class InterestingOfferList {
             navController.navigate(
                 actionId,
                 bundleOf(
+                    "conversationId" to data[adapterPos].id,
                     "receiver" to receiver,
                     "offerId" to data[adapterPos].offerId,
                     "offerTitle" to data[adapterPos].offerTitle,

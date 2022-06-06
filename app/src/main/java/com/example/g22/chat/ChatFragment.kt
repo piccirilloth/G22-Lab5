@@ -64,7 +64,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             messageListVM.clearList()
             messageListVM.resetConversationStatus()
             messageListVM.conversationId.value = ""
-            messageListVM.observeMessages(navArguments.receiver, navArguments.offerId)
+
+            if (navArguments.conversationId == null)
+                messageListVM.createConversationIfNotExist(navArguments.receiver, navArguments.offerId)
+            else
+                messageListVM.observeMessages(navArguments.conversationId!!, navArguments.receiver, navArguments.offerId)
         }
 
         messageListVM.conversationStatusLD.observe(viewLifecycleOwner) {
@@ -189,8 +193,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }
 
         messageListVM.conversationId.observe(viewLifecycleOwner) {
-            if(messageListVM.conversationId.value!! != "")
+            if(messageListVM.conversationId.value!! != "") {
+                messageListVM.observeMessages(it, navArguments.receiver, navArguments.offerId)
                 messageListVM.resetNotifications()
+            }
         }
 
         sendBtn.setOnClickListener{
