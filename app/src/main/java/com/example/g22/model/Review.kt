@@ -3,6 +3,7 @@ package com.example.g22.model
 import java.util.Date
 
 data class Review (
+    val id: String,
     var reviewType : String,
     var reviewer : String,
     var reviewerId : String,
@@ -14,6 +15,7 @@ data class Review (
     var date : Date
     ) {
     constructor(): this(
+        "",
         "",
         "",
         "",

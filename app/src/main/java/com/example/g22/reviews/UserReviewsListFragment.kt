@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -45,7 +46,7 @@ class UserReviewsListFragment : Fragment(R.layout.user_reviews_list_frag) {
 
         //Recycler View Configuration
         rv.layoutManager = LinearLayoutManager(requireActivity())
-        adapter = ReviewAdapter(requireActivity(), emptyList())
+        adapter = ReviewAdapter(requireActivity(), lifecycleScope, emptyList())
         rv.adapter = adapter
 
         val toolbar: Toolbar = requireActivity().findViewById(R.id.toolbar)
@@ -56,7 +57,7 @@ class UserReviewsListFragment : Fragment(R.layout.user_reviews_list_frag) {
 
         if(navArguments.reviewType == "offerer") {
             reviewsListVM.reviewsOffererListLD.observe(viewLifecycleOwner) {
-                adapter.updateList(it)
+                adapter.updateList(it, lifecycleScope)
             }
 
             reviewsListVM.numOffererReviewsLD.observe(viewLifecycleOwner) {
@@ -70,7 +71,7 @@ class UserReviewsListFragment : Fragment(R.layout.user_reviews_list_frag) {
 
         if(navArguments.reviewType == "requestor") {
             reviewsListVM.reviewsRequestorListLD.observe(viewLifecycleOwner) {
-                adapter.updateList(it)
+                adapter.updateList(it, lifecycleScope)
             }
 
             reviewsListVM.numRequestorReviewsLD.observe(viewLifecycleOwner) {

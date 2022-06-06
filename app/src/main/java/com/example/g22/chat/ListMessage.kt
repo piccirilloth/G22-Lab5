@@ -129,7 +129,8 @@ class MessageAdapter(private var data: List<Message>): RecyclerView.Adapter<Mess
                     oldList[oldItemPosition].receiver == newList[newItemPosition].receiver &&
                     oldList[oldItemPosition].text == newList[newItemPosition].text &&
                     oldList[oldItemPosition].offer == newList[newItemPosition].offer &&
-                    oldList[oldItemPosition].conversationId == newList[newItemPosition].conversationId
+                    oldList[oldItemPosition].conversationId == newList[newItemPosition].conversationId &&
+                    oldList[oldItemPosition].time == newList[newItemPosition].time
             return same
 
         }
