@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +25,7 @@ import com.example.g22.TimeSlotList.TimeSlotListFragmentArgs
 import com.example.g22.TimeSlotList.TimeSlotListVM
 import com.example.g22.model.Message
 import com.example.g22.model.Status
+import com.example.g22.observeAndShow
 import com.example.g22.toAdvertisementList
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -131,7 +133,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }
 
         acceptBtn.setOnClickListener {
-            messageListVM.confirmRequest()
+            messageListVM.confirmRequest(navArguments.offerId)
         }
 
         rejectBtn.setOnClickListener {
@@ -206,6 +208,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             }
         }
         //messageListVM.messageListLD.value?.size?.let { rv.scrollToPosition(it) }
+
+        // Snackbar handling
+        messageListVM.snackbarMessages.observeAndShow(viewLifecycleOwner, requireView(), lifecycleScope)
+
     }
 
 }

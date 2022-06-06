@@ -7,10 +7,15 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.g22.Event
+import com.example.g22.SnackbarMessage
+import com.example.g22.addMessage
 import com.example.g22.model.Conversation
 import com.example.g22.model.Message
 import com.example.g22.model.Status
 import com.example.g22.utils.Duration
+import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -41,6 +46,10 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
 
     val conversationStatusLD = _conversationStatusLD
 
+    // Snackbar handling
+    private val _snackbarMessages = MutableLiveData<List<Event<SnackbarMessage>>>(emptyList())
+    val snackbarMessages: LiveData<List<Event<SnackbarMessage>>>
+        get() = _snackbarMessages
 
     fun observeMessages(receiver: String, timeSlotId: String) {
         val users = listOf<String>("${Firebase.auth.currentUser!!.uid}", receiver)
@@ -152,11 +161,7 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                 }
             } else {
                 viewModelScope.launch {
-                    Toast.makeText(
-                        getApplication(),
-                        "Unable to send the message!",
-                        Toast.LENGTH_SHORT
-                    )
+                    _snackbarMessages.addMessage("Unable to send the message!", Snackbar.LENGTH_LONG)
                 }
             }
         }
@@ -248,17 +253,39 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
         _messageListLD.value = emptyList()
     }
 
-    fun confirmRequest() {
+    fun confirmRequest(offerId: String) {
         GlobalScope.launch {
             val res = firebaseConfirmRequest(conversationId.value!!)
-
-            if (res.isFailure) {
+            if (res.isSuccess) {
+                val rejRes = firebaseRejectOthers(offerId)
+                if (rejRes.isSuccess) {
+                    // TODO
+                } else {
+                    _snackbarMessages.addMessage("Error while rejecting other proposals!", Snackbar.LENGTH_LONG)
+                }
+            }
+            else {
                 viewModelScope.launch {
-                    Toast.makeText(
-                        getApplication(),
-                        "Error while accepting offer!",
-                        Toast.LENGTH_SHORT
-                    )
+                    _snackbarMessages.addMessage("Error while accepting offer!", Snackbar.LENGTH_LONG)
+                }
+            }
+        }
+    }
+
+    fun rejectRequest() {
+        GlobalScope.launch {
+            val res = firebaseRejectRequest(
+                conversationId.value!!,
+                _messageListLD.value!!.first().offer
+            )
+
+            if (res.isSuccess) {
+                viewModelScope.launch {
+                    _conversationStatusLD.value = Status.REJECTED
+                }
+            } else {
+                viewModelScope.launch {
+                    _snackbarMessages.addMessage("Error while rejecting request!", Snackbar.LENGTH_LONG)
                 }
             }
         }
@@ -294,6 +321,9 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                         transaction.update(convRef, "status", Status.CONFIRMED)
                         transaction.update(offerRef, "accepted", true)
                         transaction.update(receiverRef, "credit", creditRec + offerDuration)
+
+                        // reject other conversations
+
                     } else {
                         val rejRef = db.collection("conversations")
                             .document(conversationId)
@@ -309,25 +339,32 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun rejectRequest() {
-        GlobalScope.launch {
-            val res = firebaseRejectRequest(conversationId.value!!, _messageListLD.value!!.first().offer)
+    private suspend fun firebaseRejectOthers(timeslotId: String): Result<Unit> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val convs = db.collection("conversations")
+                    .whereEqualTo("offerId", timeslotId)
+                    .whereEqualTo("status", Status.PENDING)
+                    .get().await()
 
-            if (res.isSuccess) {
-                viewModelScope.launch {
-                    _conversationStatusLD.value = Status.REJECTED
+                val jobs = emptyList<Task<Void>>().toMutableList()
+                for (c in convs) {
+                    val job = db.collection("conversations")
+                        .document(c.id)
+                        .update("status", Status.REJECTED)
+                    jobs.add(job)
                 }
-            } else {
-                viewModelScope.launch {
-                    Toast.makeText(
-                        getApplication(),
-                        "Error while rejecting the request!",
-                        Toast.LENGTH_SHORT
-                    )
+                for (j in jobs) {
+                    j.await()
                 }
+
+                return@withContext Result.success(Unit)
+            } catch (e: Exception) {
+                return@withContext Result.failure(e)
             }
         }
     }
+
 
     private suspend fun firebaseRejectRequest(conversationId: String, offerId: String): Result<Unit> {
         return withContext(Dispatchers.IO) {
