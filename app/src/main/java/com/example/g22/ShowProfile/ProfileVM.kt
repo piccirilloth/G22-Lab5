@@ -2,19 +2,14 @@ package com.example.g22.ShowProfile
 
 import android.app.Application
 import android.net.Uri
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.g22.LOCAL_PERSISTENT_PROFILE_PICTURE_PATH
-import com.example.g22.LOCAL_TMP_PROFILE_PICTURE_PATH
-import com.example.g22.LoadingImagePath
-import com.example.g22.NullImagePath
+import com.example.g22.*
 import com.example.g22.model.Profile
-import com.example.g22.model.TimeSlot
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.ktx.Firebase
@@ -58,9 +53,12 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
     val otherProfileLD: LiveData<Profile> = _otherProfileLD
     val otherProfileImageLD: LiveData<String> = _otherProfileImageLD
 
-    // For snackbar handling
-    var snackbarMessageLD: MutableLiveData<String> = MutableLiveData("")
     val hasBeenModifiedProfileImageLD: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+
+    // Snackbar handling
+    private val _snackbarMessages = MutableLiveData<List< Event<SnackbarMessage> >>(emptyList())
+    val snackbarMessages: LiveData<List< Event<SnackbarMessage> >>
+        get() = _snackbarMessages
 
 
     init {
@@ -113,10 +111,7 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
 
                     // Cause the snackbar to be visualized
                     viewModelScope.launch {
-                        snackbarMessageLD.postValue(
-                            snackbarMessageLD.value +
-                                    "\nError while uploading profile image!"
-                        )
+                        _snackbarMessages.addMessage("Error while uploading profile image!", Snackbar.LENGTH_LONG)
                     }
 
                 }
@@ -128,10 +123,7 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
 
                 // Cause the snackbar to be visualized
                 viewModelScope.launch {
-                    snackbarMessageLD.postValue(
-                        snackbarMessageLD.value +
-                                "\nError updating the profile!"
-                    )
+                    _snackbarMessages.addMessage("Error while updating the profile!", Snackbar.LENGTH_LONG)
                 }
 
             }
@@ -147,8 +139,7 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
                 .document(uid)
                 .addSnapshotListener(Dispatchers.IO.asExecutor()) { value, e ->
                     if (e != null) {
-                        snackbarMessageLD.postValue(snackbarMessageLD.value +
-                                "Error while retrieving user from database!")
+                        _snackbarMessages.postMessage("Error while retrieving user from database!", Snackbar.LENGTH_LONG)
                         return@addSnapshotListener
                     }
                     if (value != null && value.exists()) {
@@ -206,13 +197,11 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
 
             if (result.isSuccess) {
                 viewModelScope.launch {
-                    Toast.makeText(getApplication(), "Profile created from Google account!", Toast.LENGTH_SHORT
-                    )
+                    _snackbarMessages.addMessage("Profile created from Goole account!", Snackbar.LENGTH_LONG)
                 }
             } else {
                 viewModelScope.launch {
-                    Toast.makeText(getApplication(), "Profile created from Google account!", Toast.LENGTH_SHORT
-                    )
+                    _snackbarMessages.addMessage("Error while creating profile from Google account!", Snackbar.LENGTH_LONG)
                 }
             }
         }
@@ -228,6 +217,8 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
             .document(profileId)
             .addSnapshotListener(Dispatchers.IO.asExecutor()) { value, e ->
                 if (e != null) {
+                    _snackbarMessages.postMessage("Error while retrieving user's profile!", Snackbar.LENGTH_LONG)
+
                     return@addSnapshotListener
                 }
                 if (value != null && value.exists()) {
@@ -242,23 +233,23 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
      * Firestore async suspend functions
      */
 
-    private suspend fun firestoreSetProfile(profile: Profile): Result<Boolean> {
+    private suspend fun firestoreSetProfile(profile: Profile): Result<Unit> {
         return withContext(Dispatchers.IO) {
             try {
                 db.collection("users")
                     .document(profile.id)
                     .set(profile)
                     .await()
-                return@withContext Result.success(true)
+                return@withContext Result.success(Unit)
             } catch (e: Exception) {
                 return@withContext Result.failure(e)
             }
         }
     }
 
-    private suspend fun uploadNewProfileImageToFirebase(): Result<Boolean> {
+    private suspend fun uploadNewProfileImageToFirebase(): Result<Unit> {
         if (hasBeenModifiedProfileImageLD.value == false)
-            return Result.success(true)
+            return Result.success(Unit)
 
         val result = withContext(Dispatchers.IO) {
             try {
@@ -277,7 +268,7 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
                     File(appDir.path, LOCAL_PERSISTENT_PROFILE_PICTURE_PATH),
                     true
                 )
-                return@withContext Result.success(true)
+                return@withContext Result.success(Unit)
             } catch (e: Exception) {
                 return@withContext Result.failure(e)
             }
@@ -286,7 +277,7 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
         return result
     }
 
-    private suspend fun downloadProfileImageFromFirebase(profileId: String?): Result<Boolean> {
+    private suspend fun downloadProfileImageFromFirebase(profileId: String?): Result<Unit> {
         return withContext(Dispatchers.IO) {
             try {
                 val localPath = if (profileId == null) {
@@ -311,7 +302,7 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
                 storagePathRef.getFile(localFile).await()
 
                 // Success
-                return@withContext Result.success(true)
+                return@withContext Result.success(Unit)
             } catch (e: Exception) {
                 return@withContext Result.failure(e)
             }

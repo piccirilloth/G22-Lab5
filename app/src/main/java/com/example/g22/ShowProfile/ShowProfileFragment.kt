@@ -17,6 +17,7 @@ import com.example.g22.R
 import com.example.g22.isValidImagePath
 import com.example.g22.loadFromDisk
 import com.example.g22.model.Profile
+import com.example.g22.observeAndShow
 import com.example.g22.reviews.UserReviewsListVM
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -108,12 +109,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
         }
 
         // Snackbar handling
-        profileVM.snackbarMessageLD.observe(viewLifecycleOwner) {
-            if (it != "") {
-                Snackbar.make(requireView(), it, Snackbar.LENGTH_LONG).show()
-                profileVM.snackbarMessageLD.value = ""
-            }
-        }
+        profileVM.snackbarMessages.observeAndShow(viewLifecycleOwner, requireView(), lifecycleScope)
 
         /*if (navController.currentDestination?.id == R.id.nav_show_profile)
             reviewsVM.observeReviews(profileVM.profileLD.value!!.id)

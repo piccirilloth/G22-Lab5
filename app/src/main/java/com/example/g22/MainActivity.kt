@@ -179,6 +179,8 @@ class MainActivity : AppCompatActivity() {
                 navHeaderGoogleLoginButton.visibility = View.GONE
             }
         }
+
+        profileVM.snackbarMessages.observeAndShow(this, toolbar, lifecycleScope)
     }
 
 

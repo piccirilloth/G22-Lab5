@@ -19,10 +19,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.example.g22.LOCAL_TMP_PROFILE_PICTURE_PATH
-import com.example.g22.R
-import com.example.g22.isValidImagePath
-import com.example.g22.loadFromDisk
+import com.example.g22.*
 import com.example.g22.model.Profile
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -100,7 +97,6 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_frag) {
 
         if (savedInstanceState == null) {
             profileVM.editProfileLoadedLD.value = false
-            profileVM.snackbarMessageLD.value = ""
             profileVM.hasBeenModifiedProfileImageLD.value = false
         }
 
@@ -131,6 +127,8 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_frag) {
             if (it != null)
                 bindSkills(it)
         }
+
+        profileVM.snackbarMessages.observeAndShow(viewLifecycleOwner, requireView(), lifecycleScope)
     }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
