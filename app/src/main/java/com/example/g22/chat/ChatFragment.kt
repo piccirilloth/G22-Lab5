@@ -148,7 +148,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         toolbar.title = "Offer's chat" //TODO: enhance the name of the toolbar
 
         rv.addOnLayoutChangeListener { view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-            if(adapter.itemCount > 0 && oldBottom < bottom)
+            if(adapter.itemCount > 0)
                 rv.smoothScrollToPosition(adapter.itemCount - 1)
         }
 

@@ -43,7 +43,8 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/chat_fragment_reject_message"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/chat_fragment_reject_button" >
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/chat_fragment_reject_button">
 
         </androidx.recyclerview.widget.RecyclerView>
 
