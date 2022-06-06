@@ -11,10 +11,12 @@ import android.widget.EditText
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.g22.R
+import com.example.g22.observeAndShow
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import de.hdodenhof.circleimageview.CircleImageView
@@ -64,6 +66,10 @@ class CreateReviewFragment : Fragment(R.layout.create_review_frag) {
             score.text = "${it}/5 (${createReviewVM.currentRevieweeCounterReviewsLD.value} reviews)"
             overallRatingBar.rating = it.toFloat()
         }
+
+        // Snackbar handling
+        createReviewVM.snackbarMessages.observeAndShow(viewLifecycleOwner, requireView(), lifecycleScope)
+
 
     }
 

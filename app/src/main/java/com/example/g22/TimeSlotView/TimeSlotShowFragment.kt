@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -14,6 +15,7 @@ import com.example.g22.R
 import com.example.g22.TimeSlotList.TimeSlotListVM
 import com.example.g22.custom_format
 import com.example.g22.model.TimeSlot
+import com.example.g22.observeAndShow
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
@@ -24,7 +26,6 @@ class TimeSlotShowFragment : Fragment(R.layout.time_slot_show_frag) {
 
     // ViewModels
     private val timeslotVM by activityViewModels<TimeSlotVM>()
-    private val timeslotListVM by activityViewModels<TimeSlotListVM>()
 
     // View references
     private lateinit var sv: ScrollView
@@ -73,12 +74,11 @@ class TimeSlotShowFragment : Fragment(R.layout.time_slot_show_frag) {
         if (savedInstanceState == null) {
             // Set the current timeslot shown using the received id from the list (if this is the case)
             if (navArguments.timeSlotId != "") {
+                timeslotVM.invalidTimeslotLD.value = false
                 timeslotVM.setCurrentTimeSlot(navArguments.timeSlotId, true)
             } else {
                 navController.popBackStack()
             }
-            //            if (navArguments.timeSlotId != "" && !timeslotVM.setCurrentTimeSlot(navArguments.timeSlotId, true))
-//                navController.popBackStack()
         }
 
         Firebase.auth.addAuthStateListener {
@@ -86,8 +86,15 @@ class TimeSlotShowFragment : Fragment(R.layout.time_slot_show_frag) {
         }
 
         // Observe any change to the current timeslot to update the views
+        timeslotVM.invalidTimeslotLD.observe(viewLifecycleOwner) {
+            if (it == true) {
+                timeslotVM.invalidTimeslotLD.value = false
+                navController.popBackStack()
+            }
+        }
+
         timeslotVM.timeslotLoadedLD.observe(viewLifecycleOwner) {
-            val contentVisibility = if (it) View.VISIBLE else View.GONE
+//            val contentVisibility = if (it) View.VISIBLE else View.GONE
             val loadingVisibility = if (it) View.GONE else View.VISIBLE
 
 //            sv.visibility = contentVisibility
@@ -98,12 +105,12 @@ class TimeSlotShowFragment : Fragment(R.layout.time_slot_show_frag) {
             val menu = toolbar.menu
             val editIcon = menu.findItem(R.id.edit_item)
             if (navArguments.readOnly == true)
-                editIcon?.setVisible(false)
+                editIcon?.isVisible = false
             else {
                 if (it.proposalsCounter > 0 || it.accepted || editIcon == null)
-                    editIcon?.setVisible(false)
+                    editIcon?.isVisible = false
                 else
-                    editIcon?.setVisible(true)
+                    editIcon?.isVisible = true
             }
             bindTimeSlotData(it)
         }
@@ -128,18 +135,13 @@ class TimeSlotShowFragment : Fragment(R.layout.time_slot_show_frag) {
                             "receiverName" to ownerBtn.text.toString(),
                             "offerTitle" to timeslotVM.currTimeSlotLD.value?.title
                         )
-                    ) //TODO:
+                    )
                 }
             }
         }
 
-        timeslotListVM.hasBeenEdited.observe(viewLifecycleOwner) {
-            if (it) {
-                Snackbar.make(requireView(), "Offer successfully edited", Snackbar.LENGTH_LONG)
-                    .show()
-                timeslotListVM.hasBeenEdited.value = false
-            }
-        }
+        // Snackbar handling
+        timeslotVM.snackbarMessages.observeAndShow(viewLifecycleOwner, requireView(), lifecycleScope)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

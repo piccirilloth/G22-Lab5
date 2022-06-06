@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var oneTapClient: SignInClient
     lateinit var signInRequest: BeginSignInRequest
     private val REQ_ONE_TAP = 2
-    private var showOneTapUI = true
+
     private lateinit var auth: FirebaseAuth
 
 

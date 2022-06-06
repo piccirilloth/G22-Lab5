@@ -7,6 +7,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.os.bundleOf
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -19,6 +20,9 @@ import com.example.g22.model.TimeSlot
 import com.example.g22.toAdvertisementList
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 data class Advertisement(val id: String, val title: String, val datetime: String, val duration: String, val accepted: Boolean, val proposalsCounter: Int) {
     companion object {
@@ -91,11 +95,16 @@ class AdvertisementAdapter(private var data: List<Advertisement>, private val sk
         holder.unbind()
     }
 
-    fun updateList(tsList: List<TimeSlot>) {
+    fun updateList(tsList: List<TimeSlot>, lifecycleCoroutineScope: LifecycleCoroutineScope) {
+        val adapter = this
         val newList = tsList.toAdvertisementList()
-        val diffs = DiffUtil.calculateDiff(AdvertisementListCallback(data, newList))
-        data = newList
-        diffs.dispatchUpdatesTo(this)
+        lifecycleCoroutineScope.launch {
+            val diffs = withContext(Dispatchers.Default) {
+                return@withContext DiffUtil.calculateDiff(AdvertisementListCallback(data, newList))
+            }
+            data = newList
+            diffs.dispatchUpdatesTo(adapter)
+        }
 
     }
 

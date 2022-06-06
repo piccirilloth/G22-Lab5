@@ -8,6 +8,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -16,6 +17,7 @@ import com.example.g22.ShowProfile.ProfileVM
 import com.example.g22.TimeSlotList.TimeSlotListVM
 import com.example.g22.custom_format
 import com.example.g22.model.TimeSlot
+import com.example.g22.observeAndShow
 import com.example.g22.utils.Duration
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -29,7 +31,6 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
     // ViewModels
     private val timeslotVM by activityViewModels<TimeSlotVM>()
     private val profileVM by activityViewModels<ProfileVM>()
-    private val timeslotListVM by activityViewModels<TimeSlotListVM>()
 
     // View references
     private lateinit var sv: ScrollView
@@ -93,6 +94,7 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
         if (savedInstanceState == null) {
             // Set the current timeslot shown (either empty or coming from the server)
             if (navArguments.isAdd) {
+                timeslotVM.invalidTimeslotLD.value = false
                 timeslotVM.setCurrentTimeSlotEmpty()
                 bindTimeSlotData(timeslotVM.currTimeSlotLD.value!!)
                 progressBar.visibility = View.GONE
@@ -106,9 +108,16 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
         }
 
         // Observers
+        timeslotVM.invalidTimeslotLD.observe(viewLifecycleOwner) {
+            if (it == true) {
+                timeslotVM.invalidTimeslotLD.value = false
+                navController.popBackStack()
+            }
+        }
+
         if (!navArguments.isAdd) {
             timeslotVM.timeslotLoadedLD.observe(viewLifecycleOwner) {
-                val contentVisibility = if (it) View.VISIBLE else View.GONE
+//                val contentVisibility = if (it) View.VISIBLE else View.GONE
                 val loadingVisibility = if (it) View.GONE else View.VISIBLE
 
 //                sv.visibility = contentVisibility
@@ -147,6 +156,9 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
         timeslotVM.dateTimeLD.observe(viewLifecycleOwner) {
             datetimeTV.text = it.custom_format()
         }
+
+        // Snackbar handling
+        timeslotVM.snackbarMessages.observeAndShow(viewLifecycleOwner, requireView(), lifecycleScope)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater){
@@ -269,9 +281,6 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
                                         locationEditText.text.toString(),
                                         descriptionEditText.text.toString())
 
-        // TODO: remove this - we are asynchronously updating the db and we must notify the snackbar asynchronously when the edit is completed successfully
-        timeslotListVM.hasBeenEdited.value = true
-
         navController.popBackStack()
     }
 
@@ -293,8 +302,8 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
             false,
             0
         )
-        timeslotListVM.addTimeslot(newTS)
-        timeslotListVM.hasBeenAdded.value = true
+
+        timeslotVM.addTimeslot(newTS)
 
         findNavController().popBackStack()
     }

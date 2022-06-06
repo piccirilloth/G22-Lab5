@@ -111,6 +111,10 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
 
                 val resultUpload = uploadNewProfileImageToFirebase()
 
+                viewModelScope.launch {
+                    _snackbarMessages.addMessage("Profile updated successfully!", Snackbar.LENGTH_LONG)
+                }
+
                 if (resultUpload.isFailure) {
 
                     // Cause the snackbar to be visualized

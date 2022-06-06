@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,8 +25,8 @@ import com.example.g22.TimeSlotList.TimeSlotListVM
 
 class SkillsListFragment : Fragment(R.layout.skills_list_frag) {
     private val skillsListVM by activityViewModels<SkillsListVM>()
-    private val profileVM by activityViewModels<ProfileVM>()
     private val timeslotListVM by activityViewModels<TimeSlotListVM>()
+
     private lateinit var rv: RecyclerView
     private lateinit var adapter: SkillAdapter
     private lateinit var msgEmptySkillsTextView: TextView
@@ -72,7 +73,7 @@ class SkillsListFragment : Fragment(R.layout.skills_list_frag) {
 
         // Observe any change of the skills list
         skillsListVM.skillsListLD.observe(viewLifecycleOwner) {
-            adapter.updateList(it)
+            adapter.updateList(it, lifecycleScope)
             if (it.size < 1) {
                 msgEmptySkillsTextView.visibility = View.VISIBLE
             } else {

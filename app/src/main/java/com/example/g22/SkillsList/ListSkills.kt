@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -14,6 +15,9 @@ import com.example.g22.SkillsList.SkillsListFragmentDirections
 import com.example.g22.model.Conversation
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class SkillAdapter(private var data: List<String>): RecyclerView.Adapter<SkillAdapter.SkillViewHolder>() {
@@ -54,10 +58,15 @@ class SkillAdapter(private var data: List<String>): RecyclerView.Adapter<SkillAd
         holder.unbind()
     }
 
-    fun updateList(skillsList: List<String>) {
-        val diffs = DiffUtil.calculateDiff(SkillListCallback(data, skillsList))
-        data = skillsList
-        diffs.dispatchUpdatesTo(this)
+    fun updateList(skillsList: List<String>, lifecycleCoroutineScope: LifecycleCoroutineScope) {
+        val adapter = this
+        lifecycleCoroutineScope.launch {
+            val diffs = withContext(Dispatchers.Default) {
+                return@withContext DiffUtil.calculateDiff(SkillListCallback(data, skillsList))
+            }
+            data = skillsList
+            diffs.dispatchUpdatesTo(adapter)
+        }
     }
 
     /**

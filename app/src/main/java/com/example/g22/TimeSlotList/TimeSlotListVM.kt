@@ -4,7 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.example.g22.Event
+import com.example.g22.SnackbarMessage
+import com.example.g22.addMessage
 import com.example.g22.model.TimeSlot
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -12,8 +17,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.asExecutor
+import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
 import java.util.*
 
 class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
@@ -24,16 +29,15 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
     private var tsListListenerRegistration: ListenerRegistration? = null
 
     // Live data
-    private val _tsListLD: MutableLiveData<List<TimeSlot>> =
-        MutableLiveData<List<TimeSlot>>().also {
-            it.value = emptyList()
-        }
+    private val _tsListLD: MutableLiveData<List<TimeSlot>> = MutableLiveData<List<TimeSlot>>(emptyList())
 
     val tsListLD: LiveData<List<TimeSlot>> = _tsListLD
     val tsListLoadedLD = MutableLiveData<Boolean>(false)
 
-    var hasBeenAdded: MutableLiveData<Boolean> = MutableLiveData(false)
-    var hasBeenEdited: MutableLiveData<Boolean> = MutableLiveData(false)
+    // Snackbar handling
+    private val _snackbarMessages = MutableLiveData<List<Event<SnackbarMessage>>>(emptyList())
+    val snackbarMessages: LiveData<List<Event<SnackbarMessage>>>
+        get() = _snackbarMessages
 
     var sortParam = ""
     var titleSearched = ""
@@ -41,51 +45,6 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
     var locationFilter = ""
     var dateFilter = ""
 
-    fun addTimeslot(item: TimeSlot) {
-        val newTSDocRef = db.collection("offers").document()
-        item.id = newTSDocRef.id
-
-        // Transaction to write on two collections (this should be done with lambda functions on server)
-        db.runTransaction { transaction ->
-            val toCreateSkills = emptyList<String>().toMutableList()
-            val toUpdateSkills = emptyMap<String, List<String>>().toMutableMap()
-
-            // Get operations
-            for (skill in item.skills) {
-                val docSnapshot = transaction.get(db.collection("skills").document(skill.toLowerCase()))
-                if (docSnapshot.exists()) {
-                    val docList = docSnapshot.get("offers") as List<String>
-                    toUpdateSkills[skill] = docList.plus(newTSDocRef.id)
-                } else {
-                    toCreateSkills.add(skill)
-                }
-            }
-
-            // Set operations
-            for (skill in toCreateSkills) {
-                transaction.set(
-                    db.collection("skills").document(skill),
-                    hashMapOf("offers" to listOf(newTSDocRef.id))
-                )
-            }
-
-            for (entry in toUpdateSkills.entries.iterator()) {
-                transaction.update(
-                    db.collection("skills").document(entry.key),
-                    "offers",
-                    entry.value
-                )
-            }
-
-            transaction.set(newTSDocRef, item)
-        }
-            .addOnSuccessListener {
-
-            }
-            .addOnFailureListener {
-
-            }
-    }
 
     fun observeMyOffers() {
         tsListListenerRegistration?.remove()

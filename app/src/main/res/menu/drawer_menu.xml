@@ -12,10 +12,7 @@
             android:id="@+id/nav_timeslot_list_my_offers"
             android:icon="@drawable/ic_baseline_list_alt_24"
             android:title="@string/menu_my_offers" />
-        <item
-            android:id="@+id/nav_show_profile"
-            android:icon="@drawable/ic_baseline_account_circle_24"
-            android:title="@string/menu_profile" />
+
         <item
             android:id="@+id/nav_interesting_offers"
             android:icon="@drawable/ic_baseline_chat_bubble_24"
@@ -24,6 +21,11 @@
             android:id="@+id/nav_accepted_offers"
             android:icon="@drawable/ic_baseline_save_changes_24"
             android:title="Accepted offers" />
+
+        <item
+            android:id="@+id/nav_show_profile"
+            android:icon="@drawable/ic_baseline_account_circle_24"
+            android:title="@string/menu_profile" />
 
     </group>
 

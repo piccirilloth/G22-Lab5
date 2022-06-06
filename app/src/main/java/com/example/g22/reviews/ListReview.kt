@@ -8,6 +8,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.g22.R
@@ -25,6 +26,7 @@ class ReviewAdapter(private var context: Context, private var data: List<Review>
         private val reviewerImage : CircleImageView = v.findViewById(R.id.reviewer_image_review_item)
         private val dateReview: TextView = v.findViewById(R.id.date_review_item)
         private val score: TextView = v.findViewById(R.id.avg_score_review_item)
+        val storage = Firebase.storage("gs://time-banking-9318d.appspot.com").reference
 
         fun bind(reviewerId: String, reviewer: String, description: String, rating: Double, timeSlotTitle: String, date: String, context: Context) {
             reviewerName.text = reviewer
@@ -33,7 +35,6 @@ class ReviewAdapter(private var context: Context, private var data: List<Review>
             dateReview.text = date
             score.text = rating.toString()
             this.skill.text = timeSlotTitle
-            val storage = Firebase.storage("gs://time-banking-9318d.appspot.com").reference
             storage.child("$reviewerId.jpg").downloadUrl.addOnSuccessListener {
                 val imageURL = it.toString()
                 Glide.with(context)
@@ -73,6 +74,27 @@ class ReviewAdapter(private var context: Context, private var data: List<Review>
 
     fun updateList(reviewList: List<Review>) {
         data = reviewList
+        // TODO
         notifyDataSetChanged()
+    }
+
+    // TODO
+    class ReviewListCallback(
+        private val oldList: List<Review>,
+        private val newList: List<Review>
+    ): DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            // TODO
+            return oldList[oldItemPosition] == newList[newItemPosition]
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            // TODO
+            return oldList[oldItemPosition] == newList[newItemPosition]
+        }
     }
 }

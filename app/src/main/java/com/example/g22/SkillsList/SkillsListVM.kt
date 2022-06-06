@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asExecutor
 
 class SkillsListVM(application: Application) : AndroidViewModel(application) {
-    // TODO: Implement the ViewModel
+
     val db = FirebaseFirestore.getInstance()
 
     private var skillsListListenerRegistration: ListenerRegistration? = null
@@ -33,7 +33,7 @@ class SkillsListVM(application: Application) : AndroidViewModel(application) {
     fun searchBySkill(skill: String) {
         skillsListListenerRegistration?.remove()
 
-        db.collection("skills")
+        skillsListListenerRegistration = db.collection("skills")
             .addSnapshotListener(Dispatchers.IO.asExecutor()) { value, error ->
                 if (error != null) {
                     Log.d("error", "firebase failure")

@@ -3,20 +3,28 @@ package com.example.g22.TimeSlotView
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
-import android.os.Build
 import android.os.Bundle
 import android.widget.DatePicker
 import android.widget.TimePicker
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import com.example.g22.custom_format
-import java.time.format.DateTimeFormatter
+import androidx.lifecycle.ViewModel
 import java.util.*
 
 class DateTimePickerFragment(val timeEnabled: Boolean) : DialogFragment(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     val timeslotVM by activityViewModels<TimeSlotVM>()
-    lateinit var selectedDate: Date
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
+
+    override fun onDestroyView() {
+        if (dialog != null && retainInstance) {
+            dialog!!.setDismissMessage(null)
+        }
+        super.onDestroyView()
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val c = Calendar.getInstance()

@@ -7,8 +7,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.g22.Event
+import com.example.g22.SnackbarMessage
+import com.example.g22.addMessage
 import com.example.g22.model.TimeSlot
 import com.example.g22.utils.Duration
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.*
@@ -38,6 +42,12 @@ class TimeSlotVM(application: Application): AndroidViewModel(application) {
     val ownerLD: LiveData<String> = _ownerLD
 
     val timeslotLoadedLD = MutableLiveData(false)
+    val invalidTimeslotLD = MutableLiveData(false)
+
+    // Snackbar handling
+    private val _snackbarMessages = MutableLiveData<List<Event<SnackbarMessage>>>(emptyList())
+    val snackbarMessages: LiveData<List<Event<SnackbarMessage>>>
+        get() = _snackbarMessages
 
 
     fun setCurrentTimeSlot(id: String, keepUpdated: Boolean) {
@@ -90,8 +100,8 @@ class TimeSlotVM(application: Application): AndroidViewModel(application) {
                     _skillsLD.postValue(ts.skills)
                     timeslotLoadedLD.postValue(true)
                 } else {
-                    Toast.makeText(getApplication(), "Error loading the timeslot", Toast.LENGTH_SHORT)
-                    // TODO: Set a flag to pop the back stack
+                    _snackbarMessages.addMessage("Error loading the time slot!", Snackbar.LENGTH_LONG)
+                    invalidTimeslotLD.value = true
                 }
             }
         }
@@ -122,20 +132,39 @@ class TimeSlotVM(application: Application): AndroidViewModel(application) {
             val res = firestoreUpdateTimeslot(tmp)
 
             if (res.isSuccess) {
-                // TODO: notify to snackbar that the timeslot has been updated
-            } else {
-                Toast.makeText(
-                    getApplication(),
-                    "Error updating the timeslot!",
-                    Toast.LENGTH_SHORT
-                )
                 viewModelScope.launch {
-                    setCurrentTimeSlot(_currTimeSlotLD.value!!.id, true)
+                    _snackbarMessages.addMessage("Timeslot correctly updated!", Snackbar.LENGTH_LONG)
+                }
+            } else {
+                viewModelScope.launch {
+                    _snackbarMessages.addMessage("Error updating the timeslot!", Snackbar.LENGTH_LONG)
+//                    setCurrentTimeSlot(_currTimeSlotLD.value!!.id, true)
                 }
             }
 
         }
     }
+
+    fun addTimeslot(item: TimeSlot) {
+        GlobalScope.launch {
+            val result = firebaseNewTimeslot(item)
+
+            if (result.isSuccess) {
+                viewModelScope.launch {
+                    _snackbarMessages.addMessage("Timeslot created successfully!", Snackbar.LENGTH_LONG)
+                }
+            } else {
+                viewModelScope.launch {
+                    _snackbarMessages.addMessage("Error while creating the timeslot!", Snackbar.LENGTH_LONG)
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Firestore async suspend functions
+     */
 
     private suspend fun firestoreUpdateTimeslot(ts: TimeSlot): Result<Unit> {
         return withContext(Dispatchers.IO) {
@@ -210,11 +239,6 @@ class TimeSlotVM(application: Application): AndroidViewModel(application) {
         }
     }
 
-
-    /**
-     * Firestore async suspend functions
-     */
-
     private suspend fun firestoreGetTimeSlot(id: String): Result<TimeSlot> {
         return withContext(Dispatchers.IO) {
             try {
@@ -224,6 +248,54 @@ class TimeSlotVM(application: Application): AndroidViewModel(application) {
                     .await()
                 return@withContext Result.success(documentSnapshot.toObject(TimeSlot::class.java)!!)
             } catch (e: Exception) {
+                return@withContext Result.failure(e)
+            }
+        }
+    }
+
+    private suspend fun firebaseNewTimeslot(item: TimeSlot): Result<Unit> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val newTSDocRef = db.collection("offers").document()
+                item.id = newTSDocRef.id
+
+                // Transaction to write on two collections (this should be done with lambda functions on server)
+                db.runTransaction { transaction ->
+                    val toCreateSkills = emptyList<String>().toMutableList()
+                    val toUpdateSkills = emptyMap<String, List<String>>().toMutableMap()
+
+                    // Get operations
+                    for (skill in item.skills) {
+                        val docSnapshot = transaction.get(db.collection("skills").document(skill.toLowerCase()))
+                        if (docSnapshot.exists()) {
+                            val docList = docSnapshot.get("offers") as List<String>
+                            toUpdateSkills[skill] = docList.plus(newTSDocRef.id)
+                        } else {
+                            toCreateSkills.add(skill)
+                        }
+                    }
+
+                    // Set operations
+                    for (skill in toCreateSkills) {
+                        transaction.set(
+                            db.collection("skills").document(skill),
+                            hashMapOf("offers" to listOf(newTSDocRef.id))
+                        )
+                    }
+
+                    for (entry in toUpdateSkills.entries.iterator()) {
+                        transaction.update(
+                            db.collection("skills").document(entry.key),
+                            "offers",
+                            entry.value
+                        )
+                    }
+
+                    transaction.set(newTSDocRef, item)
+                }.await()
+
+                return@withContext Result.success(Unit)
+            } catch(e: Exception) {
                 return@withContext Result.failure(e)
             }
         }

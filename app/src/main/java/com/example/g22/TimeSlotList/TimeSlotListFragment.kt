@@ -16,6 +16,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,12 +24,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.g22.R
 import com.example.g22.TimeSlotView.DateTimePickerFragment
 import com.example.g22.TimeSlotView.TimeSlotVM
-import com.example.g22.custom_format
+import com.example.g22.observeAndShow
 import com.example.g22.toAdvertisementList
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.Timestamp
 
 class TimeSlotListFragment: Fragment(R.layout.time_slot_list_frag) {
 
@@ -133,7 +131,7 @@ class TimeSlotListFragment: Fragment(R.layout.time_slot_list_frag) {
 
         // Observe any change of the timeslot list
         listVM.tsListLoadedLD.observe(viewLifecycleOwner) {
-            val contentVisibility = if (it) View.VISIBLE else View.GONE
+//            val contentVisibility = if (it) View.VISIBLE else View.GONE
             val loadingVisibility = if (it) View.GONE else View.VISIBLE
             if(it && navArguments.skill != null)
                 listVM.restoreFilters(navArguments.skill!!)
@@ -143,7 +141,7 @@ class TimeSlotListFragment: Fragment(R.layout.time_slot_list_frag) {
         }
 
         listVM.tsListLD.observe(viewLifecycleOwner) {
-            adapter.updateList(it)
+            adapter.updateList(it, lifecycleScope)
             if (it.isEmpty()) {
                 msgEmptyTimeSlotsTextView.visibility = View.VISIBLE
             } else {
@@ -151,19 +149,9 @@ class TimeSlotListFragment: Fragment(R.layout.time_slot_list_frag) {
             }
         }
 
-        listVM.hasBeenAdded.observe(viewLifecycleOwner) {
-            if(it) {
-                Snackbar.make(requireView(), "New offer added", Snackbar.LENGTH_LONG).show()
-                listVM.hasBeenAdded.value = false
-            }
-        }
-
-        listVM.hasBeenEdited.observe(viewLifecycleOwner) {
-            if(it) {
-                Snackbar.make(requireView(), "Offer successfully edited", Snackbar.LENGTH_LONG).show()
-                listVM.hasBeenEdited.value = false
-            }
-        }
+        // Snackbar handling
+        listVM.snackbarMessages.observeAndShow(viewLifecycleOwner, requireView(), lifecycleScope)
+        timeslotVM.snackbarMessages.observeAndShow(viewLifecycleOwner, requireView(), lifecycleScope)
 
     }
 
@@ -200,6 +188,7 @@ class TimeSlotListFragment: Fragment(R.layout.time_slot_list_frag) {
         val ownerEditText = dialogLayout.findViewById<TextInputLayout>(R.id.filter_dialog_owner)
         val dateTextView = dialogLayout.findViewById<TextView>(R.id.filter_dialog_date)
 
+        // TODO: ???
         timeslotVM.dateTimeLD.observe(viewLifecycleOwner) {
             dateTextView.text = "${it.year+1900}-${it.month+1}-${it.date}"
         }

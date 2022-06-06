@@ -10,6 +10,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asExecutor
 import java.util.*
 
 class UserReviewsListVM(application: Application) : AndroidViewModel(application) {
@@ -43,32 +45,49 @@ class UserReviewsListVM(application: Application) : AndroidViewModel(application
 
     fun observeReviews(revieweeId: String) {
         reviewsListListenerRegistration?.remove()
-        db.collection("reviews")
+
+        reviewsListListenerRegistration = db.collection("reviews")
             .whereEqualTo("revieweeId", revieweeId)
-            .addSnapshotListener { value, error ->
+            .addSnapshotListener(Dispatchers.IO.asExecutor()) { value, error ->
                 if(error != null) {
                     Log.d("error", "firebase failure")
                     return@addSnapshotListener
                 }
                 if(value != null && !value.isEmpty) {
-                    _reviewsOffererListLD.value = value.toObjects(Review::class.java).filter { it.reviewType == "offerer" }
-                        .sortedBy { it.date.toString() }
-                    _numOffererReviewsLD.value = _reviewsOffererListLD.value!!.size
-                    _avgOffererScoreLD.value = _reviewsOffererListLD.value!!.map { it -> it.rating.toFloat() }.average()
-                                .toFloat().let { if(it.isNaN()) "0.0".toFloat() else it }
-                    _reviewsRequestorListLD.value = value.toObjects(Review::class.java).filter { it.reviewType == "requestor" }
-                        .sortedBy { it.date.toString() }
-                    _numRequestorReviewsLD.value = _reviewsRequestorListLD.value!!.size
-                    _avgRequestorScoreLD.value = _reviewsRequestorListLD.value!!.map { it -> it.rating.toFloat() }.average()
-                        .toFloat().let { if(it.isNaN()) "0.0".toFloat() else it }
+                    val reviews = value.toObjects(Review::class.java)
+                    val reviewsOfferer = reviews.filter { r: Review -> r.reviewType == "offerer" }
+                        .sortedBy { r: Review -> r.date.toString() }
+
+                    _reviewsOffererListLD.postValue(reviewsOfferer)
+                    _numOffererReviewsLD.postValue(reviewsOfferer.size)
+                    _avgOffererScoreLD.postValue(
+                        reviewsOfferer.map { r: Review -> r.rating.toFloat() }.average()
+                                .toFloat().let { f: Float -> if(f.isNaN()) "0.0".toFloat() else f })
+
+                    val reviewsRequestor = reviews.filter { r: Review -> r.reviewType == "requestor" }
+                        .sortedBy { r: Review -> r.date.toString() }
+                    _reviewsRequestorListLD.postValue(reviewsRequestor)
+                    _numRequestorReviewsLD.postValue(reviewsRequestor.size)
+                    _avgRequestorScoreLD.postValue(reviewsRequestor.map { r: Review -> r.rating.toFloat() }.average()
+                        .toFloat().let { f: Float -> if(f.isNaN()) "0.0".toFloat() else f })
                 } else {
-                    _reviewsOffererListLD.value = emptyList()
-                    _numOffererReviewsLD.value = 0
-                    _avgOffererScoreLD.value = "0.0".toFloat()
-                    _reviewsRequestorListLD.value = emptyList()
-                    _numRequestorReviewsLD.value = 0
-                    _avgRequestorScoreLD.value = "0.0".toFloat()
+                    _reviewsOffererListLD.postValue(emptyList())
+                    _numOffererReviewsLD.postValue(0)
+                    _avgOffererScoreLD.postValue("0.0".toFloat())
+                    _reviewsRequestorListLD.postValue(emptyList())
+                    _numRequestorReviewsLD.postValue(0)
+                    _avgRequestorScoreLD.postValue("0.0".toFloat())
                 }
             }
+    }
+
+    /**
+     * ViewModel callbacks
+     */
+    override fun onCleared() {
+        super.onCleared()
+
+        // Clear all snapshot listeners
+        reviewsListListenerRegistration?.remove()
     }
 }
