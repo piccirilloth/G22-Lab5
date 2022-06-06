@@ -68,44 +68,50 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }
 
         messageListVM.conversationStatusLD.observe(viewLifecycleOwner) {
-            if (it == Status.REJECTED && !messageListVM.messageListLD.value!!.isEmpty()) {
-                rejectMessage.visibility = View.VISIBLE
+            if (it == Status.REJECTED) {
+                if (!messageListVM.messageListLD.value!!.isEmpty()) {
+                    rejectMessage.visibility = View.VISIBLE
+                    if (messageListVM.messageListLD.value!!.first().sender == Firebase.auth.currentUser!!.uid) {
+                        rejectMessage.text = "Your proposal has been rejected."
+                    } else {
+                        rejectMessage.text = "You have rejected user's proposal."
+                    }
+                }
+
                 messageEditText.isEnabled = false
                 sendBtn.isEnabled = false
-                if (messageListVM.messageListLD.value!!.first().sender == Firebase.auth.currentUser!!.uid) {
-                    rejectMessage.text = "Your proposal has been rejected."
-                }
-                else {
-                    acceptBtn.visibility = View.GONE
-                    rejectBtn.visibility = View.GONE
-                    rejectMessage.text = "You have rejected user's proposal."
-                }
+                acceptBtn.visibility = View.GONE
+                rejectBtn.visibility = View.GONE
             }
-            else if (it == Status.REJECTED_BALANCE && !messageListVM.messageListLD.value!!.isEmpty()) {
-                rejectMessage.visibility = View.VISIBLE
+            else if (it == Status.REJECTED_BALANCE) {
+                if (!messageListVM.messageListLD.value!!.isEmpty()) {
+                    rejectMessage.visibility = View.VISIBLE
+                    if (messageListVM.messageListLD.value!!.first().sender == Firebase.auth.currentUser!!.uid) {
+                        rejectMessage.text = "Your proposal can't be accepted. Insufficient credit."
+                    } else {
+                        rejectMessage.text = "User's proposal can't be accepted. User's credit is not sufficient."
+                    }
+                }
                 messageEditText.isEnabled = false
                 sendBtn.isEnabled = false
-                if (messageListVM.messageListLD.value!!.first().sender == Firebase.auth.currentUser!!.uid) {
-                    rejectMessage.text = "Your proposal can't be accepted. Insufficient credit."
-                }
-                else {
-                    acceptBtn.visibility = View.GONE
-                    rejectBtn.visibility = View.GONE
-                    rejectMessage.text = "User's proposal can't be accepted. User's credit is not sufficient."
-                }
+                acceptBtn.visibility = View.GONE
+                rejectBtn.visibility = View.GONE
             }
 
-            else if (it == Status.CONFIRMED && !messageListVM.messageListLD.value!!.isEmpty()) {
-                rejectMessage.visibility = View.VISIBLE
-                if (messageListVM.messageListLD.value!!.first().sender == Firebase.auth.currentUser!!.uid) {
-                    rejectMessage.text = "Your proposal has been accepted!"
-                }
-                else {
-                    acceptBtn.visibility = View.GONE
-                    rejectBtn.visibility = View.GONE
-                    rejectMessage.text = "Your have accepted user's proposal!"
+            else if (it == Status.CONFIRMED) {
+                if (!messageListVM.messageListLD.value!!.isEmpty()) {
+                    rejectMessage.visibility = View.VISIBLE
 
+                    if (messageListVM.messageListLD.value!!.first().sender == Firebase.auth.currentUser!!.uid) {
+                        rejectMessage.text = "Your proposal has been accepted!"
+                    }
+                    else {
+                        rejectMessage.text = "Your have accepted user's proposal!"
+                    }
                 }
+
+                acceptBtn.visibility = View.GONE
+                rejectBtn.visibility = View.GONE
             } else {
                 rejectMessage.visibility = View.GONE
                 if(!messageListVM.messageListLD.value!!.isEmpty()) {

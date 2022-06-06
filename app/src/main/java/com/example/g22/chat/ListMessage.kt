@@ -13,6 +13,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.g22.R
+import com.example.g22.custom_format
 import com.example.g22.model.Conversation
 import com.example.g22.model.Message
 import com.example.g22.model.TimeSlot
@@ -87,11 +88,12 @@ class MessageAdapter(private var data: List<Message>): RecyclerView.Adapter<Mess
         val item = data[position]
         val date = item.time
 
-        holder.bind(item.text, "${date.date.toString().padStart(2, '0')}" +
-                "/${(date.month + 1).toString().padStart(2, '0')}" +
-                "/${(date.year - 100).toString().padStart(2, '0')} - " +
-                "${date.hours.toString().padStart(2, '0')}" +
-                ":${date.minutes.toString().padStart(2, '0')}", item.sender)
+        holder.bind(item.text, date!!.custom_format(), item.sender)
+//        holder.bind(item.text, "${date!!.date.toString().padStart(2, '0')}" +
+//                "/${(date.month + 1).toString().padStart(2, '0')}" +
+//                "/${(date.year - 100).toString().padStart(2, '0')} - " +
+//                "${date.hours.toString().padStart(2, '0')}" +
+//                ":${date.minutes.toString().padStart(2, '0')}", item.sender)
     }
 
     override fun getItemCount(): Int = data.size

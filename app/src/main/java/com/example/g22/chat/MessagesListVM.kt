@@ -198,7 +198,8 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                             receiver,
                             "${Firebase.auth.currentUser!!.uid}",
                             message,
-                            Timestamp.now().toDate(),
+//                            Timestamp.now().toDate(),
+                            null,
                             if (conversationId.value!! == "") ref.id else conversationId.value!!
                         )
                     )
