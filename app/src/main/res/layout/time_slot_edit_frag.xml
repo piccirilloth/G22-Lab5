@@ -27,7 +27,7 @@
                 android:background="@drawable/rounded_corner"
                 android:hint="Offer title"
                 android:inputType="text"
-                android:maxLength="30"
+                android:maxLength="80"
                 android:padding="16dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
