@@ -93,7 +93,6 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:text="baby sitting"
-                app:layout_constraintBottom_toBottomOf="@+id/skill_label_review_item"
                 app:layout_constraintEnd_toStartOf="@+id/date_review_item"
                 app:layout_constraintStart_toEndOf="@+id/skill_label_review_item"
                 app:layout_constraintTop_toTopOf="@+id/skill_label_review_item" />
