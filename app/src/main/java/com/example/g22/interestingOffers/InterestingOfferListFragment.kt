@@ -51,27 +51,12 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
             )
         }
 
-        if(findNavController().currentDestination!!.id == R.id.nav_accepted_offers) {
-            tabLayout.getTabAt(0)!!.text = "Bought"
-            tabLayout.getTabAt(1)!!.text = "Sold"
-        } else {
-            tabLayout.getTabAt(0)!!.text = "To buy"
-            tabLayout.getTabAt(1)!!.text = "To sell"
-        }
-
         tabLayout.selectTab(if (intOfferVM.isIncoming.value == false) tabLayout.getTabAt(0) else tabLayout.getTabAt(1))
 
         tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val toBuy = tab!!.text == "To buy" || tab.text == "Bought"
-                if (toBuy) {
-                    intOfferVM.isIncoming.value = false
-                    toolbar.title = tab.text
-                }
-                else {
-                    intOfferVM.isIncoming.value = true
-                    toolbar.title = tab.text
-                }
+                intOfferVM.isIncoming.value = !toBuy
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {

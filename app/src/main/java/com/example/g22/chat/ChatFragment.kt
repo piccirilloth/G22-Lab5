@@ -148,7 +148,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
         val toolbar: Toolbar = requireActivity().findViewById(R.id.toolbar)
-        toolbar.title = "Offer's chat" //TODO: enhance the name of the toolbar
+        toolbar.title = navArguments.receiverName //TODO: enhance the name of the toolbar
+
 
         rv.addOnLayoutChangeListener { view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             if(adapter.itemCount > 0)

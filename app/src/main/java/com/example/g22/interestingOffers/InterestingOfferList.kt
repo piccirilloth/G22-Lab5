@@ -116,6 +116,7 @@ class InterestingOfferList {
             //TODO: show chat
             val currentUser = Firebase.auth.currentUser
             var receiver = ""
+            var receiverName = ""
             val actionId =
                 if (navController.currentDestination!!.id == R.id.nav_accepted_offers)
                     R.id.action_nav_accepted_offers_to_chatFragment
@@ -123,18 +124,25 @@ class InterestingOfferList {
                     R.id.action_nav_interesting_offers_to_chatFragment
 
 
-            if(currentUser != null)
-                receiver = if(currentUser.uid == data[adapterPos].receiverUid)
+            if(currentUser != null) {
+                receiver = if (currentUser.uid == data[adapterPos].receiverUid)
                     data[adapterPos].requestorUid
                 else
                     data[adapterPos].receiverUid
+
+                receiverName = if (currentUser.uid == data[adapterPos].receiverUid)
+                    data[adapterPos].requestorName
+                else
+                    data[adapterPos].receiverName
+            }
+
             navController.navigate(
                 actionId,
                 bundleOf(
                     "receiver" to receiver,
                     "offerId" to data[adapterPos].offerId,
                     "offerTitle" to data[adapterPos].offerTitle,
-                    "receiverName" to data[adapterPos].receiverName
+                    "receiverName" to receiverName
                     )
             )
         }
