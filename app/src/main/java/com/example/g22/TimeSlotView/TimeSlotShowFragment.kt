@@ -147,8 +147,10 @@ class TimeSlotShowFragment : Fragment(R.layout.time_slot_show_frag) {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.edit_menu, menu)
-        val editIcon = menu.findItem(R.id.edit_item)
-        editIcon.setVisible(false)
+        if(navArguments.readOnly) {
+            val editIcon = menu.findItem(R.id.edit_item)
+            editIcon.setVisible(false)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

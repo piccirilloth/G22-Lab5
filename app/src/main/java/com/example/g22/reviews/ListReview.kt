@@ -59,6 +59,7 @@ class ReviewAdapter(private var context: Context, private val lifecycleCoroutine
         }
 
         fun unbind() {
+
         }
     }
 

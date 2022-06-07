@@ -186,6 +186,8 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                         db.collection("offers").document(timeSlotId),
                     ).getLong("proposalsCounter")
 
+                    val userRef = db.collection("users").document(user.uid)
+                    var currentUserName = transaction.get(userRef).get("fullname").toString()
                     if (conversationId.value!! != "") {
                         val updateNotRef =
                             db.collection("conversations").document(conversationId.value!!)
@@ -195,6 +197,7 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                         oldRequestorUnseen =
                             queryResult.get("requestorUnseen").toString().toInt()
                     }
+
                     val chatRef = db.collection("chats").document()
                     transaction.set(
                         chatRef, Message(
@@ -203,7 +206,6 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                             receiver,
                             "${Firebase.auth.currentUser!!.uid}",
                             message,
-//                            Timestamp.now().toDate(),
                             null,
                             if (conversationId.value!! == "") ref.id else conversationId.value!!
                         )
@@ -217,7 +219,7 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                                 user.uid,
                                 receiver,
                                 offerTitle,
-                                user.displayName.toString(),
+                                currentUserName,
                                 receiverName,
                                 1,
                                 0,

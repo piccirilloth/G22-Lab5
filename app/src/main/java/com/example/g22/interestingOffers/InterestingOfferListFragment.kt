@@ -28,6 +28,11 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
         })
     }
 
+    override fun onStart() {
+        super.onStart()
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -51,18 +56,6 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
         }
 
         tabLayout.selectTab(if (intOfferVM.isIncoming.value == false) tabLayout.getTabAt(0) else tabLayout.getTabAt(1))
-        toolbar.title =
-        if (intOfferVM.isIncoming.value == false)
-            if(findNavController().currentDestination!!.id == R.id.nav_accepted_offers)
-                "Bought"
-            else
-                "To buy"
-        else
-            if(findNavController().currentDestination!!.id == R.id.nav_accepted_offers)
-                "Sold"
-            else
-                "To sell"
-
 
         tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {

@@ -224,8 +224,8 @@
     <fragment
         android:id="@+id/nav_interesting_offers"
         android:name="com.example.g22.interestingOffers.InterestingOfferListFragment"
-        android:label="fragment_interesting_offer_list"
-        tools:layout="@layout/fragment_interesting_offer_list" >
+        android:label="Interesting offers"
+        tools:layout="@layout/fragment_interesting_offer_list">
         <action
             android:id="@+id/action_nav_interesting_offers_to_chatFragment"
             app:destination="@id/nav_chat_fragment"
@@ -237,8 +237,8 @@
     <fragment
         android:id="@+id/nav_accepted_offers"
         android:name="com.example.g22.interestingOffers.InterestingOfferListFragment"
-        android:label="fragment_accepted_offer_list"
-        tools:layout="@layout/fragment_interesting_offer_list" >
+        android:label="Accepted offers"
+        tools:layout="@layout/fragment_interesting_offer_list">
         <action
             android:id="@+id/action_nav_accepted_offers_to_chatFragment"
             app:destination="@id/nav_chat_fragment"
