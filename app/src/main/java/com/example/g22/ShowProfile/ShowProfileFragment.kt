@@ -122,7 +122,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
         }
 
         reviewsVM.avgOffererScoreLD.observe(viewLifecycleOwner) {
-            offererReviewsAvg.text = "$it/5"
+            offererReviewsAvg.text = String.format("%.1f/5", it)
         }
 
         reviewsVM.numRequestorReviewsLD.observe(viewLifecycleOwner) {
@@ -130,7 +130,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
         }
 
         reviewsVM.avgRequestorScoreLD.observe(viewLifecycleOwner) {
-            requestorReviewsAvg.text = "$it/5"
+            requestorReviewsAvg.text = String.format("%.1f/5", it)
         }
 
         showOffererReviewsButton.setOnClickListener {

@@ -68,7 +68,6 @@
             android:layout_marginRight="8dp"
             android:ems="10"
             android:hint="Type message here..."
-            android:inputType="textPersonName"
             android:minHeight="48dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/chat_fragment_message_send_img_button"

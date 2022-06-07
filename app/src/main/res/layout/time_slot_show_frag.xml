@@ -169,12 +169,10 @@
                 android:id="@+id/timeslot_show_contact_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Contact me"
                 android:layout_marginTop="8dp"
-                tools:layout_editor_absoluteX="25dp"
-                tools:layout_editor_absoluteY="397dp"
+                android:text="Contact"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/timeslot_show_owner_button"/>
+                app:layout_constraintTop_toBottomOf="@id/timeslot_show_owner_button" />
 
             <View
                 android:id="@+id/timeslot_show_divider2"

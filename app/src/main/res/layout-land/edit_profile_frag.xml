@@ -87,6 +87,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:hint="your full name"
+                    android:inputType="textPersonName"
                     android:maxLength="40"
                     android:text="Full name"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"

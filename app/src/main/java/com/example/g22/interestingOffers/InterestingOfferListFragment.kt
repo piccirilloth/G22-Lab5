@@ -32,15 +32,9 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
         })
     }
 
-    override fun onStart() {
-        super.onStart()
-
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val toolbar: Toolbar = requireActivity().findViewById(R.id.toolbar)
         rv = view.findViewById(R.id.interesting_offer_list_rv)
         tabLayout = view.findViewById(R.id.interesting_offer_list_tab_layout)
 
@@ -49,6 +43,14 @@ class InterestingOfferListFragment : Fragment(R.layout.fragment_interesting_offe
                 false,
                 findNavController().currentDestination!!.id == R.id.nav_accepted_offers
             )
+        }
+
+        if(findNavController().currentDestination!!.id == R.id.nav_accepted_offers) {
+            tabLayout.getTabAt(0)!!.text = "Bought"
+            tabLayout.getTabAt(1)!!.text = "Sold"
+        } else {
+            tabLayout.getTabAt(0)!!.text = "To buy"
+            tabLayout.getTabAt(1)!!.text = "To sell"
         }
 
         tabLayout.selectTab(if (intOfferVM.isIncoming.value == false) tabLayout.getTabAt(0) else tabLayout.getTabAt(1))
