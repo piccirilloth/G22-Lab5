@@ -1,5 +1,6 @@
 package com.example.g22.model
 
+import com.google.firebase.firestore.ServerTimestamp
 import java.util.Date
 
 data class Review (
@@ -12,7 +13,8 @@ data class Review (
     var rating : Double,
     var description : String,
     var timeSlotTitle : String,
-    var date : Date
+    @ServerTimestamp
+    var date : Date?
     ) {
     constructor(): this(
         "",

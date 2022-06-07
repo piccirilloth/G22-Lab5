@@ -260,8 +260,8 @@
     <fragment
         android:id="@+id/createReviewFragment"
         android:name="com.example.g22.createReview.CreateReviewFragment"
-        android:label="create_review_frag"
-        tools:layout="@layout/create_review_frag" >
+        android:label="Create review"
+        tools:layout="@layout/create_review_frag">
         <argument
             android:name="revieweeId"
             app:argType="string" />

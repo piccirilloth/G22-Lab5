@@ -22,6 +22,11 @@ fun Date.custom_format() : String {
         .format(this)
 }
 
+fun Date.custom_format_no_time() : String {
+    return DateFormat.getDateInstance(DateFormat.DEFAULT)
+        .format(this)
+}
+
 fun List<TimeSlot>.toAdvertisementList() : List<Advertisement> {
     val l: MutableList<Advertisement> = mutableListOf()
     this.forEach { l.add(Advertisement.FromTimeSlot(it)) }

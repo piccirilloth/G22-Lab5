@@ -125,7 +125,7 @@ class CreateReviewVM(application: Application) : AndroidViewModel(application) {
 
                     val reviewRef = db.collection("reviews").document()
                     val review = Review(reviewRef.id, reviewType, reviewer, reviewerId, reviewee, revieweeId, rating,
-                        description, offerTitle, Timestamp.now().toDate())
+                        description, offerTitle, null)
 
                     val convRef = db.collection("conversations").document(conversationId)
                     /*

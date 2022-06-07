@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.g22.R
 import com.example.g22.TimeSlotList.AdvertisementAdapter
+import com.example.g22.custom_format_no_time
 import com.example.g22.model.Review
 import com.example.g22.toAdvertisementList
 import com.google.firebase.ktx.Firebase
@@ -76,7 +77,7 @@ class ReviewAdapter(private var context: Context, private val lifecycleCoroutine
     override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         val item = data[position]
         val d = item.date
-        val strDate = "${d.date}/${d.month+1}/${d.year-100}"
+        val strDate = d!!.custom_format_no_time()
 
         holder.bind(item.reviewerId, item.reviewer, item.description, item.rating, item.timeSlotTitle, strDate, context, lifecycleCoroutineScope)
     }
