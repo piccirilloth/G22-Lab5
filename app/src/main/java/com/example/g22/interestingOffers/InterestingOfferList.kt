@@ -39,7 +39,7 @@ class InterestingOfferList {
                 fullnameTV.text = if(item.requestorUid == Firebase.auth.currentUser!!.uid) item.receiverName else item.requestorName
                 notChip.text = if(item.requestorUid == Firebase.auth.currentUser!!.uid) item.requestorUnseen.toString() else item.receiverUnseen.toString()
                 if (notChip.text.toString().toInt() == 0) {
-                    notChip.visibility = View.GONE
+                    notChip.visibility = View.INVISIBLE
                 }
                 else {
                     notChip.visibility = View.VISIBLE
@@ -47,8 +47,8 @@ class InterestingOfferList {
 
                 cardView.setOnClickListener { onCardViewClickCallback(bindingAdapterPosition) }
                 if (item.status == Status.REJECTED || item.status == Status.REJECTED_BALANCE) {
-                    notChip.visibility = View.GONE
-                    rateButton.visibility = View.GONE
+                    notChip.visibility = View.INVISIBLE
+                    rateButton.visibility = View.INVISIBLE
                     itemCl.setBackgroundResource(R.drawable.rounded_corner_rejected)
                 }
                 else if (item.status == Status.CONFIRMED) {
@@ -57,19 +57,19 @@ class InterestingOfferList {
 
                     if(item.receiverUid == Firebase.auth.currentUser!!.uid)
                         if(item.reviewedRequestor)
-                            rateButton.visibility = View.GONE
+                            rateButton.visibility = View.INVISIBLE
                         else
                             rateButton.visibility = View.VISIBLE
                     else
                         if(item.reviewedOfferer)
-                            rateButton.visibility = View.GONE
+                            rateButton.visibility = View.INVISIBLE
                         else
                             rateButton.visibility = View.VISIBLE
                     rateButton.setOnClickListener { onRateBtnClickCallback(bindingAdapterPosition) }
                     itemCl.setBackgroundResource(R.drawable.rounded_corner)
                 }
                 else {
-                    rateButton.visibility = View.GONE
+                    rateButton.visibility = View.INVISIBLE
                     if (notChip.text.toString().toInt() > 0)
                         notChip.visibility = View.VISIBLE
                     itemCl.setBackgroundResource(R.drawable.rounded_corner)

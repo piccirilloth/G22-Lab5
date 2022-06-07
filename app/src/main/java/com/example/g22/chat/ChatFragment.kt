@@ -109,7 +109,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                         rejectMessage.text = "Your proposal has been accepted!"
                     }
                     else {
-                        rejectMessage.text = "Your have accepted user's proposal!"
+                        rejectMessage.text = "You have accepted user's proposal!"
                     }
                 }
 
