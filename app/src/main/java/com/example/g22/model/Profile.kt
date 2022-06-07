@@ -37,7 +37,7 @@ data class Profile (
                 user.phoneNumber ?: "",
                 emptyList(),
                 "",
-                0
+                240
             )
         }
     }
