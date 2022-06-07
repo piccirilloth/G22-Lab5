@@ -15,6 +15,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -62,12 +63,12 @@ class CreateReviewVM(application: Application) : AndroidViewModel(application) {
 
 
     fun createReview(revieweeId: String, reviewType: String, offerId: String, rating: Double, description: String, conversationId: String) {
-        viewModelScope.launch {
+        GlobalScope.launch {
             val result = firebaseCreateReview(revieweeId, reviewType, offerId, rating, description, conversationId, Firebase.auth.currentUser!!.uid)
             if (result.isSuccess) {
-                _snackbarMessages.addMessage("Review created successfully!", Snackbar.LENGTH_LONG)
+                viewModelScope.launch { _snackbarMessages.addMessage("Review created successfully!", Snackbar.LENGTH_LONG) }
             } else {
-                _snackbarMessages.addMessage("Error while creating review!", Snackbar.LENGTH_LONG)
+                viewModelScope.launch { _snackbarMessages.addMessage("Error while creating review!", Snackbar.LENGTH_LONG) }
             }
         }
     }
