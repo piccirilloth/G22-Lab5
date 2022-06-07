@@ -52,12 +52,12 @@ class UserReviewsListFragment : Fragment(R.layout.user_reviews_list_frag) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        rv = requireActivity().findViewById(R.id.user_reviews_rv)
-        num_reviews = requireActivity().findViewById(R.id.reviews_number_tv)
-        rb = requireActivity().findViewById(R.id.ratingBar_reviews_list)
-        avg_score = requireActivity().findViewById(R.id.avg_score_list_tv)
-        revieweeName = requireActivity().findViewById(R.id.reviews_fullname)
-        revieweePic = requireActivity().findViewById(R.id.reviews_prof_pic)
+        rv = view.findViewById(R.id.user_reviews_rv)
+        num_reviews = view.findViewById(R.id.reviews_number_tv)
+        rb = view.findViewById(R.id.ratingBar_reviews_list)
+        avg_score = view.findViewById(R.id.avg_score_list_tv)
+        revieweeName = view.findViewById(R.id.reviews_fullname)
+        revieweePic = view.findViewById(R.id.reviews_prof_pic)
 
         //Recycler View Configuration
         rv.layoutManager = LinearLayoutManager(requireActivity())

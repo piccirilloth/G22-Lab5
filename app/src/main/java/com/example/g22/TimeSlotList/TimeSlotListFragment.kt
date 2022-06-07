@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.g22.R
 import com.example.g22.TimeSlotView.DateTimePickerFragment
 import com.example.g22.TimeSlotView.TimeSlotVM
+import com.example.g22.custom_format_no_time
 import com.example.g22.observeAndShow
 import com.example.g22.toAdvertisementList
 import com.google.android.material.textfield.TextInputLayout
@@ -56,14 +57,14 @@ class TimeSlotListFragment: Fragment(R.layout.time_slot_list_frag) {
         setHasOptionsMenu(true)
 
         // Find view references
-        contentCl = requireActivity().findViewById(R.id.timeslot_list_content_cl)
-        addFab = requireActivity().findViewById(R.id.timeslot_list_add_btn_fab)
-        rv = requireActivity().findViewById(R.id.timeslot_list_rv)
-        msgEmptyTimeSlotsTextView = requireActivity().findViewById(R.id.timeslot_list_empty_ts_message)
-        searchEditText = requireActivity().findViewById(R.id.time_slot_list_search_edit_text)
-        clearButton = requireActivity().findViewById(R.id.time_slot_list_clear_button)
-        sortMenu = requireActivity().findViewById(R.id.timeslot_edit_sort_menu)
-        progressBar = requireActivity().findViewById(R.id.timeslot_list_progress_bar)
+        contentCl = view.findViewById(R.id.timeslot_list_content_cl)
+        addFab = view.findViewById(R.id.timeslot_list_add_btn_fab)
+        rv = view.findViewById(R.id.timeslot_list_rv)
+        msgEmptyTimeSlotsTextView = view.findViewById(R.id.timeslot_list_empty_ts_message)
+        searchEditText = view.findViewById(R.id.time_slot_list_search_edit_text)
+        clearButton = view.findViewById(R.id.time_slot_list_clear_button)
+        sortMenu = view.findViewById(R.id.timeslot_edit_sort_menu)
+        progressBar = view.findViewById(R.id.timeslot_list_progress_bar)
 
         // Recycler View configuration
         rv.layoutManager = LinearLayoutManager(requireActivity())
@@ -190,7 +191,7 @@ class TimeSlotListFragment: Fragment(R.layout.time_slot_list_frag) {
 
         // TODO: ???
         timeslotVM.dateTimeLD.observe(viewLifecycleOwner) {
-            dateTextView.text = "${it.year+1900}-${it.month+1}-${it.date}"
+            dateTextView.text = it.custom_format_no_time()
         }
 
         dateTextView.text = ""

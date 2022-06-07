@@ -106,14 +106,12 @@ class InterestingOfferList {
         }
 
         fun updateList(interOfferList: List<Conversation>) {
-            // TODO: provide a way to handle list modifications better
             val diffs = DiffUtil.calculateDiff(ConversationListCallback(data, interOfferList))
             data = interOfferList
             diffs.dispatchUpdatesTo(this)
         }
 
         private fun showChat(adapterPos: Int) {
-            //TODO: show chat
             val currentUser = Firebase.auth.currentUser
             var receiver = ""
             var receiverName = ""

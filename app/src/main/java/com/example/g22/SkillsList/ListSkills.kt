@@ -60,13 +60,17 @@ class SkillAdapter(private var data: List<String>): RecyclerView.Adapter<SkillAd
 
     fun updateList(skillsList: List<String>, lifecycleCoroutineScope: LifecycleCoroutineScope) {
         val adapter = this
-        lifecycleCoroutineScope.launch {
-            val diffs = withContext(Dispatchers.Default) {
-                return@withContext DiffUtil.calculateDiff(SkillListCallback(data, skillsList))
-            }
-            data = skillsList
-            diffs.dispatchUpdatesTo(adapter)
-        }
+        val diffs = DiffUtil.calculateDiff(SkillListCallback(data, skillsList))
+        data = skillsList
+        diffs.dispatchUpdatesTo(adapter)
+
+//        lifecycleCoroutineScope.launch {
+//            val diffs = withContext(Dispatchers.Default) {
+//                return@withContext DiffUtil.calculateDiff(SkillListCallback(data, skillsList))
+//            }
+//            data = skillsList
+//            diffs.dispatchUpdatesTo(adapter)
+//        }
     }
 
     /**

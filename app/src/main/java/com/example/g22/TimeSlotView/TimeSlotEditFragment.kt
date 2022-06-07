@@ -67,16 +67,16 @@ class TimeSlotEditFragment: Fragment(R.layout.time_slot_edit_frag) {
         setHasOptionsMenu(true)
 
         // Find view references
-        sv = requireActivity().findViewById(R.id.timeslot_edit_sv)
-        titleEditText = requireActivity().findViewById(R.id.timeslot_edit_title_edittext)
-        datetimeTV = requireActivity().findViewById(R.id.timeslot_edit_datetime_textview)
-        durationHoursEditText = requireActivity().findViewById(R.id.timeslot_edit_duration_hour)
-        durationMinutesEditText = requireActivity().findViewById(R.id.timeslot_edit_duration_minute)
-        locationEditText = requireActivity().findViewById(R.id.timeslot_edit_location_edittext)
-        descriptionEditText = requireActivity().findViewById(R.id.timeslot_edit_description_edittext)
-        skillsMenu = requireActivity().findViewById(R.id.timeslot_edit_skills_menu)
-        skillsChipGroup = requireActivity().findViewById(R.id.timeslot_edit_skills_chipgroup)
-        progressBar = requireActivity().findViewById(R.id.timeslot_edit_progress_bar)
+        sv = view.findViewById(R.id.timeslot_edit_sv)
+        titleEditText = view.findViewById(R.id.timeslot_edit_title_edittext)
+        datetimeTV = view.findViewById(R.id.timeslot_edit_datetime_textview)
+        durationHoursEditText = view.findViewById(R.id.timeslot_edit_duration_hour)
+        durationMinutesEditText = view.findViewById(R.id.timeslot_edit_duration_minute)
+        locationEditText = view.findViewById(R.id.timeslot_edit_location_edittext)
+        descriptionEditText = view.findViewById(R.id.timeslot_edit_description_edittext)
+        skillsMenu = view.findViewById(R.id.timeslot_edit_skills_menu)
+        skillsChipGroup = view.findViewById(R.id.timeslot_edit_skills_chipgroup)
+        progressBar = view.findViewById(R.id.timeslot_edit_progress_bar)
 
         navController = findNavController()
 

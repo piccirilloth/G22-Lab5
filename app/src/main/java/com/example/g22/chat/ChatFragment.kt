@@ -56,12 +56,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         setHasOptionsMenu(true)
 
-        rv = requireActivity().findViewById(R.id.chat_fragment_rv)
-        sendBtn = requireActivity().findViewById(R.id.chat_fragment_message_send_img_button)
-        messageEditText = requireActivity().findViewById(R.id.chat_fragment_message_edit_text)
-        acceptBtn = requireActivity().findViewById(R.id.chat_fragment_accept_button)
-        rejectBtn = requireActivity().findViewById(R.id.chat_fragment_reject_button)
-        rejectMessage = requireActivity().findViewById(R.id.chat_fragment_reject_message)
+        rv = view.findViewById(R.id.chat_fragment_rv)
+        sendBtn = view.findViewById(R.id.chat_fragment_message_send_img_button)
+        messageEditText = view.findViewById(R.id.chat_fragment_message_edit_text)
+        acceptBtn = view.findViewById(R.id.chat_fragment_accept_button)
+        rejectBtn = view.findViewById(R.id.chat_fragment_reject_button)
+        rejectMessage = view.findViewById(R.id.chat_fragment_reject_message)
         rejectMessage.visibility = View.GONE
         if (savedInstanceState == null) {
             messageListVM.clearList()

@@ -51,16 +51,16 @@ class TimeSlotShowFragment : Fragment(R.layout.time_slot_show_frag) {
         navController = findNavController()
 
         // Find view references
-        sv = requireActivity().findViewById(R.id.timeslot_show_sv)
-        titleTV = requireActivity().findViewById(R.id.timeslot_show_title_textview)
-        datetimeTV = requireActivity().findViewById(R.id.timeslot_show_datetime_textview)
-        durationTV = requireActivity().findViewById(R.id.timeslot_show_duration_textview)
-        locationTV = requireActivity().findViewById(R.id.timeslot_show_location_textview)
-        descriptionTV = requireActivity().findViewById(R.id.timeslot_show_description_textview)
-        skillsCG = requireActivity().findViewById(R.id.timeslot_show_skills_chipgroup)
-        ownerBtn = requireActivity().findViewById(R.id.timeslot_show_owner_button)
-        contactButton = requireActivity().findViewById(R.id.timeslot_show_contact_button)
-        progressBar = requireActivity().findViewById(R.id.timeslot_show_progress_bar)
+        sv = view.findViewById(R.id.timeslot_show_sv)
+        titleTV = view.findViewById(R.id.timeslot_show_title_textview)
+        datetimeTV = view.findViewById(R.id.timeslot_show_datetime_textview)
+        durationTV = view.findViewById(R.id.timeslot_show_duration_textview)
+        locationTV = view.findViewById(R.id.timeslot_show_location_textview)
+        descriptionTV = view.findViewById(R.id.timeslot_show_description_textview)
+        skillsCG = view.findViewById(R.id.timeslot_show_skills_chipgroup)
+        ownerBtn = view.findViewById(R.id.timeslot_show_owner_button)
+        contactButton = view.findViewById(R.id.timeslot_show_contact_button)
+        progressBar = view.findViewById(R.id.timeslot_show_progress_bar)
         toolbar = requireActivity().findViewById(R.id.toolbar)
 
         // Other profile button listener

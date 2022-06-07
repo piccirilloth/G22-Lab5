@@ -96,13 +96,17 @@ class ReviewAdapter(private var context: Context, private val lifecycleCoroutine
 
     fun updateList(reviewList: List<Review>, lifecycleCoroutineScope: LifecycleCoroutineScope) {
         val adapter = this
-        lifecycleCoroutineScope.launch {
-            val diffs = withContext(Dispatchers.Default) {
-                return@withContext DiffUtil.calculateDiff(ReviewAdapter.ReviewListCallback(data, reviewList))
-            }
-            data = reviewList
-            diffs.dispatchUpdatesTo(adapter)
-        }
+        val diffs = DiffUtil.calculateDiff(ReviewAdapter.ReviewListCallback(data, reviewList))
+        data = reviewList
+        diffs.dispatchUpdatesTo(adapter)
+
+//        lifecycleCoroutineScope.launch {
+//            val diffs = withContext(Dispatchers.Default) {
+//                return@withContext DiffUtil.calculateDiff(ReviewAdapter.ReviewListCallback(data, reviewList))
+//            }
+//            data = reviewList
+//            diffs.dispatchUpdatesTo(adapter)
+//        }
     }
 
     class ReviewListCallback(

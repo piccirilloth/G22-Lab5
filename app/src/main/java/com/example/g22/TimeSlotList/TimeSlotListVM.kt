@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.g22.Event
 import com.example.g22.SnackbarMessage
 import com.example.g22.addMessage
+import com.example.g22.custom_format_no_time
 import com.example.g22.model.TimeSlot
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
@@ -188,7 +189,7 @@ class TimeSlotListVM(application: Application) : AndroidViewModel(application) {
                     val t = timeslot.get("location").toString()
                     val d: Timestamp = timeslot.get("date") as Timestamp
                     val timeslotDate: Date = d.toDate()
-                    val dateToCompare = "${timeslotDate.year+1900}-${timeslotDate.month+1}-${timeslotDate.date}"
+                    val dateToCompare = timeslotDate.custom_format_no_time()
                     if(t.lowercase().contains(location.lowercase()) && date.compareTo(dateToCompare) == 0)
                         tmpList = tmpList.plus(timeslot.toObject(TimeSlot::class.java))
                 }

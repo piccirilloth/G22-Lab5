@@ -98,14 +98,18 @@ class AdvertisementAdapter(private var data: List<Advertisement>, private val sk
     fun updateList(tsList: List<TimeSlot>, lifecycleCoroutineScope: LifecycleCoroutineScope) {
         val adapter = this
         val newList = tsList.toAdvertisementList()
-        lifecycleCoroutineScope.launch {
-            val diffs = withContext(Dispatchers.Default) {
-                return@withContext DiffUtil.calculateDiff(AdvertisementListCallback(data, newList))
-            }
-            data = newList
-            diffs.dispatchUpdatesTo(adapter)
-        }
 
+        val diffs = DiffUtil.calculateDiff(AdvertisementListCallback(data, newList))
+        data = newList
+        diffs.dispatchUpdatesTo(adapter)
+
+//        lifecycleCoroutineScope.launch {
+//            val diffs = withContext(Dispatchers.Default) {
+//                return@withContext DiffUtil.calculateDiff(AdvertisementListCallback(data, newList))
+//            }
+//            data = newList
+//            diffs.dispatchUpdatesTo(adapter)
+//        }
     }
 
     /**

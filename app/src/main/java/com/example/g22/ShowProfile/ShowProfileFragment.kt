@@ -7,6 +7,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -60,28 +61,28 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
 
         // Find view references
         profilePictureImgView =
-            requireActivity().findViewById(R.id.show_profile_profile_image_imgview)
-        fullnameTV = requireActivity().findViewById(R.id.show_profile_fullname_textview)
-        emailTV = requireActivity().findViewById(R.id.show_profile_email_textview)
-        nicknameTV = requireActivity().findViewById(R.id.show_profile_nickname_textview)
-        locationTV = requireActivity().findViewById(R.id.show_profile_location_textview)
-        phoneTV = requireActivity().findViewById(R.id.show_profile_phone_textview)
-        skillsCG = requireActivity().findViewById(R.id.show_profile_skills_chipgroup)
-        descriptionTV = requireActivity().findViewById(R.id.show_profile_description_textview)
+            view.findViewById(R.id.show_profile_profile_image_imgview)
+        fullnameTV = view.findViewById(R.id.show_profile_fullname_textview)
+        emailTV = view.findViewById(R.id.show_profile_email_textview)
+        nicknameTV = view.findViewById(R.id.show_profile_nickname_textview)
+        locationTV = view.findViewById(R.id.show_profile_location_textview)
+        phoneTV = view.findViewById(R.id.show_profile_phone_textview)
+        skillsCG = view.findViewById(R.id.show_profile_skills_chipgroup)
+        descriptionTV = view.findViewById(R.id.show_profile_description_textview)
         toolbar = requireActivity().findViewById(R.id.toolbar)
-        creditTV = requireActivity().findViewById(R.id.show_profile_credit_textview)
+        creditTV = view.findViewById(R.id.show_profile_credit_textview)
         showOffererReviewsButton =
-            requireActivity().findViewById(R.id.show_profile_show_offerer_reviews_button)
+            view.findViewById(R.id.show_profile_show_offerer_reviews_button)
         showRequestorReviewsButton =
-            requireActivity().findViewById(R.id.show_profile_show_requestor_reviews_button)
+            view.findViewById(R.id.show_profile_show_requestor_reviews_button)
         requestorReviewsAvg =
-            requireActivity().findViewById(R.id.show_profile_requestor_reviews_avg_textview)
+            view.findViewById(R.id.show_profile_requestor_reviews_avg_textview)
         requestorNumReviews =
-            requireActivity().findViewById(R.id.show_profile_requestor_num_reviews_textview)
+            view.findViewById(R.id.show_profile_requestor_num_reviews_textview)
         offererReviewsAvg =
-            requireActivity().findViewById(R.id.show_profile_offerer_reviews_avg_textview)
+            view.findViewById(R.id.show_profile_offerer_reviews_avg_textview)
         offererNumReviews =
-            requireActivity().findViewById(R.id.show_profile_offerer_num_reviews_textview)
+            view.findViewById(R.id.show_profile_offerer_num_reviews_textview)
 
 
         setScrollableImage()
@@ -217,17 +218,18 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_frag) {
         }
 
     private fun updateProfileImage(localPath: String) {
+        profilePictureImgView.setImageBitmap(requireActivity().application.resources.getDrawable(R.drawable.ic_baseline_downloading_24).toBitmap())
         profilePictureImgView.loadFromDisk(requireActivity().application, lifecycleScope, localPath)
     }
 
     fun setScrollableImage() {
-        val v1 = getView()?.findViewById<ImageView>(R.id.show_profile_profile_image_imgview)
-        val sv = getView()?.findViewById<ScrollView>(R.id.show_profile_sv)
+        val v1 = requireView().findViewById<ImageView>(R.id.show_profile_profile_image_imgview)
+        val sv = requireView().findViewById<ScrollView>(R.id.show_profile_sv)
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            sv?.viewTreeObserver?.addOnGlobalLayoutListener(object :
+            sv.viewTreeObserver?.addOnGlobalLayoutListener(object :
                 ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
-                    v1?.post { v1.layoutParams = LinearLayout.LayoutParams(sv.width, sv.height / 3) }
+                    v1.post { v1.layoutParams = LinearLayout.LayoutParams(sv.width, sv.height / 3) }
                     sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
             })

@@ -14,6 +14,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.children
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -72,18 +73,18 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_frag) {
         setHasOptionsMenu(true)
 
         // Find view references
-        fullnameEditText = requireActivity().findViewById(R.id.edit_profile_fullname_edittext)
-        emailEditText = requireActivity().findViewById(R.id.edit_profile_email_edittext)
-        nicknameEditText = requireActivity().findViewById(R.id.edit_profile_nickname_edittext)
-        locationEditText = requireActivity().findViewById(R.id.edit_profile_location_edittext)
-        phoneEditText = requireActivity().findViewById(R.id.edit_profile_phone_edittext)
-        skillsCG = requireActivity().findViewById(R.id.edit_profile_skills_chipgroup)
-        descriptionEditText = requireActivity().findViewById(R.id.edit_profile_description_edittext)
-        newSkillsEditText = requireActivity().findViewById(R.id.edit_profile_new_skill_edittext)
-        addSkillButton = requireActivity().findViewById(R.id.edit_profile_add_skill_button)
+        fullnameEditText = view.findViewById(R.id.edit_profile_fullname_edittext)
+        emailEditText = view.findViewById(R.id.edit_profile_email_edittext)
+        nicknameEditText = view.findViewById(R.id.edit_profile_nickname_edittext)
+        locationEditText = view.findViewById(R.id.edit_profile_location_edittext)
+        phoneEditText = view.findViewById(R.id.edit_profile_phone_edittext)
+        skillsCG = view.findViewById(R.id.edit_profile_skills_chipgroup)
+        descriptionEditText = view.findViewById(R.id.edit_profile_description_edittext)
+        newSkillsEditText = view.findViewById(R.id.edit_profile_new_skill_edittext)
+        addSkillButton = view.findViewById(R.id.edit_profile_add_skill_button)
         profileImageImgView =
-            requireActivity().findViewById(R.id.edit_profile_profile_image_imgview)
-        cameraImgButton = requireActivity().findViewById(R.id.edit_profile_photo_edit_button_imgbtn)
+            view.findViewById(R.id.edit_profile_profile_image_imgview)
+        cameraImgButton = view.findViewById(R.id.edit_profile_photo_edit_button_imgbtn)
 
         navController = findNavController()
 
@@ -322,6 +323,7 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_frag) {
     }
 
     private fun updateProfileImage(localPath: String) {
+        profileImageImgView.setImageBitmap(requireActivity().application.resources.getDrawable(R.drawable.ic_baseline_downloading_24).toBitmap())
         profileImageImgView.loadFromDisk(requireActivity().application, lifecycleScope, localPath)
     }
 
@@ -341,8 +343,8 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_frag) {
     }
 
     fun setScrollableImage() {
-        val v1 = requireActivity().findViewById<RelativeLayout>(R.id.edit_profile_rl)
-        val sv = requireActivity().findViewById<ScrollView>(R.id.edit_profile_sv)
+        val v1 = requireView().findViewById<RelativeLayout>(R.id.edit_profile_rl)
+        val sv = requireView().findViewById<ScrollView>(R.id.edit_profile_sv)
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             sv.viewTreeObserver.addOnGlobalLayoutListener(object :
                 ViewTreeObserver.OnGlobalLayoutListener {

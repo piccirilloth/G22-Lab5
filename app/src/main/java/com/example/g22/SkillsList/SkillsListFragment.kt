@@ -41,16 +41,16 @@ class SkillsListFragment : Fragment(R.layout.skills_list_frag) {
         timeslotListVM.clearFilters()
 
         // Find view references
-        rv = requireActivity().findViewById(R.id.skills_list_rv)
-        msgEmptySkillsTextView = requireActivity().findViewById(R.id.skills_list_empty_ts_message)
+        rv = view.findViewById(R.id.skills_list_rv)
+        msgEmptySkillsTextView = view.findViewById(R.id.skills_list_empty_ts_message)
 
         // Recycler View configuration
         rv.layoutManager = LinearLayoutManager(requireActivity())
         adapter = SkillAdapter(skillsListVM.skillsListLD.value ?: emptyList())
         rv.adapter = adapter
 
-        searchBar = requireActivity().findViewById(R.id.skills_list_search_edit_text)
-        deleteTextButton = requireActivity().findViewById(R.id.skills_list_delete_text_button)
+        searchBar = view.findViewById(R.id.skills_list_search_edit_text)
+        deleteTextButton = view.findViewById(R.id.skills_list_delete_text_button)
 
         deleteTextButton.setOnClickListener {
             searchBar.text.clear()
