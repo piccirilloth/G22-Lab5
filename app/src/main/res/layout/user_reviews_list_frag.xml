@@ -19,6 +19,29 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/reviews_prof_pic"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginTop="24dp"
+                app:layout_constraintStart_toStartOf="@+id/reviews_number_tv"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/reviews_fullname"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="8dp"
+                android:text="Lorenzo Pintaldi"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                app:layout_constraintBottom_toBottomOf="@+id/reviews_prof_pic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toEndOf="@+id/reviews_prof_pic"
+                app:layout_constraintTop_toTopOf="@+id/reviews_prof_pic" />
+
             <TextView
                 android:id="@+id/reviews_number_tv"
                 android:layout_width="wrap_content"
@@ -26,9 +49,9 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
                 android:text="10 Reviews"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/reviews_prof_pic" />
 
             <RatingBar
                 android:id="@+id/ratingBar_reviews_list"

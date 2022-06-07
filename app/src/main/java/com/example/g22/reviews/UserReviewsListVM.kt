@@ -10,6 +10,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asExecutor
 import java.util.*
@@ -18,6 +19,10 @@ class UserReviewsListVM(application: Application) : AndroidViewModel(application
     private val db = FirebaseFirestore.getInstance()
 
     private var reviewsListListenerRegistration: ListenerRegistration? = null
+    private var revieweeNameListenerRegistration: ListenerRegistration? = null
+
+
+    private val _revieweeNameLD: MutableLiveData<String> = MutableLiveData("")
 
     private val _reviewsOffererListLD: MutableLiveData<List<Review>> =
         MutableLiveData<List<Review>>().also {
@@ -38,6 +43,7 @@ class UserReviewsListVM(application: Application) : AndroidViewModel(application
     val reviewsOffererListLD: LiveData<List<Review>> = _reviewsOffererListLD
     val numOffererReviewsLD : LiveData<Int> = _numOffererReviewsLD
     val avgOffererScoreLD : LiveData<Float> = _avgOffererScoreLD
+    val revieweeNameLD : LiveData<String> = _revieweeNameLD
 
     val reviewsRequestorListLD: LiveData<List<Review>> = _reviewsRequestorListLD
     val numRequestorReviewsLD : LiveData<Int> = _numRequestorReviewsLD
@@ -81,6 +87,19 @@ class UserReviewsListVM(application: Application) : AndroidViewModel(application
             }
     }
 
+    fun observeRevieweeName(revieweeId: String) {
+        revieweeNameListenerRegistration = db.collection("users").document(revieweeId)
+            .addSnapshotListener(Dispatchers.IO.asExecutor()) { value, error ->
+                if(error != null) {
+                    Log.d("error", "firebase failure")
+                    return@addSnapshotListener
+                }
+                if(value != null) {
+                    _revieweeNameLD.postValue(value.getString("fullname"))
+                }
+            }
+    }
+
     /**
      * ViewModel callbacks
      */
@@ -89,5 +108,6 @@ class UserReviewsListVM(application: Application) : AndroidViewModel(application
 
         // Clear all snapshot listeners
         reviewsListListenerRegistration?.remove()
+        revieweeNameListenerRegistration?.remove()
     }
 }

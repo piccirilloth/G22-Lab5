@@ -184,6 +184,7 @@
         <entry key="app/src/main/res/layout/time_slot_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/time_slot_list_frag.xml" value="0.67" />
         <entry key="app/src/main/res/layout/time_slot_show_frag.xml" value="0.35625" />
+        <entry key="app/src/main/res/layout/user_reviews_list_frag.xml" value="1.0" />
         <entry key="app/src/main/res/menu/drawer_menu.xml" value="0.3224489795918367" />
         <entry key="app/src/main/res/menu/edit_menu.xml" value="0.33" />
         <entry key="app/src/main/res/menu/filter_menu.xml" value="0.30052083333333335" />
@@ -203,7 +204,7 @@
   <component name="VisualizationToolProject">
     <option name="state">
       <ProjectState>
-        <option name="scale" value="0.3645833333333333" />
+        <option name="scale" value="0.4463452566096423" />
       </ProjectState>
     </option>
   </component>

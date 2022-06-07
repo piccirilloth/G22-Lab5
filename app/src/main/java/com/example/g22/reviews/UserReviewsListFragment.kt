@@ -3,6 +3,7 @@ package com.example.g22.reviews
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
@@ -13,11 +14,19 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.g22.R
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 
 class UserReviewsListFragment : Fragment(R.layout.user_reviews_list_frag) {
     private val reviewsListVM by activityViewModels<UserReviewsListVM>()
+    val storage = Firebase.storage("gs://time-banking-9318d.appspot.com").reference
 
     private val navArguments: UserReviewsListFragmentArgs by navArgs()
 
@@ -26,6 +35,8 @@ class UserReviewsListFragment : Fragment(R.layout.user_reviews_list_frag) {
     private lateinit var num_reviews : TextView
     private lateinit var rb : RatingBar
     private lateinit var avg_score : TextView
+    private lateinit var revieweeName : TextView
+    private lateinit var revieweePic : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +54,8 @@ class UserReviewsListFragment : Fragment(R.layout.user_reviews_list_frag) {
         num_reviews = requireActivity().findViewById(R.id.reviews_number_tv)
         rb = requireActivity().findViewById(R.id.ratingBar_reviews_list)
         avg_score = requireActivity().findViewById(R.id.avg_score_list_tv)
+        revieweeName = requireActivity().findViewById(R.id.reviews_fullname)
+        revieweePic = requireActivity().findViewById(R.id.reviews_prof_pic)
 
         //Recycler View Configuration
         rv.layoutManager = LinearLayoutManager(requireActivity())
@@ -55,7 +68,12 @@ class UserReviewsListFragment : Fragment(R.layout.user_reviews_list_frag) {
         else
             "Reviews as a Requestor"
 
+        reviewsListVM.revieweeNameLD.observe(viewLifecycleOwner) {
+            revieweeName.text = it
+        }
+
         if(navArguments.reviewType == "offerer") {
+
             reviewsListVM.reviewsOffererListLD.observe(viewLifecycleOwner) {
                 adapter.updateList(it, lifecycleScope)
             }
@@ -84,5 +102,20 @@ class UserReviewsListFragment : Fragment(R.layout.user_reviews_list_frag) {
         }
 
         reviewsListVM.observeReviews(navArguments.revieweeId)
+        reviewsListVM.observeRevieweeName(navArguments.revieweeId)
+
+        lifecycleScope.launch {
+            try {
+                val glideRes = withContext(Dispatchers.IO) {
+                    val uri = storage.child("${navArguments.revieweeId}.jpg").downloadUrl.await()
+                    val imageURL = uri.toString()
+                    Glide.with(requireActivity())
+                        .load(imageURL)
+                }
+                glideRes.into(revieweePic)
+            } catch(e: Exception) {
+
+            }
+        }
     }
 }
