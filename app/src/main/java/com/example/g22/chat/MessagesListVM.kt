@@ -258,7 +258,8 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
     fun confirmRequest(offerId: String) {
         GlobalScope.launch {
             val res = firebaseConfirmRequest(conversationId.value!!)
-            if (res.isSuccess) {
+            val result = res.getOrNull()
+            if (res.isSuccess && result == true) {
                 val rejRes = firebaseRejectOthers(offerId)
                 if (rejRes.isSuccess) {
                     // TODO
@@ -293,9 +294,10 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private suspend fun firebaseConfirmRequest(conversationId: String): Result<Unit> {
+    private suspend fun firebaseConfirmRequest(conversationId: String): Result<Boolean> {
         return withContext(Dispatchers.IO) {
             try {
+                var sufficientCredit = false
                 db.runTransaction { transaction ->
                     val convRef = db.collection("conversations").document(conversationId)
                     val convResult = transaction.get(convRef)
@@ -323,18 +325,18 @@ class MessagesListVM(application: Application) : AndroidViewModel(application) {
                         transaction.update(convRef, "status", Status.CONFIRMED)
                         transaction.update(offerRef, "accepted", true)
                         transaction.update(receiverRef, "credit", creditRec + offerDuration)
+                        sufficientCredit = true
 
                         // reject other conversations
 
                     } else {
                         val rejRef = db.collection("conversations")
                             .document(conversationId)
-                        transaction.update(rejRef, "status", Status.REJECTED)
+                        transaction.update(rejRef, "status", Status.REJECTED_BALANCE)
                     }
-
                 }.await()
 
-                return@withContext Result.success(Unit)
+                return@withContext Result.success(sufficientCredit)
             } catch(e: Exception) {
                 return@withContext Result.failure(e)
             }
