@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -51,7 +52,7 @@ fun ImageView.loadFromDisk(application: Application, lifecycleScope: LifecycleCo
         // Load bitmap with Dispatchers.IO
         val bitmap = withContext(Dispatchers.IO) {
             if (localPath == String.LoadingImagePath())
-                return@withContext BitmapFactory.decodeResource(application.resources, R.drawable.ic_baseline_downloading_24)
+                return@withContext application.resources.getDrawable(R.drawable.ic_baseline_downloading_24).toBitmap()
             if (!localPath.isValidImagePath())
                 return@withContext BitmapFactory.decodeResource(application.resources, R.drawable.user_icon)
 

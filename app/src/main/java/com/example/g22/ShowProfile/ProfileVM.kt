@@ -109,6 +109,11 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
 
             if (result.isSuccess) {
 
+                // Cause the update of the profile picture
+                viewModelScope.launch {
+                    _profileImageLD.value = String.LoadingImagePath()
+                }
+
                 val resultUpload = uploadNewProfileImageToFirebase()
 
                 viewModelScope.launch {
@@ -119,6 +124,7 @@ class ProfileVM(application: Application) : AndroidViewModel(application) {
 
                     // Cause the snackbar to be visualized
                     viewModelScope.launch {
+                        _profileImageLD.value = LOCAL_PERSISTENT_PROFILE_PICTURE_PATH
                         _snackbarMessages.addMessage("Error while uploading profile image!", Snackbar.LENGTH_LONG)
                     }
 

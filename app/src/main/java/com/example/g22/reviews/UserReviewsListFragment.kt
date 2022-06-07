@@ -1,5 +1,6 @@
 package com.example.g22.reviews
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -105,6 +107,7 @@ class UserReviewsListFragment : Fragment(R.layout.user_reviews_list_frag) {
         reviewsListVM.observeRevieweeName(navArguments.revieweeId)
 
         lifecycleScope.launch {
+            revieweePic.setImageBitmap(view.resources.getDrawable(R.drawable.ic_baseline_downloading_24).toBitmap())
             try {
                 val glideRes = withContext(Dispatchers.IO) {
                     val uri = storage.child("${navArguments.revieweeId}.jpg").downloadUrl.await()
@@ -114,7 +117,8 @@ class UserReviewsListFragment : Fragment(R.layout.user_reviews_list_frag) {
                 }
                 glideRes.into(revieweePic)
             } catch(e: Exception) {
-
+                // Pick from default icon
+                revieweePic.setImageBitmap(BitmapFactory.decodeResource(view.resources, R.drawable.user_icon))
             }
         }
     }

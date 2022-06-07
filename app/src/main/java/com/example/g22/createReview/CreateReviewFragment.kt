@@ -1,5 +1,6 @@
 package com.example.g22.createReview
 
+import android.graphics.BitmapFactory
 import android.media.ImageReader
 import android.os.Bundle
 import android.view.Menu
@@ -10,6 +11,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -20,6 +22,10 @@ import com.example.g22.observeAndShow
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class CreateReviewFragment : Fragment(R.layout.create_review_frag) {
 
@@ -51,11 +57,20 @@ class CreateReviewFragment : Fragment(R.layout.create_review_frag) {
             createReviewVM.observeCurrentReviewInfo(navArguments.revieweeId, navArguments.reviewType)
         }
 
-        storage.child("${navArguments.revieweeId}.jpg").downloadUrl.addOnSuccessListener {
-            val imageURL = it.toString()
-            Glide.with(view)
-                .load(imageURL)
-                .into(profilePic)
+        lifecycleScope.launch {
+            profilePic.setImageBitmap(view.resources.getDrawable(R.drawable.ic_baseline_downloading_24).toBitmap())
+            try {
+                val glideRes = withContext(Dispatchers.IO) {
+                    val uri = storage.child("${navArguments.revieweeId}.jpg").downloadUrl.await()
+                    val imageURL = uri.toString()
+                    Glide.with(view)
+                        .load(imageURL)
+                }
+                glideRes.into(profilePic)
+            } catch(e: Exception) {
+                // Pick from default icon
+                profilePic.setImageBitmap(BitmapFactory.decodeResource(view.resources, R.drawable.user_icon))
+            }
         }
 
         createReviewVM.currentRevieweeLD.observe(viewLifecycleOwner) {

@@ -1,11 +1,13 @@
 package com.example.g22.reviews
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -45,6 +47,8 @@ class ReviewAdapter(private var context: Context, private val lifecycleCoroutine
             this.skill.text = timeSlotTitle
 
             lifecycleCoroutineScope.launch {
+
+                reviewerImage.setImageBitmap(context.resources.getDrawable(R.drawable.ic_baseline_downloading_24).toBitmap())
                 try {
                     val glideRes = withContext(Dispatchers.IO) {
                         val uri = storage.child("$reviewerId.jpg").downloadUrl.await()
@@ -54,7 +58,8 @@ class ReviewAdapter(private var context: Context, private val lifecycleCoroutine
                     }
                     glideRes.into(reviewerImage)
                 } catch(e: Exception) {
-
+                    // Pick from default icon
+                    reviewerImage.setImageBitmap(BitmapFactory.decodeResource(context.resources, R.drawable.user_icon))
                 }
             }
         }
