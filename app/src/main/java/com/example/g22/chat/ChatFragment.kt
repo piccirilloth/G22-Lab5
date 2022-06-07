@@ -1,17 +1,16 @@
 package com.example.g22.chat
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
+import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -54,6 +53,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setHasOptionsMenu(true)
 
         rv = requireActivity().findViewById(R.id.chat_fragment_rv)
         sendBtn = requireActivity().findViewById(R.id.chat_fragment_message_send_img_button)
@@ -213,5 +214,19 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         messageListVM.snackbarMessages.observeAndShow(viewLifecycleOwner, requireView(), lifecycleScope)
 
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.show_profile_chat_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.show_profile_chat_item -> {
+                findNavController().navigate(R.id.action_nav_chat_fragment_to_nav_show_other_profile, bundleOf("profileId" to navArguments.receiver))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }    }
 
 }

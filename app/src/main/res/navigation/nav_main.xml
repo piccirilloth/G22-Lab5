@@ -208,6 +208,9 @@
         <argument
             android:name="receiverName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_nav_chat_fragment_to_nav_show_other_profile"
+            app:destination="@id/nav_show_other_profile" />
     </fragment>
     <fragment
         android:id="@+id/nav_reviews_list"
