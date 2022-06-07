@@ -84,7 +84,7 @@ class UserReviewsListFragment : Fragment(R.layout.user_reviews_list_frag) {
                 num_reviews.text = it.toString() + " Reviews"
             }
             reviewsListVM.avgOffererScoreLD.observe(viewLifecycleOwner) {
-                avg_score.text = it.toString()
+                avg_score.text = String.format("%.1f / 5", it)
                 rb.rating = it
             }
         }
@@ -98,7 +98,7 @@ class UserReviewsListFragment : Fragment(R.layout.user_reviews_list_frag) {
                 num_reviews.text = it.toString() + " Reviews"
             }
             reviewsListVM.avgRequestorScoreLD.observe(viewLifecycleOwner) {
-                avg_score.text = it.toString()
+                avg_score.text = String.format("%.1f / 5", it)
                 rb.rating = it
             }
         }

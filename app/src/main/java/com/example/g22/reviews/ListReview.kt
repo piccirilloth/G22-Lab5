@@ -43,7 +43,7 @@ class ReviewAdapter(private var context: Context, private val lifecycleCoroutine
             reviewDescription.text = description
             ratingBar.rating = rating.toFloat()
             dateReview.text = date
-            score.text = String.format("%.2f", rating)
+            score.text = String.format("%.2f / 5", rating)
             this.skill.text = timeSlotTitle
 
             lifecycleCoroutineScope.launch {
